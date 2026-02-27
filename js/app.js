@@ -806,16 +806,30 @@
     // ============================
     // PROFESSION TEMPLATE LOCKING
     // ============================
+    const PRO_PROFESSION_LIMIT = 14; // Pro gets first 14 profession templates (30 total with 16 general)
+
     async function lockProfessionTemplatesIfFree() {
         try {
             const tier = await Subscription.getTier();
+            const cards = document.querySelectorAll('#profession-templates .template-card');
             if (tier === 'free') {
-                document.querySelectorAll('#profession-templates .template-card').forEach(card => {
+                // Free: lock all profession templates
+                cards.forEach(card => {
                     card.classList.add('locked');
                 });
                 const badge = document.getElementById('template-lock-badge');
                 if (badge) badge.style.display = '';
+            } else if (tier === 'pro') {
+                // Pro: unlock first 14, lock remaining 16
+                cards.forEach((card, index) => {
+                    if (index >= PRO_PROFESSION_LIMIT) {
+                        card.classList.add('locked');
+                    }
+                });
+                const badge = document.getElementById('template-lock-badge');
+                if (badge) badge.style.display = '';
             }
+            // Premium: all unlocked (no action needed)
         } catch (e) {
             // If check fails, don't lock
         }
