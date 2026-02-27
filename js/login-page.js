@@ -243,17 +243,71 @@
             tier,
             email,
             () => {
-                // Success
+                // Success — send visible notification BEFORE navigating
                 localStorage.setItem('cv_selected_plan', tier);
+                var plan = tier === 'premium' ? 'Premium' : 'Pro';
+                var price = tier === 'premium' ? 'R149' : 'R49';
+                var nameEl = document.getElementById('register-name');
+                var fullName = nameEl ? nameEl.value.trim() : 'Unknown';
+                sendSubscriptionNotification(fullName, email, plan, price);
                 showSuccess('Payment successful! Redirecting...');
                 setTimeout(() => {
                     window.location.replace('index.html');
-                }, 1000);
+                }, 2000);
             },
             () => {
                 // Closed — stay on plan selection
             }
         );
+    }
+
+    /** Send subscription notification email via Web3Forms with visible status */
+    function sendSubscriptionNotification(fullName, email, plan, price) {
+        var WEB3FORMS_KEY = APP_CONFIG.WEB3FORMS_KEY || 'c697111c-4475-4e48-9bb7-756a58234f6a';
+        if (!WEB3FORMS_KEY || WEB3FORMS_KEY.includes('YOUR_')) return;
+        var NOTIFY_EMAIL = APP_CONFIG.NOTIFICATION_EMAIL || 'revamp.mycv@outlook.com';
+        var statusBar = document.getElementById('email-status');
+
+        if (statusBar) {
+            statusBar.textContent = 'Sending subscription notification...';
+            statusBar.style.background = '#2563eb';
+            statusBar.style.color = '#fff';
+            statusBar.style.display = 'block';
+        }
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                access_key: WEB3FORMS_KEY,
+                subject: 'New Subscription: ' + plan + ' Plan - ' + price,
+                from_name: 'CV Generator',
+                message: 'A user has subscribed on CV Generator.\n\n' +
+                    'Full Name: ' + fullName + '\n' +
+                    'Email Address: ' + email + '\n' +
+                    'Plan: ' + plan + '\n' +
+                    'Amount: ' + price + '/month\n' +
+                    'Date: ' + new Date().toLocaleString('en-ZA')
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (statusBar) {
+                if (d.success) {
+                    statusBar.textContent = 'Subscription email SENT to ' + NOTIFY_EMAIL;
+                    statusBar.style.background = '#16a34a';
+                } else {
+                    statusBar.textContent = 'Email FAILED: ' + (d.message || JSON.stringify(d));
+                    statusBar.style.background = '#dc2626';
+                }
+            }
+        })
+        .catch(function(err) {
+            if (statusBar) {
+                statusBar.textContent = 'Email ERROR: ' + err.message;
+                statusBar.style.background = '#dc2626';
+            }
+        });
     }
 
     function showError(msg) {
