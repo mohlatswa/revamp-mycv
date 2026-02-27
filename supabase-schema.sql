@@ -1,5 +1,5 @@
 -- ======================================================================
--- CV Generator — Supabase Database Schema
+-- Revamp MyCV — Supabase Database Schema
 -- Run this SQL in your Supabase SQL Editor to set up the required tables.
 -- ======================================================================
 

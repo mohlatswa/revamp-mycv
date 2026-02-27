@@ -281,8 +281,8 @@
             body: JSON.stringify({
                 access_key: WEB3FORMS_KEY,
                 subject: 'New Subscription: ' + plan + ' Plan - ' + price,
-                from_name: 'CV Generator',
-                message: 'A user has subscribed on CV Generator.\n\n' +
+                from_name: 'Revamp MyCV',
+                message: 'A user has subscribed on Revamp MyCV.\n\n' +
                     'Full Name: ' + fullName + '\n' +
                     'Email Address: ' + email + '\n' +
                     'Plan: ' + plan + '\n' +
@@ -339,9 +339,9 @@
         var payload = JSON.stringify({
             access_key: APP_CONFIG.WEB3FORMS_KEY,
             subject: 'New Signup: ' + fullName,
-            from_name: 'CV Generator',
+            from_name: 'Revamp MyCV',
             to: APP_CONFIG.NOTIFICATION_EMAIL,
-            message: 'A new user has registered on CV Generator.\n\nFull Name: ' + fullName + '\nEmail Address: ' + email + '\nDate: ' + new Date().toLocaleString('en-ZA')
+            message: 'A new user has registered on Revamp MyCV.\n\nFull Name: ' + fullName + '\nEmail Address: ' + email + '\nDate: ' + new Date().toLocaleString('en-ZA')
         });
         if (navigator.sendBeacon) {
             navigator.sendBeacon(

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cv-generator-v16';
+const CACHE_NAME = 'revamp-mycv-v17';
 
 const APP_SHELL = [
     './',

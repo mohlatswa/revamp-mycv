@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free CV generator for South African job seekers. Create a professional CV in minutes.">
+    <meta name="description" content="Free CV builder for South African job seekers. Revamp your CV. Land the job.">
     <meta name="theme-color" content="#1a6b3c">
-    <title>CV Generator — Build Your Professional CV</title>
+    <title>Revamp MyCV — Revamp your CV. Land the job.</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>CV</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>RM</text></svg>">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/wizard.css">
     <link rel="stylesheet" href="css/templates.css">
@@ -34,8 +34,8 @@
     <!-- Header -->
     <header class="app-header">
         <div>
-            <h1 class="app-title">CV Generator</h1>
-            <p class="app-subtitle">Build your professional CV in minutes</p>
+            <h1 class="app-title">Revamp MyCV</h1>
+            <p class="app-subtitle">Revamp your CV. Land the job.</p>
         </div>
         <div class="user-menu" id="user-menu" style="display:none">
             <span class="subscription-badge" id="pro-badge" style="display:none">PRO</span>
@@ -43,6 +43,7 @@
             <span class="user-email" id="user-email"></span>
             <a href="admin.html" class="btn-logout" id="btn-admin" style="display:none;text-decoration:none">Admin</a>
             <button type="button" class="btn-my-cvs" id="btn-my-cvs" title="My CVs">&#128196; My CVs</button>
+            <button type="button" class="btn-share" id="btn-share" title="Share App">&#128279; Share</button>
             <button type="button" class="btn-settings" id="btn-settings" title="Settings">&#9881;</button>
             <button type="button" class="btn-logout" id="btn-logout">Sign Out</button>
         </div>
@@ -851,7 +852,7 @@
                     <p class="paywall-eft-heading">Bank Details:</p>
                     <table class="paywall-eft-table">
                         <tr><td>Bank</td><td><strong>FNB (First National Bank)</strong></td></tr>
-                        <tr><td>Account Name</td><td><strong>CV Generator</strong></td></tr>
+                        <tr><td>Account Name</td><td><strong>Revamp MyCV</strong></td></tr>
                         <tr><td>Account Number</td><td><strong>62812345678</strong></td></tr>
                         <tr><td>Branch Code</td><td><strong>250655</strong></td></tr>
                         <tr><td>Account Type</td><td><strong>Cheque / Current</strong></td></tr>
@@ -863,7 +864,7 @@
                             <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
                             <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
                             <li>Use your <strong>email address</strong> as the payment reference</li>
-                            <li>Send proof of payment to <strong>payments@cvgenerator.co.za</strong></li>
+                            <li>Send proof of payment to <strong>revamp.mycv@outlook.com</strong></li>
                         </ol>
                         <p class="paywall-eft-note">Your subscription will be activated within 24 hours after confirmation.</p>
                     </div>
@@ -887,20 +888,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="js/config.js?v=16"></script>
-    <script src="js/auth.js?v=16"></script>
-    <script src="js/subscription.js?v=16"></script>
-    <script src="js/cv-parser.js?v=16"></script>
-    <script src="js/skills-data.js?v=16"></script>
-    <script src="js/storage.js?v=16"></script>
-    <script src="js/cv-manager.js?v=16"></script>
-    <script src="js/settings.js?v=16"></script>
-    <script src="js/session-timer.js?v=16"></script>
-    <script src="js/wizard.js?v=16"></script>
-    <script src="js/summary-generator.js?v=16"></script>
-    <script src="js/cv-renderer.js?v=16"></script>
-    <script src="js/pdf-export.js?v=16"></script>
-    <script src="js/app.js?v=16"></script>
+    <script src="js/config.js?v=17"></script>
+    <script src="js/auth.js?v=17"></script>
+    <script src="js/subscription.js?v=17"></script>
+    <script src="js/cv-parser.js?v=17"></script>
+    <script src="js/skills-data.js?v=17"></script>
+    <script src="js/storage.js?v=17"></script>
+    <script src="js/cv-manager.js?v=17"></script>
+    <script src="js/settings.js?v=17"></script>
+    <script src="js/session-timer.js?v=17"></script>
+    <script src="js/wizard.js?v=17"></script>
+    <script src="js/summary-generator.js?v=17"></script>
+    <script src="js/cv-renderer.js?v=17"></script>
+    <script src="js/pdf-export.js?v=17"></script>
+    <script src="js/app.js?v=17"></script>
 
     <!-- Inline subscription email notification for paywall -->
     <script>
@@ -922,12 +923,52 @@
                     body: JSON.stringify({
                         access_key: WEB3FORMS_KEY,
                         subject: 'New Subscription: ' + plan + ' Plan - ' + price,
-                        from_name: 'CV Generator',
-                        message: 'A user has subscribed on CV Generator.\n\nEmail Address: ' + email + '\nPlan: ' + plan + '\nAmount: ' + price + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
+                        from_name: 'Revamp MyCV',
+                        message: 'A user has subscribed on Revamp MyCV.\n\nEmail Address: ' + email + '\nPlan: ' + plan + '\nAmount: ' + price + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
                     })
                 }).catch(function() {});
             }, 2500);
         });
+    })();
+    </script>
+
+    <!-- Share button -->
+    <script>
+    (function() {
+        var shareBtn = document.getElementById('btn-share');
+        if (!shareBtn) return;
+        var shareData = {
+            title: 'Revamp MyCV',
+            text: 'Check out Revamp MyCV — Revamp your CV and land the job!',
+            url: 'https://mohlatswa.github.io/revamp-mycv/'
+        };
+        shareBtn.addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share(shareData).catch(function() {});
+            } else {
+                var copyText = shareData.text + ' ' + shareData.url;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(copyText).then(function() {
+                        showCopyToast();
+                    });
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = copyText;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showCopyToast();
+                }
+            }
+        });
+        function showCopyToast() {
+            var t = document.getElementById('toast');
+            if (!t) return;
+            t.textContent = 'Link copied to clipboard!';
+            t.classList.add('show');
+            setTimeout(function() { t.classList.remove('show'); }, 3000);
+        }
     })();
     </script>
 </body>

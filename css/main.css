@@ -1147,6 +1147,22 @@ body.font-large { font-size: 18px; }
     color: #fff;
 }
 
+/* === Share Button (header) === */
+.btn-share {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-share:hover {
+    background: rgba(255,255,255,0.15);
+}
+
 /* === My CVs Modal === */
 .mycvs-overlay {
     position: fixed;
@@ -1865,6 +1881,11 @@ body.dark-mode .plan-card.recommended {
     }
 
     .btn-my-cvs {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+
+    .btn-share {
         font-size: 0.8rem;
         padding: 4px 8px;
     }

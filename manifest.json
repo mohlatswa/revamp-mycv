@@ -1,7 +1,7 @@
 {
-    "name": "CV Generator — Build Your Professional CV",
-    "short_name": "CV Generator",
-    "description": "Free CV generator for South African job seekers. Create a professional CV in minutes.",
+    "name": "Revamp MyCV — Revamp your CV. Land the job.",
+    "short_name": "Revamp MyCV",
+    "description": "Free CV builder for South African job seekers. Revamp your CV. Land the job.",
     "start_url": "./login.html",
     "display": "standalone",
     "background_color": "#f5f6fa",

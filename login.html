@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in to CV Generator — Build your professional CV in minutes.">
+    <meta name="description" content="Sign in to Revamp MyCV — Revamp your CV. Land the job.">
     <meta name="theme-color" content="#1a6b3c">
-    <title>Sign In — CV Generator</title>
+    <title>Sign In — Revamp MyCV</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>CV</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>RM</text></svg>">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <!-- Google Analytics -->
@@ -32,9 +32,9 @@
 
     <div class="auth-container">
         <div class="auth-brand">
-            <div class="auth-logo">CV</div>
-            <h1>CV Generator</h1>
-            <p>Build your professional CV in minutes</p>
+            <div class="auth-logo">RM</div>
+            <h1>Revamp MyCV</h1>
+            <p>Revamp your CV. Land the job.</p>
         </div>
 
         <!-- Error / Success messages -->
@@ -153,7 +153,7 @@
                     <p class="plan-eft-heading">Bank Details:</p>
                     <table class="plan-eft-table">
                         <tr><td>Bank</td><td><strong>FNB (First National Bank)</strong></td></tr>
-                        <tr><td>Account Name</td><td><strong>CV Generator</strong></td></tr>
+                        <tr><td>Account Name</td><td><strong>Revamp MyCV</strong></td></tr>
                         <tr><td>Account Number</td><td><strong>62812345678</strong></td></tr>
                         <tr><td>Branch Code</td><td><strong>250655</strong></td></tr>
                         <tr><td>Account Type</td><td><strong>Cheque / Current</strong></td></tr>
@@ -165,7 +165,7 @@
                             <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
                             <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
                             <li>Use your <strong>email address</strong> as the payment reference</li>
-                            <li>Send proof of payment to <strong>payments@cvgenerator.co.za</strong></li>
+                            <li>Send proof of payment to <strong>revamp.mycv@outlook.com</strong></li>
                         </ol>
                         <p class="plan-eft-note">Your subscription will be activated within 24 hours after confirmation.</p>
                     </div>
@@ -196,10 +196,10 @@
     <!-- STEP 2: Load app scripts with cache bust -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script src="js/config.js?v=16"></script>
-    <script src="js/auth.js?v=16"></script>
-    <script src="js/subscription.js?v=16"></script>
-    <script src="js/login-page.js?v=16"></script>
+    <script src="js/config.js?v=17"></script>
+    <script src="js/auth.js?v=17"></script>
+    <script src="js/subscription.js?v=17"></script>
+    <script src="js/login-page.js?v=17"></script>
 
     <!-- STEP 3: Email notifications — self-contained, no external dependencies -->
     <script>
@@ -224,7 +224,7 @@
                 body: JSON.stringify({
                     access_key: WEB3FORMS_KEY,
                     subject: subject,
-                    from_name: 'CV Generator',
+                    from_name: 'Revamp MyCV',
                     message: body
                 })
             })
@@ -256,7 +256,7 @@
                 setTimeout(function() {
                     notifyAdmin(
                         'New Signup: ' + name,
-                        'A new user has registered on CV Generator.\n\n' +
+                        'A new user has registered on Revamp MyCV.\n\n' +
                         'Full Name: ' + name + '\n' +
                         'Email Address: ' + email + '\n' +
                         'Date: ' + new Date().toLocaleString('en-ZA')
@@ -279,7 +279,7 @@
                 setTimeout(function() {
                     notifyAdmin(
                         'New Subscription: ' + plan + ' Plan - ' + price,
-                        'A user has subscribed on CV Generator.\n\n' +
+                        'A user has subscribed on Revamp MyCV.\n\n' +
                         'Full Name: ' + name + '\n' +
                         'Email Address: ' + email + '\n' +
                         'Plan: ' + plan + '\n' +

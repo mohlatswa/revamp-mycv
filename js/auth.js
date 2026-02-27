@@ -220,8 +220,8 @@ const Auth = (() => {
         if (APP_CONFIG.WEB3FORMS_KEY && !APP_CONFIG.WEB3FORMS_KEY.includes('YOUR_')) {
             var payload = JSON.stringify({
                 access_key: APP_CONFIG.WEB3FORMS_KEY,
-                subject: 'Password Reset — CV Generator',
-                from_name: 'CV Generator',
+                subject: 'Password Reset — Revamp MyCV',
+                from_name: 'Revamp MyCV',
                 to: APP_CONFIG.NOTIFICATION_EMAIL,
                 message: 'Password reset requested for: ' + email +
                          '\n\nTemporary password: ' + tempPass +

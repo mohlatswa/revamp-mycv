@@ -180,7 +180,7 @@ const Subscription = (() => {
         const priceRand = (amount / 100).toFixed(0);
         const confirmed = confirm(
             'LOCAL TEST MODE\n\n' +
-            'Subscribe to CV Generator ' + planName.toUpperCase() + '?\n' +
+            'Subscribe to Revamp MyCV ' + planName.toUpperCase() + '?\n' +
             'R' + priceRand + '/month\n\n' +
             'Click OK to simulate successful payment.'
         );
@@ -216,9 +216,9 @@ const Subscription = (() => {
             var payload = JSON.stringify({
                 access_key: APP_CONFIG.WEB3FORMS_KEY,
                 subject: 'New Subscription: ' + planName.charAt(0).toUpperCase() + planName.slice(1) + ' Plan - R' + priceRand,
-                from_name: 'CV Generator',
+                from_name: 'Revamp MyCV',
                 to: APP_CONFIG.NOTIFICATION_EMAIL,
-                message: 'A user has subscribed to a paid plan on CV Generator.\n\nFull Name: ' + fullName + '\nEmail Address: ' + email + '\nPlan: ' + planName.charAt(0).toUpperCase() + planName.slice(1) + '\nAmount: R' + priceRand + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
+                message: 'A user has subscribed to a paid plan on Revamp MyCV.\n\nFull Name: ' + fullName + '\nEmail Address: ' + email + '\nPlan: ' + planName.charAt(0).toUpperCase() + planName.slice(1) + '\nAmount: R' + priceRand + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
             });
             if (navigator.sendBeacon) {
                 navigator.sendBeacon(
