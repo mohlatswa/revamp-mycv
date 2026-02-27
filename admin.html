@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a6b3c">
+    <title>Admin — CV Generator</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>CV</text></svg>">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <!-- Google Analytics -->
+    <script>
+    (function() {
+        var s = JSON.parse(localStorage.getItem('cv_admin_settings') || '{}');
+        var gaId = s.gaMeasurementId || 'G-XXXXXXXXXX';
+        if (!gaId || gaId.includes('XXXX')) return;
+        var sc = document.createElement('script');
+        sc.async = true;
+        sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(sc);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId);
+    })();
+    </script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div>
+            <h1 class="app-title">Admin Panel</h1>
+            <p class="app-subtitle">System Management</p>
+        </div>
+        <div class="admin-header-actions">
+            <a href="index.html" class="btn-header-link">Back to App</a>
+            <button type="button" class="btn-logout" id="btn-logout">Sign Out</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+
+        <!-- Access denied -->
+        <div id="access-denied" class="admin-denied" style="display:none">
+            <h2>Access Denied</h2>
+            <p>You do not have permission to view this page.</p>
+            <a href="index.html" class="btn btn-primary">Go to App</a>
+        </div>
+
+        <!-- Admin content -->
+        <div id="admin-content" style="display:none">
+
+            <!-- Stats bar -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-total">0</span>
+                    <span class="stat-label">Total Users</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-admins">0</span>
+                    <span class="stat-label">Admins</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-subscribers">0</span>
+                    <span class="stat-label">Subscribers</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-downloads">0</span>
+                    <span class="stat-label">Downloads</span>
+                </div>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button type="button" class="admin-tab active" data-panel="panel-users">Users</button>
+                <button type="button" class="admin-tab" data-panel="panel-subscriptions">Subscriptions</button>
+                <button type="button" class="admin-tab" data-panel="panel-settings">System Settings</button>
+            </div>
+
+            <!-- ═══ USERS PANEL ═══ -->
+            <div class="admin-panel active" id="panel-users">
+                <div class="admin-toolbar">
+                    <h2>Users</h2>
+                    <button type="button" class="btn btn-primary" id="btn-add-user">+ Add User</button>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Subscription</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody"></tbody>
+                    </table>
+                    <p class="admin-empty" id="no-users" style="display:none">No users found.</p>
+                </div>
+            </div>
+
+            <!-- ═══ SUBSCRIPTIONS PANEL ═══ -->
+            <div class="admin-panel" id="panel-subscriptions">
+                <div class="admin-toolbar">
+                    <h2>Subscriptions</h2>
+                    <button type="button" class="btn btn-primary" id="btn-add-sub">+ Add Subscription</button>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="subs-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Start Date</th>
+                                <th>Reference</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subs-tbody"></tbody>
+                    </table>
+                    <p class="admin-empty" id="no-subs" style="display:none">No subscriptions found.</p>
+                </div>
+            </div>
+
+            <!-- ═══ SYSTEM SETTINGS PANEL ═══ -->
+            <div class="admin-panel" id="panel-settings">
+                <h2>System Settings</h2>
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Free Downloads</h3>
+                        <p class="settings-desc">Number of free PDF downloads before paywall.</p>
+                        <div class="settings-field">
+                            <input type="number" id="set-free-downloads" min="0" max="100" value="1">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-save-free-downloads">Save</button>
+                        </div>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Subscription Price</h3>
+                        <p class="settings-desc">Monthly subscription amount in Rands.</p>
+                        <div class="settings-field">
+                            <div class="input-prefix">
+                                <span>R</span>
+                                <input type="number" id="set-sub-price" min="0" step="1" value="49">
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-save-sub-price">Save</button>
+                        </div>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Paystack Keys</h3>
+                        <p class="settings-desc">Update Paystack public key and plan code.</p>
+                        <div class="auth-field">
+                            <label for="set-paystack-key">Public Key</label>
+                            <input type="text" id="set-paystack-key" placeholder="pk_test_...">
+                        </div>
+                        <div class="auth-field">
+                            <label for="set-paystack-plan">Plan Code</label>
+                            <input type="text" id="set-paystack-plan" placeholder="PLN_...">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-paystack" style="margin-top:8px">Save Keys</button>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Supabase Credentials</h3>
+                        <p class="settings-desc">Update Supabase project URL and anon key.</p>
+                        <div class="auth-field">
+                            <label for="set-supabase-url">Project URL</label>
+                            <input type="text" id="set-supabase-url" placeholder="https://your-project.supabase.co">
+                        </div>
+                        <div class="auth-field">
+                            <label for="set-supabase-key">Anon Key</label>
+                            <input type="text" id="set-supabase-key" placeholder="eyJ...">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-supabase" style="margin-top:8px">Save Credentials</button>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Google Analytics</h3>
+                        <p class="settings-desc">Track visitor activity across all pages.</p>
+                        <div class="auth-field">
+                            <label for="set-ga-id">GA Measurement ID</label>
+                            <input type="text" id="set-ga-id" placeholder="G-XXXXXXXXXX">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-ga" style="margin-top:8px">Save</button>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Email Notifications (Web3Forms)</h3>
+                        <p class="settings-desc">Configure email notification settings.</p>
+                        <div class="auth-field">
+                            <label for="set-web3forms-key">Web3Forms Access Key</label>
+                            <input type="text" id="set-web3forms-key" placeholder="Your access key">
+                        </div>
+                        <div class="auth-field">
+                            <label for="set-notify-email">Notification Email</label>
+                            <input type="email" id="set-notify-email" placeholder="revamp.mycv@outlook.com">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-email-settings" style="margin-top:8px">Save Settings</button>
+                    </div>
+                    <div class="settings-card settings-card-danger">
+                        <h3>Danger Zone</h3>
+                        <p class="settings-desc">Irreversible actions.</p>
+                        <button type="button" class="btn btn-danger btn-sm" id="btn-clear-all-downloads">Reset All Download Counts</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="btn-clear-all-subs" style="margin-top:8px">Cancel All Subscriptions</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add / Edit User Modal -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-card">
+            <h3 id="modal-title">Add User</h3>
+            <form id="form-user" novalidate>
+                <input type="hidden" id="edit-user-id">
+                <div class="auth-field">
+                    <label for="user-name">Full Name *</label>
+                    <input type="text" id="user-name" required placeholder="e.g. Thabo Mokoena">
+                </div>
+                <div class="auth-field">
+                    <label for="user-email">Email Address *</label>
+                    <input type="email" id="user-email" required placeholder="user@example.com">
+                </div>
+                <div class="auth-field" id="password-field">
+                    <label for="user-password">Password *</label>
+                    <input type="password" id="user-password" placeholder="Min. 6 characters">
+                </div>
+                <div class="auth-field">
+                    <label for="user-role">Role</label>
+                    <select id="user-role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="super_admin">Super Admin</option>
+                    </select>
+                </div>
+                <div id="modal-error" class="auth-message auth-message-error" style="display:none"></div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal-overlay" id="reset-modal">
+        <div class="modal-card">
+            <h3>Reset Password</h3>
+            <p class="modal-subtitle" id="reset-user-label">User: —</p>
+            <form id="form-reset" novalidate>
+                <input type="hidden" id="reset-user-id">
+                <div class="auth-field">
+                    <label for="new-password">New Password *</label>
+                    <input type="password" id="new-password" required placeholder="Min. 6 characters">
+                </div>
+                <div class="auth-field">
+                    <label for="confirm-new-password">Confirm Password *</label>
+                    <input type="password" id="confirm-new-password" required placeholder="Re-enter password">
+                </div>
+                <div id="reset-error" class="auth-message auth-message-error" style="display:none"></div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Reset Password</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-reset">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-card">
+            <h3>Delete User</h3>
+            <p id="delete-confirm-text">Are you sure? This cannot be undone.</p>
+            <input type="hidden" id="delete-user-id">
+            <div class="modal-actions">
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete">Delete</button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-delete">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscription Modal -->
+    <div class="modal-overlay" id="sub-modal">
+        <div class="modal-card">
+            <h3 id="sub-modal-title">Add Subscription</h3>
+            <form id="form-sub" novalidate>
+                <input type="hidden" id="sub-edit-user-id">
+                <div class="auth-field">
+                    <label for="sub-user-select">User *</label>
+                    <select id="sub-user-select" required></select>
+                </div>
+                <div class="auth-field">
+                    <label for="sub-status">Status</label>
+                    <select id="sub-status">
+                        <option value="active">Active</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                </div>
+                <div class="auth-field">
+                    <label for="sub-start-date">Start Date</label>
+                    <input type="date" id="sub-start-date">
+                </div>
+                <div class="auth-field">
+                    <label for="sub-reference">Payment Reference</label>
+                    <input type="text" id="sub-reference" placeholder="e.g. PAY_12345">
+                </div>
+                <div id="sub-error" class="auth-message auth-message-error" style="display:none"></div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-sub">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin-page.js"></script>
+</body>
+</html>

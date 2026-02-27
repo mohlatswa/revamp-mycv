@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free CV generator for South African job seekers. Create a professional CV in minutes.">
+    <meta name="theme-color" content="#1a6b3c">
+    <title>CV Generator — Build Your Professional CV</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>CV</text></svg>">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/wizard.css">
+    <link rel="stylesheet" href="css/templates.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <!-- Google Analytics -->
+    <script>
+    (function() {
+        var s = JSON.parse(localStorage.getItem('cv_admin_settings') || '{}');
+        var gaId = s.gaMeasurementId || 'G-XXXXXXXXXX';
+        if (!gaId || gaId.includes('XXXX')) return;
+        var sc = document.createElement('script');
+        sc.async = true;
+        sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(sc);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId);
+    })();
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div>
+            <h1 class="app-title">CV Generator</h1>
+            <p class="app-subtitle">Build your professional CV in minutes</p>
+        </div>
+        <div class="user-menu" id="user-menu" style="display:none">
+            <span class="subscription-badge" id="pro-badge" style="display:none">PRO</span>
+            <span class="subscription-expiry" id="subscription-expiry" style="display:none"></span>
+            <span class="user-email" id="user-email"></span>
+            <a href="admin.html" class="btn-logout" id="btn-admin" style="display:none;text-decoration:none">Admin</a>
+            <button type="button" class="btn-my-cvs" id="btn-my-cvs" title="My CVs">&#128196; My CVs</button>
+            <button type="button" class="btn-settings" id="btn-settings" title="Settings">&#9881;</button>
+            <button type="button" class="btn-logout" id="btn-logout">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <nav class="progress-bar" aria-label="Wizard progress">
+        <ol class="progress-steps">
+            <li class="progress-step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">Personal</span>
+            </li>
+            <li class="progress-step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">Experience</span>
+            </li>
+            <li class="progress-step" data-step="3">
+                <span class="step-number">3</span>
+                <span class="step-label">Education</span>
+            </li>
+            <li class="progress-step" data-step="4">
+                <span class="step-number">4</span>
+                <span class="step-label">Skills</span>
+            </li>
+            <li class="progress-step" data-step="5">
+                <span class="step-number">5</span>
+                <span class="step-label">References</span>
+            </li>
+            <li class="progress-step" data-step="6">
+                <span class="step-number">6</span>
+                <span class="step-label">Preview</span>
+            </li>
+        </ol>
+    </nav>
+
+    <main class="wizard-container">
+
+        <!-- CV Import (Optional) -->
+        <div class="cv-import-banner" id="cv-import-banner">
+            <div class="cv-import-content">
+                <div class="cv-import-icon">&#128196;</div>
+                <div class="cv-import-text">
+                    <strong>Already have a CV?</strong>
+                    <p>Upload it and we'll auto-fill the form for you. Supports PDF and Word documents.</p>
+                </div>
+                <div class="cv-import-actions">
+                    <label for="cvFileUpload" class="btn btn-primary btn-sm cv-import-btn">Upload CV</label>
+                    <input type="file" id="cvFileUpload" accept=".pdf,.doc,.docx,.txt" style="display:none">
+                    <button type="button" class="btn-import-dismiss" id="btn-import-dismiss">No thanks, I'll start fresh</button>
+                </div>
+            </div>
+            <div class="cv-import-progress" id="cv-import-progress" style="display:none">
+                <div class="cv-import-spinner"></div>
+                <span>Reading your CV...</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Personal Info -->
+        <section class="wizard-step active" id="step-1" aria-label="Personal Information">
+            <h2 class="step-title">Personal Information</h2>
+            <p class="step-description">Let's start with your basic details. Fields marked with * are required.</p>
+
+            <form class="wizard-form" id="form-personal" novalidate>
+                <!-- Photo Upload -->
+                <div class="photo-upload-group">
+                    <div class="photo-preview" id="photo-preview">
+                        <span class="photo-placeholder">+</span>
+                    </div>
+                    <div class="photo-upload-info">
+                        <label for="photoUpload" class="btn btn-secondary btn-sm photo-upload-btn">Upload Photo</label>
+                        <input type="file" id="photoUpload" accept="image/*" style="display:none">
+                        <p class="hint">Optional. A professional headshot makes your CV stand out.</p>
+                        <button type="button" class="btn-remove-photo" id="btn-remove-photo" style="display:none">Remove photo</button>
+                    </div>
+                </div>
+
+                <!-- ── Contact Details ── -->
+                <div class="form-section-divider">
+                    <span>Contact Details</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required
+                        placeholder="e.g. Thabo Mokoena" autocomplete="name">
+                    <span class="error-message" id="error-fullName"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required
+                            placeholder="e.g. 071 234 5678" autocomplete="tel">
+                        <span class="error-message" id="error-phone"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email"
+                            placeholder="e.g. thabo@email.com" autocomplete="email">
+                        <span class="error-message" id="error-email"></span>
+                    </div>
+                </div>
+
+                <!-- ── Address ── -->
+                <div class="form-section-divider">
+                    <span>Address</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Street Address</label>
+                    <input type="text" id="address" name="address"
+                        placeholder="e.g. 45 Mandela Drive, Unit 3" autocomplete="street-address">
+                    <span class="hint">Optional. Include suburb or street name for a complete CV.</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Town / City *</label>
+                        <input type="text" id="location" name="location" required
+                            placeholder="e.g. Polokwane" autocomplete="address-level2">
+                        <span class="error-message" id="error-location"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="province">Province *</label>
+                        <select id="province" name="province" required>
+                            <option value="">— Select —</option>
+                            <option value="Eastern Cape">Eastern Cape</option>
+                            <option value="Free State">Free State</option>
+                            <option value="Gauteng">Gauteng</option>
+                            <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                            <option value="Limpopo">Limpopo</option>
+                            <option value="Mpumalanga">Mpumalanga</option>
+                            <option value="North West">North West</option>
+                            <option value="Northern Cape">Northern Cape</option>
+                            <option value="Western Cape">Western Cape</option>
+                        </select>
+                        <span class="error-message" id="error-province"></span>
+                    </div>
+                </div>
+
+                <!-- ── Personal Details ── -->
+                <div class="form-section-divider">
+                    <span>Personal Details</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="">— Select —</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nationality">Nationality</label>
+                        <input type="text" id="nationality" name="nationality"
+                            placeholder="e.g. South African" value="South African">
+                    </div>
+                    <div class="form-group">
+                        <label for="maritalStatus">Marital Status</label>
+                        <select id="maritalStatus" name="maritalStatus">
+                            <option value="">— Select —</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="languages">Languages</label>
+                    <input type="text" id="languages" name="languages"
+                        placeholder="e.g. English, Sepedi, Zulu">
+                    <span class="hint">Separate with commas. SA employers value multilingual candidates.</span>
+                </div>
+
+                <!-- ── Additional Information ── -->
+                <div class="form-section-divider">
+                    <span>Additional Information</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="driversLicence">Driver's Licence</label>
+                        <select id="driversLicence" name="driversLicence">
+                            <option value="">None</option>
+                            <option value="Code A (Motorcycle)">Code A (Motorcycle)</option>
+                            <option value="Code B (Light Motor)">Code B (Light Motor)</option>
+                            <option value="Code C1 (Heavy Vehicle)">Code C1 (Heavy Vehicle)</option>
+                            <option value="Code C (Extra Heavy)">Code C (Extra Heavy)</option>
+                            <option value="Code EB (Articulated)">Code EB (Articulated)</option>
+                            <option value="Code EC1">Code EC1</option>
+                            <option value="Code EC">Code EC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="disability">Disability Status</label>
+                        <select id="disability" name="disability">
+                            <option value="">— Select —</option>
+                            <option value="None">None</option>
+                            <option value="Physical disability (mobility/dexterity)">Physical disability (mobility/dexterity)</option>
+                            <option value="Visual impairment (blind/partially sighted)">Visual impairment (blind/partially sighted)</option>
+                            <option value="Hearing impairment (deaf/hard of hearing)">Hearing impairment (deaf/hard of hearing)</option>
+                            <option value="Communication disability (speech/language)">Communication disability (speech/language)</option>
+                            <option value="Intellectual disability">Intellectual disability</option>
+                            <option value="Emotional/Behavioural disability">Emotional/Behavioural disability</option>
+                            <option value="Learning disability (e.g. dyslexia)">Learning disability (e.g. dyslexia)</option>
+                            <option value="Neurological disability (e.g. epilepsy)">Neurological disability (e.g. epilepsy)</option>
+                            <option value="Chronic illness (e.g. HIV, diabetes, asthma)">Chronic illness (e.g. HIV, diabetes, asthma)</option>
+                            <option value="Psychosocial disability (mental health)">Psychosocial disability (mental health)</option>
+                            <option value="Multiple disabilities">Multiple disabilities</option>
+                            <option value="Other">Other (type below)</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="disabilityOtherGroup" style="display:none">
+                    <label for="disabilityOther">Please specify your disability</label>
+                    <input type="text" id="disabilityOther" name="disabilityOther"
+                        placeholder="e.g. Albinism, Autism spectrum">
+                </div>
+
+                <!-- ── Career Objective ── -->
+                <div class="form-section-divider">
+                    <span>Career Objective</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="objective">Career Objective / Professional Summary</label>
+                    <textarea id="objective" name="objective" rows="3"
+                        placeholder="A short statement about your career goals and what you bring to the table (auto-generated if left empty)"></textarea>
+                    <span class="hint">Leave blank to auto-generate a compelling summary based on your experience and skills.</span>
+                </div>
+            </form>
+        </section>
+
+        <!-- Step 2: Work Experience -->
+        <section class="wizard-step" id="step-2" aria-label="Work Experience">
+            <h2 class="step-title">Work Experience</h2>
+            <p class="step-description">Add your work history, starting with the most recent. No experience? Skip to the next step.</p>
+
+            <div id="experience-list" class="entry-list"></div>
+
+            <div class="add-entry-form" id="experience-form">
+                <h3 class="form-section-title">Add Work Experience</h3>
+                <form class="wizard-form" id="form-experience" novalidate>
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title *</label>
+                        <input type="text" id="jobTitle" name="jobTitle" required
+                            placeholder="e.g. Farm Worker, Shop Assistant">
+                        <span class="error-message" id="error-jobTitle"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company / Employer *</label>
+                        <input type="text" id="company" name="company" required
+                            placeholder="e.g. Spar Limpopo">
+                        <span class="error-message" id="error-company"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date *</label>
+                            <input type="month" id="startDate" name="startDate" required>
+                            <span class="error-message" id="error-startDate"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="month" id="endDate" name="endDate">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="currentJob" name="currentJob">
+                                I currently work here
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duties">Main Duties</label>
+                        <textarea id="duties" name="duties" rows="3"
+                            placeholder="Describe your main responsibilities, one per line&#10;e.g. Assisted customers with purchases&#10;Packed and sorted goods"></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" id="btn-add-experience">Add This Job</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Step 3: Education -->
+        <section class="wizard-step" id="step-3" aria-label="Education">
+            <h2 class="step-title">Education</h2>
+            <p class="step-description">Add your schools, training courses, or qualifications.</p>
+
+            <div id="education-list" class="entry-list"></div>
+
+            <div class="add-entry-form" id="education-form">
+                <h3 class="form-section-title">Add Education</h3>
+                <form class="wizard-form" id="form-education" novalidate>
+                    <div class="form-group">
+                        <label for="institution">School / Institution *</label>
+                        <input type="text" id="institution" name="institution" required
+                            placeholder="e.g. Mokopane High School">
+                        <span class="error-message" id="error-institution"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qualification">Qualification / Certificate *</label>
+                        <input type="text" id="qualification" name="qualification" required
+                            placeholder="e.g. Matric, N3 Certificate">
+                        <span class="error-message" id="error-qualification"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eduYear">Year Completed</label>
+                        <input type="number" id="eduYear" name="eduYear"
+                            min="1970" max="2026" placeholder="e.g. 2020">
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" id="btn-add-education">Add This Entry</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Step 4: Skills -->
+        <section class="wizard-step" id="step-4" aria-label="Skills">
+            <h2 class="step-title">Skills</h2>
+            <p class="step-description">Select skills from the categories below, or add your own.</p>
+
+            <div class="skills-filter">
+                <label for="skillCategory">Filter by Category:</label>
+                <select id="skillCategory">
+                    <option value="all">All Categories</option>
+                </select>
+            </div>
+
+            <div id="skills-grid" class="skills-grid"></div>
+
+            <div class="custom-skill-form">
+                <label for="customSkill">Add a Custom Skill:</label>
+                <div class="input-with-button">
+                    <input type="text" id="customSkill" placeholder="Type a skill and press Add">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-add-skill">Add</button>
+                </div>
+            </div>
+
+            <div class="selected-skills">
+                <h3>Your Selected Skills:</h3>
+                <div id="selected-skills-list" class="chip-list"></div>
+                <p class="hint" id="no-skills-hint">No skills selected yet. Pick from above or add your own.</p>
+            </div>
+        </section>
+
+        <!-- Step 5: References -->
+        <section class="wizard-step" id="step-5" aria-label="References">
+            <h2 class="step-title">References</h2>
+            <p class="step-description">Add people who can vouch for your work. This section is optional.</p>
+
+            <div id="references-list" class="entry-list"></div>
+
+            <div class="add-entry-form" id="references-form">
+                <h3 class="form-section-title">Add a Reference</h3>
+                <form class="wizard-form" id="form-references" novalidate>
+                    <div class="form-group">
+                        <label for="refName">Reference Name *</label>
+                        <input type="text" id="refName" name="refName" required
+                            placeholder="e.g. Mr. James Nkosi">
+                        <span class="error-message" id="error-refName"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="refRelationship">Relationship *</label>
+                        <input type="text" id="refRelationship" name="refRelationship" required
+                            placeholder="e.g. Former Employer, Teacher">
+                        <span class="error-message" id="error-refRelationship"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="refPhone">Phone Number *</label>
+                        <input type="tel" id="refPhone" name="refPhone" required
+                            placeholder="e.g. 082 345 6789">
+                        <span class="error-message" id="error-refPhone"></span>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" id="btn-add-reference">Add This Reference</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Step 6: Preview & Download -->
+        <section class="wizard-step" id="step-6" aria-label="Preview and Download">
+            <h2 class="step-title">Preview & Download</h2>
+            <p class="step-description">Review your CV below. Choose a template, then download or print.</p>
+
+            <div class="template-chooser">
+                <label>Choose Template:</label>
+
+                <!-- Category Tabs -->
+                <div class="template-tabs">
+                    <button type="button" class="tab-btn active" data-tab="general">General</button>
+                    <button type="button" class="tab-btn" data-tab="profession">By Profession <span class="template-lock-badge" id="template-lock-badge" style="display:none">PRO</span></button>
+                </div>
+
+                <!-- General Templates -->
+                <div class="template-tab-content active" id="tab-general">
+                    <div class="template-grid" id="general-templates">
+                        <button type="button" class="template-card active" data-template="classic"><span class="template-name">Classic</span><span class="template-desc">Traditional, clean</span></button>
+                        <button type="button" class="template-card" data-template="modern"><span class="template-name">Modern</span><span class="template-desc">Green sidebar</span></button>
+                        <button type="button" class="template-card" data-template="sa-formal"><span class="template-name">SA Formal</span><span class="template-desc">Government standard</span></button>
+                        <button type="button" class="template-card" data-template="executive"><span class="template-name">Executive</span><span class="template-desc">Navy corporate</span></button>
+                        <button type="button" class="template-card" data-template="creative"><span class="template-name">Creative</span><span class="template-desc">Orange accent</span></button>
+                        <button type="button" class="template-card" data-template="elegant"><span class="template-name">Elegant</span><span class="template-desc">Teal two-column</span></button>
+                        <button type="button" class="template-card" data-template="compact"><span class="template-name">Compact</span><span class="template-desc">Dense two-column</span></button>
+                        <button type="button" class="template-card" data-template="timeline"><span class="template-name">Timeline</span><span class="template-desc">Visual career path</span></button>
+                        <button type="button" class="template-card" data-template="minimalist"><span class="template-name">Minimalist</span><span class="template-desc">Ultra-clean, airy</span></button>
+                        <button type="button" class="template-card" data-template="ats"><span class="template-name">ATS-Friendly</span><span class="template-desc">Tracking-system safe</span></button>
+                        <button type="button" class="template-card" data-template="graduate"><span class="template-name">Graduate</span><span class="template-desc">Entry-level focus</span></button>
+                        <button type="button" class="template-card" data-template="career-change"><span class="template-name">Career Change</span><span class="template-desc">Skills-first format</span></button>
+                        <button type="button" class="template-card" data-template="executive-modern"><span class="template-name">Executive Modern</span><span class="template-desc">Bold leadership</span></button>
+                        <button type="button" class="template-card" data-template="professional"><span class="template-name">Professional</span><span class="template-desc">Clean serif, versatile</span></button>
+                        <button type="button" class="template-card" data-template="infographic"><span class="template-name">Infographic</span><span class="template-desc">Visual skill bars</span></button>
+                        <button type="button" class="template-card" data-template="simple"><span class="template-name">Simple</span><span class="template-desc">Ultra-readable</span></button>
+                    </div>
+                </div>
+
+                <!-- Profession Templates -->
+                <div class="template-tab-content" id="tab-profession">
+                    <div class="template-search">
+                        <input type="text" id="templateSearch" placeholder="Search professions..." class="template-search-input">
+                    </div>
+                    <div class="template-grid" id="profession-templates">
+                        <button type="button" class="template-card" data-template="healthcare" data-keywords="nurse nursing medical hospital clinic health care doctor"><span class="template-name">Healthcare</span><span class="template-desc">Nursing, medical</span></button>
+                        <button type="button" class="template-card" data-template="tech" data-keywords="it developer software programmer computer coding web"><span class="template-name">IT / Tech</span><span class="template-desc">Developer, terminal</span></button>
+                        <button type="button" class="template-card" data-template="teaching" data-keywords="teacher education school lecturer tutor ece"><span class="template-name">Teaching</span><span class="template-desc">Education, academic</span></button>
+                        <button type="button" class="template-card" data-template="engineering" data-keywords="engineer civil mechanical electrical chemical industrial"><span class="template-name">Engineering</span><span class="template-desc">Technical, steel blue</span></button>
+                        <button type="button" class="template-card" data-template="finance" data-keywords="accounting accountant finance bookkeeper auditor tax bank"><span class="template-name">Finance</span><span class="template-desc">Accounting, formal</span></button>
+                        <button type="button" class="template-card" data-template="legal" data-keywords="law lawyer attorney advocate paralegal court"><span class="template-name">Legal</span><span class="template-desc">Law, conservative</span></button>
+                        <button type="button" class="template-card" data-template="hospitality" data-keywords="hotel restaurant tourism chef waiter catering food"><span class="template-name">Hospitality</span><span class="template-desc">Tourism, warm gold</span></button>
+                        <button type="button" class="template-card" data-template="government" data-keywords="government public service municipal civil servant department"><span class="template-name">Government</span><span class="template-desc">Public service</span></button>
+                        <button type="button" class="template-card" data-template="trades" data-keywords="artisan plumber electrician welder carpenter mechanic trade"><span class="template-name">Trades</span><span class="template-desc">Artisan, safety</span></button>
+                        <button type="button" class="template-card" data-template="mining" data-keywords="mining miner underground shaft mineral resources"><span class="template-name">Mining</span><span class="template-desc">Mining, earth tones</span></button>
+                        <button type="button" class="template-card" data-template="agriculture" data-keywords="farming farm agriculture livestock crop tractor"><span class="template-name">Agriculture</span><span class="template-desc">Farming, green</span></button>
+                        <button type="button" class="template-card" data-template="retail" data-keywords="retail sales shop store manager cashier merchandise"><span class="template-name">Retail / Sales</span><span class="template-desc">Results-driven</span></button>
+                        <button type="button" class="template-card" data-template="creative-design" data-keywords="design graphic designer media art photography video"><span class="template-name">Design / Media</span><span class="template-desc">Creative, bold</span></button>
+                        <button type="button" class="template-card" data-template="socialwork" data-keywords="social work ngo nonprofit community counsellor welfare"><span class="template-name">Social Work</span><span class="template-desc">NGO, community</span></button>
+                        <button type="button" class="template-card" data-template="security" data-keywords="security guard officer enforcement psira protection"><span class="template-name">Security</span><span class="template-desc">Law enforcement</span></button>
+                        <button type="button" class="template-card" data-template="logistics" data-keywords="transport logistics driver delivery fleet warehouse supply chain"><span class="template-name">Logistics</span><span class="template-desc">Transport, delivery</span></button>
+                        <button type="button" class="template-card" data-template="academic" data-keywords="researcher professor university phd lecturer postdoc publications"><span class="template-name">Academic</span><span class="template-desc">Research, publications</span></button>
+                        <button type="button" class="template-card" data-template="consulting" data-keywords="consultant strategy advisory management big4 deloitte pwc"><span class="template-name">Consulting</span><span class="template-desc">Strategy, advisory</span></button>
+                        <button type="button" class="template-card" data-template="nonprofit" data-keywords="ngo charity volunteer community development fundraising programme"><span class="template-name">Non-Profit</span><span class="template-desc">NGO, community impact</span></button>
+                        <button type="button" class="template-card" data-template="marketing" data-keywords="marketing digital brand content pr communications advertising"><span class="template-name">Marketing</span><span class="template-desc">Brand, campaigns</span></button>
+                        <button type="button" class="template-card" data-template="data-science" data-keywords="data science analyst machine learning ai python statistics kaggle"><span class="template-name">Data Science</span><span class="template-desc">Analytics, ML</span></button>
+                        <button type="button" class="template-card" data-template="aviation" data-keywords="pilot cabin crew aircraft airline flight aviation maintenance atc"><span class="template-name">Aviation</span><span class="template-desc">Pilot, crew, airline</span></button>
+                        <button type="button" class="template-card" data-template="media" data-keywords="journalist editor producer broadcaster podcaster writer content"><span class="template-name">Media</span><span class="template-desc">Journalism, editorial</span></button>
+                        <button type="button" class="template-card" data-template="banking" data-keywords="bank banking teller branch manager financial services credit"><span class="template-name">Banking</span><span class="template-desc">Financial services</span></button>
+                        <button type="button" class="template-card" data-template="medical-doctor" data-keywords="doctor physician specialist surgeon gp medical practitioner"><span class="template-name">Medical Doctor</span><span class="template-desc">Doctor, specialist</span></button>
+                        <button type="button" class="template-card" data-template="hr" data-keywords="hr human resources people recruitment talent management"><span class="template-name">HR / People</span><span class="template-desc">Human resources</span></button>
+                        <button type="button" class="template-card" data-template="project-manager" data-keywords="project manager pm agile scrum pmp prince2 methodology"><span class="template-name">Project Manager</span><span class="template-desc">PM, methodology tags</span></button>
+                        <button type="button" class="template-card" data-template="pharmacy" data-keywords="pharmacist pharmacy pharmaceutical dispensary medicine drug"><span class="template-name">Pharmacy</span><span class="template-desc">Pharmaceutical</span></button>
+                        <button type="button" class="template-card" data-template="real-estate" data-keywords="real estate property agent broker housing development"><span class="template-name">Real Estate</span><span class="template-desc">Property sector</span></button>
+                        <button type="button" class="template-card" data-template="tourism" data-keywords="tour guide tourism travel safari adventure heritage culture"><span class="template-name">Tourism Guide</span><span class="template-desc">Travel, guiding</span></button>
+                    </div>
+                </div>
+
+                <!-- Color Customization -->
+                <div class="color-customizer">
+                    <label>Accent Colour:</label>
+                    <div class="color-presets" id="color-presets">
+                        <button type="button" class="color-dot active" data-color="" title="Default (template colour)" style="background:linear-gradient(135deg,#1B2A4A,#2D5F3E,#6B2737);"></button>
+                        <button type="button" class="color-dot" data-color="#1B2A4A" title="Deep Navy" style="background:#1B2A4A"></button>
+                        <button type="button" class="color-dot" data-color="#4A6FA5" title="Steel Blue" style="background:#4A6FA5"></button>
+                        <button type="button" class="color-dot" data-color="#5B7B9A" title="Slate Blue" style="background:#5B7B9A"></button>
+                        <button type="button" class="color-dot" data-color="#2C6E6F" title="Dark Teal" style="background:#2C6E6F"></button>
+                        <button type="button" class="color-dot" data-color="#2D5F3E" title="Forest Green" style="background:#2D5F3E"></button>
+                        <button type="button" class="color-dot" data-color="#355E3B" title="Hunter Green" style="background:#355E3B"></button>
+                        <button type="button" class="color-dot" data-color="#6B2737" title="Burgundy" style="background:#6B2737"></button>
+                        <button type="button" class="color-dot" data-color="#8B5E3C" title="Terracotta" style="background:#8B5E3C"></button>
+                        <button type="button" class="color-dot" data-color="#8A7968" title="Warm Taupe" style="background:#8A7968"></button>
+                        <button type="button" class="color-dot" data-color="#2D2D2D" title="Charcoal" style="background:#2D2D2D"></button>
+                        <button type="button" class="color-dot" data-color="#4A4A4A" title="Graphite" style="background:#4A4A4A"></button>
+                        <button type="button" class="color-dot" data-color="#3B3F45" title="Dark Slate" style="background:#3B3F45"></button>
+                        <button type="button" class="color-dot" data-color="#5C6B4F" title="Muted Olive" style="background:#5C6B4F"></button>
+                        <button type="button" class="color-dot" data-color="#831843" title="Wine" style="background:#831843"></button>
+                        <button type="button" class="color-dot" data-color="#4c1d95" title="Deep Purple" style="background:#4c1d95"></button>
+                    </div>
+                    <div class="color-custom-row">
+                        <input type="color" id="customColor" value="#1a6b3c" title="Pick any colour">
+                        <span class="hint">Pick any custom colour</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-actions">
+                <button type="button" class="btn btn-primary" id="btn-download-pdf">
+                    Download PDF
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-print">
+                    Print CV
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-save-cv">
+                    Save CV
+                </button>
+                <button type="button" class="btn btn-success" id="btn-finish-cv">
+                    Finish &amp; Save
+                </button>
+            </div>
+
+            <div id="cv-preview" class="cv-preview"></div>
+        </section>
+
+    </main>
+
+    <!-- Wizard Navigation -->
+    <nav class="wizard-nav" aria-label="Step navigation">
+        <button type="button" class="btn btn-secondary" id="btn-prev" disabled>
+            &larr; Back
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-next">
+            Next &rarr;
+        </button>
+    </nav>
+
+    <!-- My CVs Modal -->
+    <div class="mycvs-overlay" id="mycvs-overlay">
+        <div class="mycvs-panel">
+            <div class="mycvs-header">
+                <div class="mycvs-title-row">
+                    <h2>My CVs</h2>
+                    <span class="mycvs-count" id="mycvs-count">0</span>
+                </div>
+                <button type="button" class="settings-close" id="mycvs-close">&times;</button>
+            </div>
+
+            <!-- Tabs: Saved CVs / Recycle Bin -->
+            <div class="mycvs-tabs">
+                <button type="button" class="mycvs-tab active" data-mycvs-tab="saved">Saved CVs</button>
+                <button type="button" class="mycvs-tab" data-mycvs-tab="trash">Recycle Bin <span class="mycvs-trash-count" id="mycvs-trash-count" style="display:none">0</span></button>
+            </div>
+
+            <!-- Saved CVs Tab -->
+            <div class="mycvs-tab-content active" id="mycvs-tab-saved">
+                <div class="mycvs-toolbar">
+                    <input type="text" class="mycvs-search" id="mycvs-search" placeholder="Search by name...">
+                    <div class="mycvs-sort">
+                        <select id="mycvs-sort-field">
+                            <option value="updatedAt">Date modified</option>
+                            <option value="createdAt">Date created</option>
+                            <option value="name">Name</option>
+                        </select>
+                        <button type="button" class="mycvs-sort-dir" id="mycvs-sort-dir" title="Toggle sort direction">&#9660; Newest</button>
+                    </div>
+                </div>
+                <div class="mycvs-list" id="saved-cvs-list"></div>
+                <div class="mycvs-empty" id="mycvs-empty" style="display:none">
+                    <p>No saved CVs yet.</p>
+                    <p class="hint">Use the <strong>Save CV</strong> button on the Preview step to save your first CV.</p>
+                </div>
+            </div>
+
+            <!-- Recycle Bin Tab -->
+            <div class="mycvs-tab-content" id="mycvs-tab-trash">
+                <div class="mycvs-trash-toolbar">
+                    <p class="mycvs-trash-hint">Deleted CVs are kept for 30 days before being permanently removed.</p>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-empty-trash" style="display:none">Empty Recycle Bin</button>
+                </div>
+                <div class="mycvs-list" id="trash-cvs-list"></div>
+                <div class="mycvs-empty" id="mycvs-trash-empty" style="display:none">
+                    <p>Recycle bin is empty.</p>
+                    <p class="hint">Deleted CVs will appear here so you can restore them.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="settings-overlay" id="settings-overlay">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button type="button" class="settings-close" id="settings-close">&times;</button>
+            </div>
+
+            <div class="settings-tabs">
+                <button type="button" class="settings-tab active" data-settings-tab="appearance">Appearance</button>
+                <button type="button" class="settings-tab" data-settings-tab="session">Session</button>
+                <button type="button" class="settings-tab" data-settings-tab="data">Data</button>
+                <button type="button" class="settings-tab" data-settings-tab="subscription">Subscription</button>
+                <button type="button" class="settings-tab" data-settings-tab="about">About</button>
+            </div>
+
+            <!-- Appearance Tab -->
+            <div class="settings-tab-content active" id="settings-tab-appearance">
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Theme</strong>
+                        <span>Switch between light and dark mode</span>
+                    </div>
+                    <div class="settings-control">
+                        <select id="setting-theme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Font Size</strong>
+                        <span>Adjust the interface text size</span>
+                    </div>
+                    <div class="settings-control">
+                        <select id="setting-fontSize">
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>UI Accent Colour</strong>
+                        <span>Custom app colour (leave empty for default)</span>
+                    </div>
+                    <div class="settings-control">
+                        <input type="color" id="setting-uiAccentColor" value="#1a6b3c">
+                        <button type="button" class="btn btn-sm btn-secondary" id="setting-resetAccent">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Tab -->
+            <div class="settings-tab-content" id="settings-tab-session">
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Session Timeout</strong>
+                        <span>Auto-logout after inactivity</span>
+                    </div>
+                    <div class="settings-control settings-control-range">
+                        <input type="range" id="setting-sessionTimeout" min="1" max="30" value="7">
+                        <span class="settings-range-value" id="setting-sessionTimeout-val">7 min</span>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Auto-Save</strong>
+                        <span>Automatically save form changes</span>
+                    </div>
+                    <div class="settings-control">
+                        <label class="settings-toggle">
+                            <input type="checkbox" id="setting-autoSave" checked>
+                            <span class="settings-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Tab -->
+            <div class="settings-tab-content" id="settings-tab-data">
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Export CV Data</strong>
+                        <span>Download all your data as a JSON file</span>
+                    </div>
+                    <div class="settings-control">
+                        <button type="button" class="btn btn-sm btn-secondary" id="setting-export">Export</button>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Import CV Data</strong>
+                        <span>Restore data from a JSON backup</span>
+                    </div>
+                    <div class="settings-control">
+                        <label class="btn btn-sm btn-secondary" for="setting-import-file" style="cursor:pointer">Import</label>
+                        <input type="file" id="setting-import-file" accept=".json" style="display:none">
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Clear All Data</strong>
+                        <span>Permanently delete all saved CV data</span>
+                    </div>
+                    <div class="settings-control">
+                        <button type="button" class="btn btn-sm btn-danger" id="setting-clearAll">Clear</button>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Reset Settings</strong>
+                        <span>Restore all settings to factory defaults</span>
+                    </div>
+                    <div class="settings-control">
+                        <button type="button" class="btn btn-sm btn-danger" id="setting-resetDefaults">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Tab -->
+            <div class="settings-tab-content" id="settings-tab-subscription">
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Current Plan</strong>
+                        <span>Your active subscription tier</span>
+                    </div>
+                    <div class="settings-control"><span id="setting-current-plan">Free</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Expiry Countdown</strong>
+                        <span>Days remaining in your billing cycle</span>
+                    </div>
+                    <div class="settings-control"><span id="setting-expiry-countdown">—</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Started On</strong>
+                        <span>When your current subscription began</span>
+                    </div>
+                    <div class="settings-control"><span id="setting-started-on">—</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Upgrade Plan</strong>
+                        <span>Switch to a higher tier for more features</span>
+                    </div>
+                    <div class="settings-control">
+                        <button type="button" class="btn btn-sm btn-primary" id="setting-upgrade-btn">Upgrade</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div class="settings-tab-content" id="settings-tab-about">
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>App Version</strong>
+                    </div>
+                    <div class="settings-control"><span>v7.0</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Storage Usage</strong>
+                    </div>
+                    <div class="settings-control"><span id="setting-storage-usage">—</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Templates</strong>
+                    </div>
+                    <div class="settings-control"><span>46+ professional templates</span></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">
+                        <strong>Built for South African job seekers</strong>
+                        <span>Includes SA Employment Equity Act disability categories, government templates, and local formatting.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paywall Modal — 2-tier -->
+    <div class="paywall-overlay" id="paywall-overlay">
+        <div class="paywall-card paywall-card-wide">
+            <h2>Upgrade Your Plan</h2>
+            <p class="paywall-subtitle">Unlock profession templates, unlimited downloads, and more.</p>
+            <div class="paywall-tiers">
+                <div class="paywall-tier-card" data-tier="pro">
+                    <h3>Pro</h3>
+                    <div class="paywall-tier-price">R49<span>/month</span></div>
+                    <ul class="paywall-tier-features">
+                        <li>Unlimited PDF downloads</li>
+                        <li>All 30 profession templates</li>
+                        <li>Save up to 10 CVs</li>
+                        <li>Full AI summary generator</li>
+                    </ul>
+                    <button type="button" class="btn-subscribe" data-tier="pro">Subscribe Pro</button>
+                </div>
+                <div class="paywall-tier-card recommended" data-tier="premium">
+                    <span class="paywall-tier-badge">Best Value</span>
+                    <h3>Premium</h3>
+                    <div class="paywall-tier-price">R149<span>/month</span></div>
+                    <ul class="paywall-tier-features">
+                        <li>Everything in Pro</li>
+                        <li>Unlimited saved CVs</li>
+                        <li>WhatsApp priority support</li>
+                        <li>Cover letter builder (coming soon)</li>
+                    </ul>
+                    <button type="button" class="btn-subscribe btn-subscribe-premium" data-tier="premium">Subscribe Premium</button>
+                </div>
+            </div>
+            <!-- EFT Payment Option -->
+            <div class="paywall-eft">
+                <div class="paywall-eft-divider"><span>or pay via EFT / Bank Transfer</span></div>
+                <div class="paywall-eft-details">
+                    <p class="paywall-eft-heading">Bank Details:</p>
+                    <table class="paywall-eft-table">
+                        <tr><td>Bank</td><td><strong>FNB (First National Bank)</strong></td></tr>
+                        <tr><td>Account Name</td><td><strong>CV Generator</strong></td></tr>
+                        <tr><td>Account Number</td><td><strong>62812345678</strong></td></tr>
+                        <tr><td>Branch Code</td><td><strong>250655</strong></td></tr>
+                        <tr><td>Account Type</td><td><strong>Cheque / Current</strong></td></tr>
+                    </table>
+                    <div class="paywall-eft-steps">
+                        <p><strong>How to pay:</strong></p>
+                        <ol>
+                            <li>Log in to your banking app (FNB, Capitec, Standard Bank, Absa, Nedbank, etc.)</li>
+                            <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
+                            <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
+                            <li>Use your <strong>email address</strong> as the payment reference</li>
+                            <li>Send proof of payment to <strong>payments@cvgenerator.co.za</strong></li>
+                        </ol>
+                        <p class="paywall-eft-note">Your subscription will be activated within 24 hours after confirmation.</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn-paywall-close" id="btn-paywall-close">Maybe later</button>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Clear stale service worker cache -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        caches.keys().then(function(k) { k.forEach(function(n) { caches.delete(n); }); });
+        navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(w) { w.unregister(); }); });
+    }
+    </script>
+    <!-- Scripts (cache-busted) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="js/config.js?v=15"></script>
+    <script src="js/auth.js?v=15"></script>
+    <script src="js/subscription.js?v=15"></script>
+    <script src="js/cv-parser.js?v=15"></script>
+    <script src="js/skills-data.js?v=15"></script>
+    <script src="js/storage.js?v=15"></script>
+    <script src="js/cv-manager.js?v=15"></script>
+    <script src="js/settings.js?v=15"></script>
+    <script src="js/session-timer.js?v=15"></script>
+    <script src="js/wizard.js?v=15"></script>
+    <script src="js/summary-generator.js?v=15"></script>
+    <script src="js/cv-renderer.js?v=15"></script>
+    <script src="js/pdf-export.js?v=15"></script>
+    <script src="js/app.js?v=15"></script>
+
+    <!-- Inline subscription email notification for paywall -->
+    <script>
+    (function() {
+        var WEB3FORMS_KEY = 'c697111c-4475-4e48-9bb7-756a58234f6a';
+        document.addEventListener('click', function(e) {
+            var btn = e.target;
+            if (!btn.classList.contains('btn-subscribe') || !btn.dataset.tier) return;
+            var tier = btn.dataset.tier;
+            var plan = tier === 'premium' ? 'Premium' : 'Pro';
+            var price = tier === 'premium' ? 'R149' : 'R49';
+
+            setTimeout(function() {
+                var emailEl = document.getElementById('user-email');
+                var email = emailEl ? emailEl.textContent.trim() : 'Unknown';
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: WEB3FORMS_KEY,
+                        subject: 'New Subscription: ' + plan + ' Plan - ' + price,
+                        from_name: 'CV Generator',
+                        message: 'A user has subscribed on CV Generator.\n\nEmail Address: ' + email + '\nPlan: ' + plan + '\nAmount: ' + price + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
+                    })
+                }).catch(function() {});
+            }, 2500);
+        });
+    })();
+    </script>
+</body>
+</html>

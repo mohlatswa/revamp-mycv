@@ -1,0 +1,681 @@
+/* ======================================================================
+   AUTH PAGE — Login / Register
+   ====================================================================== */
+
+.auth-body {
+    background: linear-gradient(135deg, #f5f6fa 0%, #e8ece6 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-brand {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: #1a6b3c;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    font-family: Arial, sans-serif;
+}
+
+.auth-brand h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 4px;
+}
+
+.auth-brand p {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0;
+}
+
+/* ── Auth Card ── */
+.auth-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    display: none;
+}
+
+.auth-card.active {
+    display: block;
+}
+
+.auth-card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+/* ── Form Fields ── */
+.auth-field {
+    margin-bottom: 16px;
+}
+
+.auth-field label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.auth-field input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.auth-field input:focus {
+    outline: none;
+    border-color: #1a6b3c;
+    box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1);
+}
+
+/* ── Auth Button ── */
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Switch Link ── */
+.auth-switch {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: #666;
+    margin-top: 16px;
+}
+
+.auth-switch a {
+    color: #1a6b3c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* ── Messages ── */
+.auth-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.auth-message-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.auth-message-success {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+
+/* ======================================================================
+   USER MENU — Header bar on main app
+   ====================================================================== */
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+}
+
+.user-email {
+    color: #fff;
+    opacity: 0.9;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.subscription-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #fbbf24;
+    color: #1a1a2e;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subscription-expiry {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+}
+
+.subscription-expiry.expiry-warning {
+    background: #f59e0b;
+    color: #1a1a2e;
+}
+
+.subscription-expiry.expiry-urgent {
+    background: #dc2626;
+    color: #fff;
+    animation: pulse-urgent 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-urgent {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+
+/* ======================================================================
+   PAYWALL MODAL — Subscription prompt
+   ====================================================================== */
+
+.paywall-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    padding: 16px;
+}
+
+.paywall-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.paywall-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 32px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.paywall-overlay.show .paywall-card {
+    transform: translateY(0);
+}
+
+.paywall-card h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 8px;
+}
+
+.paywall-card .paywall-subtitle {
+    font-size: 0.9375rem;
+    color: #666;
+    margin: 0 0 24px;
+}
+
+.paywall-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a6b3c;
+    margin: 0 0 4px;
+}
+
+.paywall-price-note {
+    font-size: 0.8125rem;
+    color: #888;
+    margin: 0 0 24px;
+}
+
+.paywall-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    text-align: left;
+}
+
+.paywall-features li {
+    padding: 8px 0;
+    font-size: 0.9375rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.paywall-features li::before {
+    content: '\2713';
+    color: #1a6b3c;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.btn-subscribe {
+    width: 100%;
+    padding: 14px;
+    background: #1a6b3c;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 12px;
+}
+
+.btn-subscribe:hover {
+    background: #155d33;
+}
+
+.btn-paywall-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.btn-paywall-close:hover {
+    color: #333;
+}
+
+/* === 2-Tier Paywall Layout === */
+.paywall-card-wide {
+    max-width: 640px;
+}
+
+.paywall-tiers {
+    display: flex;
+    gap: 16px;
+    margin: 20px 0 16px;
+}
+
+.paywall-tier-card {
+    flex: 1;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.paywall-tier-card:hover {
+    border-color: #1a6b3c;
+}
+
+.paywall-tier-card.recommended {
+    border-color: #1a6b3c;
+    box-shadow: 0 4px 16px rgba(26,107,60,0.12);
+}
+
+.paywall-tier-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a6b3c;
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.paywall-tier-card h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 6px;
+}
+
+.paywall-tier-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a6b3c;
+    margin: 0 0 12px;
+}
+
+.paywall-tier-price span {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #888;
+}
+
+.paywall-tier-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    text-align: left;
+}
+
+.paywall-tier-features li {
+    padding: 5px 0;
+    font-size: 0.8125rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.paywall-tier-features li::before {
+    content: '\2713';
+    color: #1a6b3c;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.paywall-tier-card .btn-subscribe {
+    width: 100%;
+}
+
+.btn-subscribe-premium {
+    background: #0f4c2d;
+}
+
+.btn-subscribe-premium:hover {
+    background: #0b3821;
+}
+
+/* === Dark Mode — Paywall Tiers === */
+body.dark-mode .paywall-card {
+    background: #16213e;
+}
+
+body.dark-mode .paywall-card h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .paywall-card .paywall-subtitle {
+    color: #a0a0a0;
+}
+
+body.dark-mode .paywall-tier-card {
+    border-color: #374151;
+    background: #1a1a2e;
+}
+
+body.dark-mode .paywall-tier-card.recommended {
+    border-color: #2d5f3e;
+}
+
+body.dark-mode .paywall-tier-card h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .paywall-tier-features li {
+    color: #c0c0c0;
+    border-color: #2a2a3e;
+}
+
+/* ======================================================================
+   EFT PAYMENT INFO — Paywall & Plan Selection
+   ====================================================================== */
+
+/* Paywall EFT section */
+.paywall-eft {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.paywall-eft-divider,
+.plan-eft-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.paywall-eft-divider::before,
+.paywall-eft-divider::after,
+.plan-eft-divider::before,
+.plan-eft-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #d1d5db;
+}
+
+.paywall-eft-divider span,
+.plan-eft-divider span {
+    font-size: 0.8125rem;
+    color: #888;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.paywall-eft-details,
+.plan-eft-details {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 18px;
+}
+
+.paywall-eft-heading,
+.plan-eft-heading {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 10px;
+}
+
+.paywall-eft-table,
+.plan-eft-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+}
+
+.paywall-eft-table td,
+.plan-eft-table td {
+    padding: 5px 0;
+    color: #555;
+    vertical-align: top;
+}
+
+.paywall-eft-table td:first-child,
+.plan-eft-table td:first-child {
+    width: 40%;
+    color: #888;
+}
+
+.paywall-eft-table td strong,
+.plan-eft-table td strong {
+    color: #1a1a2e;
+}
+
+.paywall-eft-steps,
+.plan-eft-steps {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+}
+
+.paywall-eft-steps p,
+.plan-eft-steps p {
+    font-size: 0.8125rem;
+    color: #333;
+    margin: 0 0 8px;
+}
+
+.paywall-eft-steps ol,
+.plan-eft-steps ol {
+    padding-left: 20px;
+    margin: 0 0 10px;
+}
+
+.paywall-eft-steps li,
+.plan-eft-steps li {
+    font-size: 0.8125rem;
+    color: #555;
+    padding: 3px 0;
+    line-height: 1.5;
+}
+
+.paywall-eft-note,
+.plan-eft-note {
+    font-size: 0.75rem;
+    color: #1a6b3c;
+    font-weight: 600;
+    margin: 8px 0 0 !important;
+    padding: 8px 10px;
+    background: #f0fdf4;
+    border-radius: 6px;
+    border: 1px solid #bbf7d0;
+}
+
+/* Plan page EFT section */
+.plan-eft-info {
+    margin-top: 24px;
+    text-align: left;
+}
+
+/* === Dark Mode — EFT === */
+body.dark-mode .paywall-eft-details,
+body.dark-mode .plan-eft-details {
+    background: #1a1a2e;
+    border-color: #374151;
+}
+
+body.dark-mode .paywall-eft-heading,
+body.dark-mode .plan-eft-heading {
+    color: #e0e0e0;
+}
+
+body.dark-mode .paywall-eft-table td {
+    color: #c0c0c0;
+}
+
+body.dark-mode .paywall-eft-table td:first-child {
+    color: #a0a0a0;
+}
+
+body.dark-mode .paywall-eft-table td strong {
+    color: #e0e0e0;
+}
+
+body.dark-mode .paywall-eft-steps p,
+body.dark-mode .plan-eft-steps p {
+    color: #c0c0c0;
+}
+
+body.dark-mode .paywall-eft-steps li,
+body.dark-mode .plan-eft-steps li {
+    color: #a0a0a0;
+}
+
+body.dark-mode .paywall-eft-note,
+body.dark-mode .plan-eft-note {
+    background: #1a3a2a;
+    border-color: #2d5f3e;
+    color: #4ade80;
+}
+
+body.dark-mode .paywall-eft-divider::before,
+body.dark-mode .paywall-eft-divider::after,
+body.dark-mode .plan-eft-divider::before,
+body.dark-mode .plan-eft-divider::after {
+    background: #374151;
+}
+
+body.dark-mode .paywall-eft-divider span,
+body.dark-mode .plan-eft-divider span {
+    color: #a0a0a0;
+}
+
+/* ======================================================================
+   RESPONSIVE
+   ====================================================================== */
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 24px 20px;
+    }
+
+    .paywall-card {
+        padding: 28px 20px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .paywall-tiers {
+        flex-direction: column;
+    }
+
+    .user-email {
+        display: none;
+    }
+
+    .paywall-eft-table td,
+    .plan-eft-table td {
+        font-size: 0.75rem;
+    }
+}

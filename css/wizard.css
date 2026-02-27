@@ -1,0 +1,355 @@
+/* === Progress Bar === */
+.progress-bar {
+    background: var(--color-white);
+    padding: 12px 16px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.progress-steps {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    min-width: 340px;
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    right: 24px;
+    height: 2px;
+    background: var(--color-border);
+    z-index: 0;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-border);
+    color: var(--color-text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all var(--transition);
+}
+
+.step-label {
+    font-size: 0.6875rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+    transition: color var(--transition);
+    white-space: nowrap;
+}
+
+/* Active step */
+.progress-step.active .step-number {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.progress-step.active .step-label {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* Completed step */
+.progress-step.completed .step-number {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: var(--color-white);
+}
+
+.progress-step.completed .step-number::after {
+    content: '\2713';
+    font-size: 1rem;
+}
+
+.progress-step.completed .step-number span {
+    display: none;
+}
+
+.progress-step.completed .step-label {
+    color: var(--color-success);
+}
+
+/* === Wizard Steps === */
+.wizard-container {
+    padding: 20px 16px;
+}
+
+.wizard-step {
+    display: none;
+}
+
+.wizard-step.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step-title {
+    font-size: 1.375rem;
+    color: var(--color-secondary);
+    margin-bottom: 4px;
+}
+
+.step-description {
+    color: var(--color-text-light);
+    font-size: 0.9375rem;
+    margin-bottom: 20px;
+}
+
+/* === Wizard Navigation === */
+.wizard-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    z-index: 100;
+}
+
+.wizard-nav .btn {
+    flex: 1;
+    max-width: 200px;
+}
+
+/* On step 6 (preview), hide the next button from nav */
+.wizard-nav .btn-hidden {
+    visibility: hidden;
+}
+
+/* === Responsive === */
+@media (min-width: 600px) {
+    .wizard-nav {
+        max-width: 640px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .step-number {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+    }
+}
+
+
+/* === Photo Upload === */
+.photo-upload-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px dashed #d1d5db;
+}
+
+.photo-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #d1d5db;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-placeholder {
+    font-size: 1.75rem;
+    color: #9ca3af;
+    font-weight: 300;
+}
+
+.photo-upload-info {
+    flex: 1;
+}
+
+.photo-upload-btn {
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 4px;
+}
+
+.btn-remove-photo {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+}
+.btn-remove-photo:hover {
+    text-decoration: underline;
+}
+
+/* === CV Import Banner === */
+.cv-import-banner {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.cv-import-banner.dismissed {
+    display: none;
+}
+
+.cv-import-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cv-import-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.cv-import-text {
+    flex: 1;
+}
+
+.cv-import-text h3 {
+    font-size: 1rem;
+    color: #1e3a5f;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+}
+
+.cv-import-text p {
+    font-size: 0.8125rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.cv-import-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.cv-import-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: var(--color-primary, #2563eb);
+    color: #fff;
+    transition: background 0.2s;
+}
+
+.cv-import-btn:hover {
+    background: var(--color-primary-dark, #1d4ed8);
+}
+
+.btn-import-dismiss {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-import-dismiss:hover {
+    background: #f1f5f9;
+}
+
+.cv-import-progress {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.cv-import-progress.active {
+    display: flex;
+}
+
+.cv-import-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e2e8f0;
+    border-top-color: var(--color-primary, #2563eb);
+    border-radius: 50%;
+    animation: importSpin 0.6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes importSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 480px) {
+    .cv-import-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cv-import-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}

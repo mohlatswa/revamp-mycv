@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to CV Generator — Build your professional CV in minutes.">
+    <meta name="theme-color" content="#1a6b3c">
+    <title>Sign In — CV Generator</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>CV</text></svg>">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <!-- Google Analytics -->
+    <script>
+    (function() {
+        var s = JSON.parse(localStorage.getItem('cv_admin_settings') || '{}');
+        var gaId = s.gaMeasurementId || 'G-XXXXXXXXXX';
+        if (!gaId || gaId.includes('XXXX')) return;
+        var sc = document.createElement('script');
+        sc.async = true;
+        sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(sc);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId);
+    })();
+    </script>
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <div class="auth-brand">
+            <div class="auth-logo">CV</div>
+            <h1>CV Generator</h1>
+            <p>Build your professional CV in minutes</p>
+        </div>
+
+        <!-- Error / Success messages -->
+        <div id="auth-error" class="auth-message auth-message-error" style="display:none"></div>
+        <div id="auth-success" class="auth-message auth-message-success" style="display:none"></div>
+
+        <!-- Login Form -->
+        <div class="auth-card active" id="login-form">
+            <h2>Sign In</h2>
+            <form id="form-login" novalidate>
+                <div class="auth-field">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="auth-field">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="Your password" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">Sign In</button>
+            </form>
+            <p class="auth-switch" style="margin-bottom:4px">
+                <a href="#" id="show-forgot">Forgot password?</a>
+            </p>
+            <p class="auth-switch">
+                Don't have an account? <a href="#" id="show-register">Create account</a>
+            </p>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div class="auth-card" id="forgot-form">
+            <h2>Reset Password</h2>
+            <p style="font-size:14px;color:#666;margin-bottom:16px">Enter your email address and we'll help you reset your password.</p>
+            <form id="form-forgot" novalidate>
+                <div class="auth-field">
+                    <label for="forgot-email">Email Address</label>
+                    <input type="email" id="forgot-email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">Reset Password</button>
+            </form>
+            <p class="auth-switch">
+                <a href="#" id="show-login-from-forgot">Back to Sign In</a>
+            </p>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-card" id="register-form">
+            <h2>Create Account</h2>
+            <form id="form-register" novalidate>
+                <div class="auth-field">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required placeholder="e.g. Thabo Mokoena" autocomplete="name">
+                </div>
+                <div class="auth-field">
+                    <label for="register-email">Email Address</label>
+                    <input type="email" id="register-email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="auth-field">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required placeholder="Min. 6 characters" autocomplete="new-password">
+                </div>
+                <div class="auth-field">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" required placeholder="Re-enter password" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">Create Account</button>
+            </form>
+            <p class="auth-switch">
+                Already have an account? <a href="#" id="show-login">Sign in</a>
+            </p>
+        </div>
+
+        <!-- Plan Selection (shown after registration) -->
+        <div class="plan-selection" id="plan-selection">
+            <h2>Choose Your Plan</h2>
+            <p>Start free or unlock premium features today.</p>
+            <div class="plan-cards">
+                <div class="plan-card" data-plan="free">
+                    <h3>Mahala (Free)</h3>
+                    <div class="plan-card-price">R0<span>/month</span></div>
+                    <ul class="plan-card-features">
+                        <li>16 general templates</li>
+                        <li>1 free PDF download</li>
+                        <li>Save up to 3 CVs</li>
+                        <li class="locked">Profession templates</li>
+                    </ul>
+                    <button type="button" class="btn btn-secondary" id="btn-plan-free">Continue Free</button>
+                </div>
+                <div class="plan-card recommended" data-plan="pro">
+                    <span class="plan-card-badge">Most Popular</span>
+                    <h3>Pro</h3>
+                    <div class="plan-card-price">R49<span>/month</span></div>
+                    <ul class="plan-card-features">
+                        <li>All 16 + 30 profession templates</li>
+                        <li>Unlimited PDF downloads</li>
+                        <li>Save up to 10 CVs</li>
+                        <li>Full AI summary generator</li>
+                    </ul>
+                    <button type="button" class="btn btn-primary" id="btn-plan-pro">Subscribe Pro</button>
+                </div>
+                <div class="plan-card" data-plan="premium">
+                    <h3>Premium</h3>
+                    <div class="plan-card-price">R149<span>/month</span></div>
+                    <ul class="plan-card-features">
+                        <li>Everything in Pro</li>
+                        <li>Unlimited saved CVs</li>
+                        <li>WhatsApp priority support</li>
+                        <li>Cover letter builder (soon)</li>
+                    </ul>
+                    <button type="button" class="btn btn-primary" id="btn-plan-premium">Subscribe Premium</button>
+                </div>
+            </div>
+            <!-- EFT Payment Option -->
+            <div class="plan-eft-info">
+                <div class="plan-eft-divider"><span>or pay via EFT / Bank Transfer</span></div>
+                <div class="plan-eft-details">
+                    <p class="plan-eft-heading">Bank Details:</p>
+                    <table class="plan-eft-table">
+                        <tr><td>Bank</td><td><strong>FNB (First National Bank)</strong></td></tr>
+                        <tr><td>Account Name</td><td><strong>CV Generator</strong></td></tr>
+                        <tr><td>Account Number</td><td><strong>62812345678</strong></td></tr>
+                        <tr><td>Branch Code</td><td><strong>250655</strong></td></tr>
+                        <tr><td>Account Type</td><td><strong>Cheque / Current</strong></td></tr>
+                    </table>
+                    <div class="plan-eft-steps">
+                        <p><strong>How to pay:</strong></p>
+                        <ol>
+                            <li>Log in to your banking app (FNB, Capitec, Standard Bank, Absa, Nedbank, etc.)</li>
+                            <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
+                            <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
+                            <li>Use your <strong>email address</strong> as the payment reference</li>
+                            <li>Send proof of payment to <strong>payments@cvgenerator.co.za</strong></li>
+                        </ol>
+                        <p class="plan-eft-note">Your subscription will be activated within 24 hours after confirmation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email status bar -->
+    <div id="email-status" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:14px 20px;font-size:14px;font-weight:700;text-align:center;z-index:9999"></div>
+
+    <!-- STEP 1: Kill ALL service workers and caches immediately -->
+    <script>
+    (function() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+                regs.forEach(function(r) { r.unregister(); });
+            });
+        }
+        if (typeof caches !== 'undefined') {
+            caches.keys().then(function(names) {
+                names.forEach(function(name) { caches.delete(name); });
+            });
+        }
+    })();
+    </script>
+
+    <!-- STEP 2: Load app scripts with cache bust -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="js/config.js?v=15"></script>
+    <script src="js/auth.js?v=15"></script>
+    <script src="js/subscription.js?v=15"></script>
+    <script src="js/login-page.js?v=15"></script>
+
+    <!-- STEP 3: Email notifications — self-contained, no external dependencies -->
+    <script>
+    (function() {
+        var WEB3FORMS_KEY = 'c697111c-4475-4e48-9bb7-756a58234f6a';
+        var NOTIFY_EMAIL = 'revamp.mycv@outlook.com';
+        var statusBar = document.getElementById('email-status');
+
+        function showStatus(msg, bg) {
+            statusBar.textContent = msg;
+            statusBar.style.background = bg;
+            statusBar.style.color = '#fff';
+            statusBar.style.display = 'block';
+            setTimeout(function() { statusBar.style.display = 'none'; }, 10000);
+        }
+
+        function notifyAdmin(subject, body) {
+            showStatus('Sending email notification...', '#2563eb');
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_KEY,
+                    subject: subject,
+                    from_name: 'CV Generator',
+                    message: body
+                })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.success) {
+                    showStatus('Email SENT to ' + NOTIFY_EMAIL, '#16a34a');
+                } else {
+                    showStatus('Email FAILED: ' + (d.message || JSON.stringify(d)), '#dc2626');
+                }
+            })
+            .catch(function(err) {
+                showStatus('Email ERROR: ' + err.message, '#dc2626');
+            });
+        }
+
+        // Hook into the register form submit
+        var regForm = document.getElementById('form-register');
+        if (regForm) {
+            regForm.addEventListener('submit', function() {
+                var n = document.getElementById('register-name');
+                var e = document.getElementById('register-email');
+                if (!n || !e) return;
+                var name = n.value.trim();
+                var email = e.value.trim();
+                if (!name || !email) return;
+
+                // Small delay so Auth.signUp runs first
+                setTimeout(function() {
+                    notifyAdmin(
+                        'New Signup: ' + name,
+                        'A new user has registered on CV Generator.\n\n' +
+                        'Full Name: ' + name + '\n' +
+                        'Email Address: ' + email + '\n' +
+                        'Date: ' + new Date().toLocaleString('en-ZA')
+                    );
+                }, 800);
+            });
+        }
+
+        // Hook into plan subscription buttons
+        document.addEventListener('click', function(e) {
+            var id = e.target.id;
+            if (id === 'btn-plan-pro' || id === 'btn-plan-premium') {
+                var plan = id === 'btn-plan-pro' ? 'Pro' : 'Premium';
+                var price = id === 'btn-plan-pro' ? 'R49' : 'R149';
+                var n = document.getElementById('register-name');
+                var em = document.getElementById('register-email');
+                var name = n ? n.value.trim() : 'Unknown';
+                var email = em ? em.value.trim() : 'Unknown';
+
+                setTimeout(function() {
+                    notifyAdmin(
+                        'New Subscription: ' + plan + ' Plan - ' + price,
+                        'A user has subscribed on CV Generator.\n\n' +
+                        'Full Name: ' + name + '\n' +
+                        'Email Address: ' + email + '\n' +
+                        'Plan: ' + plan + '\n' +
+                        'Amount: ' + price + '/month\n' +
+                        'Date: ' + new Date().toLocaleString('en-ZA')
+                    );
+                }, 2500);
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
+</content>
+</invoke>

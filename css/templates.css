@@ -1,0 +1,2376 @@
+/* === CV Preview Container === */
+.cv-preview {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+/* === CV Photo Styles === */
+.cv-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    margin-bottom: 10px;
+}
+
+.cv-photo-round {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* For centered headers */
+.cv-classic .cv-photo,
+.cv-professional .cv-photo,
+.cv-executive .cv-photo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* For sidebar templates */
+.cv-modern .cv-photo-round,
+.cv-infographic .cv-photo-round,
+.cv-hr .cv-photo-round,
+.cv-elegant .cv-photo-round,
+.cv-nonprofit .cv-photo-round,
+.cv-data-science .cv-photo-round {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+
+/* ======================================================================
+   1. CLASSIC TEMPLATE — Traditional serif, single-column
+   ====================================================================== */
+.cv-classic {
+    padding: 32px 24px;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #333;
+    line-height: 1.5;
+}
+
+.cv-classic .cv-header {
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.cv-classic .cv-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.cv-classic .cv-contact { font-size: 0.875rem; color: #555; }
+.cv-classic .cv-contact span { display: inline; }
+.cv-classic .cv-contact span + span::before { content: ' | '; color: #999; }
+
+.cv-classic .cv-section { margin-bottom: 20px; }
+.cv-classic .cv-section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.cv-classic .cv-objective { font-style: italic; color: #444; font-size: 0.9375rem; }
+.cv-classic .cv-entry { margin-bottom: 14px; }
+.cv-classic .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-classic .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-classic .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+
+.cv-classic .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-classic .cv-duties li { margin-bottom: 2px; }
+
+.cv-classic .cv-skills-list {
+    display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0;
+}
+.cv-classic .cv-skills-list li {
+    background: #f0f0f0; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem;
+}
+
+.cv-classic .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-classic .cv-ref-entry strong { display: block; }
+.cv-classic .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   2. MODERN TEMPLATE — Green sidebar + white main
+   ====================================================================== */
+.cv-modern {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+    min-height: 600px;
+}
+
+.cv-modern .cv-sidebar {
+    background: #1a6b3c; color: #fff; padding: 28px 18px;
+}
+.cv-modern .cv-sidebar .cv-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; word-break: break-word; }
+.cv-modern .cv-sidebar .cv-contact { font-size: 0.75rem; opacity: 0.9; margin-bottom: 24px; }
+.cv-modern .cv-sidebar .cv-contact p { margin-bottom: 4px; }
+.cv-modern .cv-sidebar-section { margin-bottom: 20px; }
+.cv-modern .cv-sidebar-title {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 8px;
+}
+.cv-modern .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-modern .cv-sidebar .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.cv-modern .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-modern .cv-sidebar .cv-ref-entry strong { display: block; font-size: 0.875rem; }
+.cv-modern .cv-sidebar .cv-ref-entry span { opacity: 0.8; font-size: 0.75rem; }
+.cv-modern .cv-sidebar p { font-size: 0.8125rem; }
+
+.cv-modern .cv-main { padding: 28px 24px; }
+.cv-modern .cv-section { margin-bottom: 22px; }
+.cv-modern .cv-section-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #1a6b3c; border-bottom: 2px solid #1a6b3c; padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-modern .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-modern .cv-entry { margin-bottom: 16px; }
+.cv-modern .cv-entry-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-modern .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-modern .cv-entry-date { font-size: 0.75rem; color: #888; white-space: nowrap; }
+.cv-modern .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-modern .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-modern .cv-duties li { margin-bottom: 2px; }
+
+@media (max-width: 599px) {
+    .cv-modern { grid-template-columns: 1fr; }
+    .cv-modern .cv-sidebar { padding: 20px 16px; }
+    .cv-modern .cv-main { padding: 20px 16px; }
+}
+
+/* ======================================================================
+   3. SA FORMAL — Government/corporate standard with tables
+   ====================================================================== */
+.cv-sa-formal {
+    padding: 28px 24px;
+    font-family: Arial, Calibri, sans-serif;
+    color: #000;
+    line-height: 1.4;
+    font-size: 0.9375rem;
+}
+
+.cv-sa-formal .cv-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+}
+
+.cv-sa-formal .cv-header .cv-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.cv-sa-formal .cv-header .cv-subname {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.cv-sa-formal .cv-section { margin-bottom: 18px; }
+.cv-sa-formal .cv-section-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #f2f2f2;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    border-left: 3px solid #000;
+}
+
+.cv-sa-formal .cv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.cv-sa-formal .cv-table th,
+.cv-sa-formal .cv-table td {
+    border: 1px solid #999;
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.cv-sa-formal .cv-table th {
+    background: #f2f2f2;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+}
+
+.cv-sa-formal .cv-label {
+    font-weight: 700;
+    width: 160px;
+    background: #fafafa;
+}
+
+.cv-sa-formal .cv-objective {
+    font-size: 0.9375rem;
+    color: #333;
+}
+
+.cv-sa-formal .cv-entry { margin-bottom: 14px; }
+.cv-sa-formal .cv-entry-row {
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px;
+}
+.cv-sa-formal .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-sa-formal .cv-entry-subtitle { color: #333; font-size: 0.875rem; }
+.cv-sa-formal .cv-entry-date { font-size: 0.8125rem; color: #555; }
+
+.cv-sa-formal .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-sa-formal .cv-duties li { margin-bottom: 2px; }
+
+.cv-sa-formal .cv-skills-list {
+    display: flex; flex-wrap: wrap; gap: 4px; list-style: disc; padding-left: 20px;
+}
+.cv-sa-formal .cv-skills-list li { font-size: 0.8125rem; width: calc(50% - 2px); }
+
+/* ======================================================================
+   4. EXECUTIVE — Navy blue corporate
+   ====================================================================== */
+.cv-executive {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+
+.cv-executive .cv-header {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 28px 24px;
+    text-align: center;
+}
+
+.cv-executive .cv-header .cv-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.cv-executive .cv-header .cv-contact {
+    font-size: 0.8125rem;
+    margin-top: 8px;
+    opacity: 0.9;
+}
+
+.cv-executive .cv-header .cv-contact span { margin: 0 4px; }
+.cv-executive .cv-header .cv-contact .sep { opacity: 0.5; }
+
+.cv-executive .cv-body { padding: 24px; }
+.cv-executive .cv-section { margin-bottom: 22px; }
+
+.cv-executive .cv-section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #1e3a5f;
+    border-bottom: 2px solid #1e3a5f;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+}
+
+.cv-executive .cv-objective { font-size: 0.9375rem; color: #555; }
+
+.cv-executive .cv-entry { margin-bottom: 16px; }
+.cv-executive .cv-entry-row {
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px;
+}
+.cv-executive .cv-entry-title { font-weight: 700; font-size: 0.9375rem; color: #1e3a5f; }
+.cv-executive .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-executive .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+
+.cv-executive .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-executive .cv-duties li { margin-bottom: 2px; }
+
+.cv-executive .cv-skills-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+}
+.cv-executive .cv-skill-tag {
+    background: #e8eef5;
+    color: #1e3a5f;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.cv-executive .cv-ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.cv-executive .cv-ref-entry { font-size: 0.875rem; }
+.cv-executive .cv-ref-entry strong { display: block; color: #1e3a5f; }
+.cv-executive .cv-ref-entry span { display: block; color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   5. CREATIVE — Orange accent, bold personality
+   ====================================================================== */
+.cv-creative {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #222;
+    line-height: 1.5;
+}
+
+.cv-creative .cv-header {
+    padding: 28px 24px;
+    border-bottom: 4px solid #f97316;
+}
+
+.cv-creative .cv-header .cv-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111;
+    letter-spacing: -0.5px;
+}
+
+.cv-creative .cv-header .cv-contact {
+    font-size: 0.8125rem;
+    color: #666;
+    margin-top: 6px;
+}
+.cv-creative .cv-header .cv-contact span + span::before { content: ' \00B7 '; color: #f97316; font-weight: 700; }
+
+.cv-creative .cv-body { padding: 24px; }
+.cv-creative .cv-section { margin-bottom: 22px; }
+
+.cv-creative .cv-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #222;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cv-creative .accent-bar {
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: #f97316;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.cv-creative .cv-objective { font-size: 0.9375rem; color: #555; }
+
+.cv-creative .cv-entry { margin-bottom: 16px; padding-left: 14px; border-left: 2px solid #fde8d8; }
+.cv-creative .cv-entry-row {
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px;
+}
+.cv-creative .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-creative .cv-entry-date { font-size: 0.75rem; color: #f97316; font-weight: 600; }
+.cv-creative .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+
+.cv-creative .cv-duties { margin-top: 4px; padding-left: 16px; font-size: 0.8125rem; color: #555; }
+.cv-creative .cv-duties li { margin-bottom: 2px; }
+.cv-creative .cv-duties li::marker { color: #f97316; }
+
+.cv-creative .cv-skills-wrap {
+    display: flex; flex-wrap: wrap; gap: 8px;
+}
+.cv-creative .cv-skill-pill {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.cv-creative .cv-ref-entry { margin-bottom: 6px; font-size: 0.875rem; }
+.cv-creative .cv-ref-entry strong { color: #222; }
+
+/* ======================================================================
+   6. ELEGANT — Teal sidebar, refined two-column
+   ====================================================================== */
+.cv-elegant {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+    min-height: 600px;
+}
+
+.cv-elegant .cv-sidebar {
+    background: #0d4f4f;
+    color: #fff;
+    padding: 28px 16px;
+}
+
+.cv-elegant .cv-sidebar .cv-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    word-break: break-word;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 12px;
+}
+
+.cv-elegant .cv-sidebar-section { margin-bottom: 18px; }
+.cv-elegant .cv-sidebar-title {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+}
+
+.cv-elegant .cv-sidebar p { font-size: 0.8125rem; margin-bottom: 3px; opacity: 0.9; }
+
+.cv-elegant .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-elegant .cv-sidebar .cv-skills-list li {
+    font-size: 0.8125rem; padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.cv-elegant .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-elegant .cv-sidebar .cv-ref-entry strong { display: block; }
+.cv-elegant .cv-sidebar .cv-ref-entry span { opacity: 0.8; font-size: 0.75rem; }
+
+.cv-elegant .cv-main { padding: 28px 24px; }
+.cv-elegant .cv-section { margin-bottom: 22px; }
+
+.cv-elegant .cv-section-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #0d4f4f;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #0d9488;
+}
+
+.cv-elegant .cv-objective { font-size: 0.9375rem; color: #555; }
+
+.cv-elegant .cv-entry { margin-bottom: 16px; }
+.cv-elegant .cv-entry-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-elegant .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-elegant .cv-entry-date { font-size: 0.75rem; color: #0d9488; font-weight: 500; }
+.cv-elegant .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+
+.cv-elegant .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-elegant .cv-duties li { margin-bottom: 2px; }
+
+@media (max-width: 599px) {
+    .cv-elegant { grid-template-columns: 1fr; }
+    .cv-elegant .cv-sidebar { padding: 20px 16px; }
+    .cv-elegant .cv-main { padding: 20px 16px; }
+}
+
+/* ======================================================================
+   7. COMPACT — Dense equal two-column
+   ====================================================================== */
+.cv-compact {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #222;
+    line-height: 1.4;
+    font-size: 0.875rem;
+}
+
+.cv-compact .cv-header {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 20px 24px;
+    text-align: center;
+}
+
+.cv-compact .cv-header .cv-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.cv-compact .cv-header .cv-contact {
+    font-size: 0.75rem;
+    margin-top: 6px;
+    opacity: 0.9;
+}
+.cv-compact .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-compact .cv-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.cv-compact .cv-col {
+    padding: 20px;
+}
+
+.cv-compact .cv-col-left {
+    background: #f8f9fa;
+    border-right: 1px solid #e5e7eb;
+}
+
+.cv-compact .cv-section { margin-bottom: 16px; }
+
+.cv-compact .cv-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #1a1a2e;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+}
+
+.cv-compact .cv-objective { font-size: 0.8125rem; color: #555; }
+
+.cv-compact .cv-entry { margin-bottom: 12px; }
+.cv-compact .cv-entry-title { font-weight: 700; font-size: 0.8125rem; }
+.cv-compact .cv-entry-meta { font-size: 0.75rem; color: #666; }
+
+.cv-compact .cv-duties { margin-top: 3px; padding-left: 16px; font-size: 0.8125rem; color: #555; }
+.cv-compact .cv-duties li { margin-bottom: 1px; }
+
+.cv-compact .cv-skills-list { list-style: none; padding: 0; }
+.cv-compact .cv-skills-list li {
+    font-size: 0.8125rem; padding: 2px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cv-compact .cv-ref-entry { margin-bottom: 8px; font-size: 0.8125rem; }
+.cv-compact .cv-ref-entry strong { display: block; }
+.cv-compact .cv-ref-entry span { color: #666; font-size: 0.75rem; }
+
+@media (max-width: 599px) {
+    .cv-compact .cv-columns { grid-template-columns: 1fr; }
+    .cv-compact .cv-col-left { border-right: none; border-bottom: 1px solid #e5e7eb; }
+}
+
+/* ======================================================================
+   8. TIMELINE — Visual career path with vertical line
+   ====================================================================== */
+.cv-timeline {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+
+.cv-timeline .cv-header {
+    padding: 24px;
+    text-align: center;
+    border-bottom: 3px solid #3b82f6;
+}
+
+.cv-timeline .cv-header .cv-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.cv-timeline .cv-header .cv-contact {
+    font-size: 0.8125rem;
+    color: #666;
+    margin-top: 6px;
+}
+.cv-timeline .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-timeline .cv-body { padding: 24px; }
+.cv-timeline .cv-section { margin-bottom: 22px; }
+
+.cv-timeline .cv-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1e3a5f;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+}
+
+.cv-timeline .cv-objective { font-size: 0.9375rem; color: #555; }
+
+/* Timeline list */
+.cv-timeline .cv-tl-list {
+    position: relative;
+    padding-left: 24px;
+}
+
+.cv-timeline .cv-tl-list::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: #3b82f6;
+    border-radius: 1px;
+}
+
+.cv-timeline .cv-tl-item {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.cv-timeline .cv-tl-marker {
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 14px;
+    display: flex;
+    justify-content: center;
+}
+
+.cv-timeline .cv-tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.cv-timeline .cv-tl-content { flex: 1; }
+.cv-timeline .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-timeline .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-timeline .cv-entry-date { font-size: 0.75rem; color: #3b82f6; font-weight: 500; }
+
+.cv-timeline .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-timeline .cv-duties li { margin-bottom: 2px; }
+
+.cv-timeline .cv-skills-wrap {
+    display: flex; flex-wrap: wrap; gap: 8px;
+}
+.cv-timeline .cv-skill-tag {
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.cv-timeline .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-timeline .cv-ref-entry strong { display: block; }
+.cv-timeline .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   SHARED PROFESSION TEMPLATE FOUNDATIONS
+   ====================================================================== */
+
+/* -- Common entry row (title + date on same line) -- */
+.cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-entry-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+
+/* -- Common skills-wrap -- */
+.cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* -- Common two-panel layout (header + left-main + right-panel) -- */
+.cv-columns { display: grid; grid-template-columns: 1fr 260px; }
+.cv-col-main { padding: 24px; }
+.cv-col-panel { padding: 20px; background: #f8f9fa; border-left: 1px solid #e5e7eb; }
+
+@media (max-width: 599px) {
+    .cv-columns { grid-template-columns: 1fr; }
+    .cv-col-panel { border-left: none; border-top: 1px solid #e5e7eb; }
+}
+
+/* ======================================================================
+   9. HEALTHCARE — Medical teal, left sidebar
+   ====================================================================== */
+.cv-healthcare {
+    display: grid; grid-template-columns: 200px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b; line-height: 1.5; min-height: 600px;
+}
+.cv-healthcare .cv-sidebar {
+    background: #f0fdfa; border-left: 4px solid #0891b2; padding: 24px 16px;
+}
+.cv-healthcare .cv-sidebar .cv-name { font-size: 1.2rem; font-weight: 700; color: #0891b2; margin-bottom: 16px; word-break: break-word; }
+.cv-healthcare .cv-sidebar-section { margin-bottom: 16px; }
+.cv-healthcare .cv-sidebar-title { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 1.5px; color: #0891b2; border-bottom: 1px solid #e0f2fe; padding-bottom: 3px; margin-bottom: 8px; }
+.cv-healthcare .cv-sidebar p { font-size: 0.8125rem; margin-bottom: 3px; color: #334155; }
+.cv-healthcare .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-healthcare .cv-sidebar .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid #e0f2fe; }
+.cv-healthcare .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 8px; }
+.cv-healthcare .cv-sidebar .cv-ref-entry strong { display: block; color: #0891b2; }
+.cv-healthcare .cv-sidebar .cv-ref-entry span { color: #64748b; font-size: 0.75rem; }
+
+.cv-healthcare .cv-main { padding: 24px; }
+.cv-healthcare .cv-section { margin-bottom: 20px; }
+.cv-healthcare .cv-section-title { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #0891b2; border-bottom: 1px solid #e0f2fe; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-healthcare .cv-objective { font-size: 0.9375rem; color: #475569; }
+.cv-healthcare .cv-entry { margin-bottom: 14px; }
+.cv-healthcare .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-healthcare .cv-entry-date { font-size: 0.75rem; color: #0891b2; }
+.cv-healthcare .cv-entry-subtitle { color: #64748b; font-size: 0.8125rem; }
+.cv-healthcare .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+
+@media (max-width: 599px) { .cv-healthcare { grid-template-columns: 1fr; } }
+
+/* ======================================================================
+   10. TECH — Dark terminal header, code tags
+   ====================================================================== */
+.cv-tech { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6; }
+.cv-tech .cv-header { background: #0f172a; padding: 28px 24px; color: #e2e8f0; }
+.cv-tech .cv-header .cv-name { font-size: 1.75rem; font-weight: 700; font-family: Consolas, 'Fira Code', monospace; color: #22c55e; }
+.cv-tech .cv-header .cv-name .prompt { opacity: 0.5; font-weight: 400; }
+.cv-tech .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 6px; opacity: 0.8; }
+.cv-tech .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-tech .cv-body { padding: 24px; }
+.cv-tech .cv-section { margin-bottom: 20px; }
+.cv-tech .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1e293b; border-left: 3px solid #3b82f6; padding-left: 12px; margin-bottom: 10px; }
+.cv-tech .cv-objective { font-size: 0.9375rem; color: #475569; }
+.cv-tech .cv-entry { margin-bottom: 14px; }
+.cv-tech .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-tech .cv-entry-date { font-size: 0.75rem; color: #3b82f6; }
+.cv-tech .cv-entry-subtitle { color: #64748b; font-size: 0.8125rem; }
+.cv-tech .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+
+.cv-tech .cv-code-tag {
+    display: inline-block; background: #1e293b; color: #e2e8f0;
+    font-family: Consolas, 'Fira Code', monospace; padding: 4px 12px;
+    border-radius: 4px; font-size: 0.75rem; margin: 2px;
+}
+.cv-tech .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-tech .cv-ref-entry strong { display: block; }
+.cv-tech .cv-ref-entry span { color: #64748b; font-size: 0.8125rem; }
+
+/* ======================================================================
+   11. TEACHING — Burgundy academic
+   ====================================================================== */
+.cv-teaching { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #374151; line-height: 1.5; }
+.cv-teaching .cv-header { background: #881337; padding: 20px 24px; color: #fff; }
+.cv-teaching .cv-header .cv-name { font-family: Georgia, serif; font-size: 1.5rem; font-weight: 700; }
+.cv-teaching .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-teaching .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-teaching .cv-body { padding: 24px; }
+.cv-teaching .cv-philosophy-box { background: #fff1f2; border-left: 3px solid #881337; padding: 14px 18px; margin-bottom: 20px; font-style: italic; font-size: 0.9375rem; color: #4a1d2c; }
+.cv-teaching .cv-section { margin-bottom: 20px; }
+.cv-teaching .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #881337; border-bottom: 1px dotted #d1d5db; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-teaching .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-teaching .cv-entry { margin-bottom: 14px; border-left: 2px solid #fecdd3; padding-left: 12px; }
+.cv-teaching .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-teaching .cv-entry-date { font-size: 0.75rem; color: #881337; }
+.cv-teaching .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-teaching .cv-duties { margin-top: 4px; padding-left: 16px; font-size: 0.8125rem; }
+
+.cv-teaching .cv-teach-tag { display: inline-block; background: #fecdd3; color: #881337; padding: 4px 12px; border-radius: 16px; font-size: 0.8125rem; font-weight: 500; }
+.cv-teaching .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-teaching .cv-ref-entry strong { display: block; }
+.cv-teaching .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   12. ENGINEERING — Steel blue header + right panel
+   ====================================================================== */
+.cv-engineering { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.5; }
+.cv-engineering .cv-header { background: #1e40af; padding: 24px; color: #fff; text-align: center; }
+.cv-engineering .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+.cv-engineering .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 6px; opacity: 0.9; }
+.cv-engineering .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-engineering .cv-columns { grid-template-columns: 1fr 280px; }
+.cv-engineering .cv-col-panel { background: #f1f5f9; border-top: 3px solid #1e40af; border-left: 1px solid #e2e8f0; }
+
+.cv-engineering .cv-section { margin-bottom: 20px; }
+.cv-engineering .cv-section-title { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #1e40af; border-bottom: 2px solid #1e40af; padding-bottom: 3px; margin-bottom: 10px; }
+.cv-engineering .cv-objective { font-size: 0.9375rem; color: #475569; }
+.cv-engineering .cv-entry { margin-bottom: 14px; }
+.cv-engineering .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-engineering .cv-entry-date { font-size: 0.75rem; color: #ea580c; font-weight: 600; }
+.cv-engineering .cv-entry-subtitle { color: #64748b; font-size: 0.8125rem; }
+.cv-engineering .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-engineering .cv-skills-list { list-style: none; padding: 0; }
+.cv-engineering .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid #e2e8f0; }
+.cv-engineering .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-engineering .cv-ref-entry strong { display: block; }
+.cv-engineering .cv-ref-entry span { color: #64748b; font-size: 0.8125rem; }
+
+/* ======================================================================
+   13. FINANCE — Deep green, conservative
+   ====================================================================== */
+.cv-finance { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #111827; line-height: 1.5; }
+.cv-finance .cv-header { text-align: center; border-bottom: 2px solid #166534; padding: 24px 24px 16px; }
+.cv-finance .cv-header .cv-name { font-family: Georgia, serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #166534; }
+.cv-finance .cv-header .cv-contact { font-size: 0.8125rem; color: #555; margin-top: 6px; }
+.cv-finance .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-finance .cv-body { padding: 24px; }
+.cv-finance .cv-section { margin-bottom: 20px; }
+.cv-finance .cv-section-title { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #166534; border-bottom: 1px solid #166534; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-finance .cv-objective { font-size: 0.9375rem; color: #374151; }
+.cv-finance .cv-entry { margin-bottom: 14px; }
+.cv-finance .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-finance .cv-entry-date { font-size: 0.75rem; color: #166534; }
+.cv-finance .cv-entry-subtitle { color: #6b7280; font-size: 0.8125rem; }
+.cv-finance .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-finance .cv-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.cv-finance .cv-table th, .cv-finance .cv-table td { border: 1px solid #d1d5db; padding: 6px 10px; text-align: left; }
+.cv-finance .cv-table th { background: #f0fdf4; font-size: 0.75rem; text-transform: uppercase; }
+.cv-finance .cv-fin-tag { display: inline-block; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-finance .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-finance .cv-ref-entry strong { display: block; }
+.cv-finance .cv-ref-entry span { color: #6b7280; font-size: 0.8125rem; }
+
+/* ======================================================================
+   14. LEGAL — Black serif, double-border header
+   ====================================================================== */
+.cv-legal { font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; line-height: 1.6; }
+.cv-legal .cv-header { text-align: center; border-top: 3px double #000; border-bottom: 3px double #000; padding: 16px 24px; }
+.cv-legal .cv-header .cv-name { font-size: 1.75rem; font-weight: 700; letter-spacing: 1px; }
+.cv-legal .cv-header .cv-contact { font-size: 0.8125rem; color: #555; margin-top: 6px; }
+.cv-legal .cv-header .cv-contact .sep { margin: 0 8px; opacity: 0.4; }
+
+.cv-legal .cv-body { padding: 24px; }
+.cv-legal .cv-section { margin-bottom: 20px; }
+.cv-legal .cv-section-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #7f1d1d; padding-bottom: 3px; margin-bottom: 12px; }
+.cv-legal .cv-objective { font-size: 0.9375rem; color: #374151; }
+.cv-legal .cv-entry { margin-bottom: 14px; }
+.cv-legal .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-legal .cv-entry-date { font-size: 0.8125rem; color: #6b7280; float: right; }
+.cv-legal .cv-entry-subtitle { font-style: italic; color: #374151; font-size: 0.875rem; }
+.cv-legal .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-legal .cv-areas { font-size: 0.9375rem; color: #374151; }
+.cv-legal .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-legal .cv-ref-entry strong { display: block; }
+.cv-legal .cv-ref-entry span { color: #6b7280; font-size: 0.8125rem; }
+
+/* ======================================================================
+   15. HOSPITALITY — Gold/amber warmth
+   ====================================================================== */
+.cv-hospitality { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1f2937; line-height: 1.5; }
+.cv-hospitality .cv-header { background: #b45309; padding: 24px; color: #fff; }
+.cv-hospitality .cv-header .cv-name { font-size: 1.75rem; font-weight: 700; }
+.cv-hospitality .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-hospitality .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-hospitality .cv-strengths-bar { background: #fef3c7; padding: 12px 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+.cv-hospitality .cv-strength-pill { background: #fde68a; color: #92400e; padding: 5px 14px; border-radius: 20px; font-size: 0.8125rem; font-weight: 500; }
+
+.cv-hospitality .cv-body { padding: 24px; }
+.cv-hospitality .cv-section { margin-bottom: 20px; }
+.cv-hospitality .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #92400e; border-bottom: 2px solid #f59e0b; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-hospitality .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-hospitality .cv-entry { margin-bottom: 14px; border-left: 2px solid #fde68a; padding-left: 12px; }
+.cv-hospitality .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-hospitality .cv-entry-date { font-size: 0.75rem; color: #b45309; font-weight: 500; }
+.cv-hospitality .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-hospitality .cv-duties { margin-top: 4px; padding-left: 16px; font-size: 0.8125rem; }
+.cv-hospitality .cv-hosp-tag { display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-hospitality .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-hospitality .cv-ref-entry strong { display: block; }
+.cv-hospitality .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   16. GOVERNMENT — Navy formal, table-heavy
+   ====================================================================== */
+.cv-government { font-family: Arial, Calibri, sans-serif; color: #000; line-height: 1.4; font-size: 0.9375rem; }
+.cv-government .cv-header { background: #1e3a5f; color: #fff; padding: 14px 24px; text-align: center; }
+.cv-government .cv-header .cv-name { font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+
+.cv-government .cv-section { margin: 16px 24px; }
+.cv-government .cv-section-title { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; background: #f1f5f9; border-left: 3px solid #1e3a5f; padding: 6px 10px; margin-bottom: 10px; }
+.cv-government .cv-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.cv-government .cv-table th, .cv-government .cv-table td { border: 1px solid #94a3b8; padding: 6px 10px; text-align: left; }
+.cv-government .cv-table th { background: #e2e8f0; font-size: 0.8125rem; text-transform: uppercase; }
+.cv-government .cv-label { font-weight: 700; width: 160px; background: #f8fafc; }
+.cv-government .cv-objective { font-size: 0.9375rem; color: #333; }
+.cv-government .cv-entry { margin-bottom: 14px; }
+.cv-government .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-government .cv-entry-date { font-size: 0.8125rem; color: #555; }
+.cv-government .cv-entry-subtitle { color: #333; font-size: 0.875rem; }
+.cv-government .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-government .cv-skills-list { padding-left: 20px; }
+.cv-government .cv-skills-list li { font-size: 0.8125rem; }
+.cv-government .cv-declaration { margin: 24px 24px 16px; border-top: 2px solid #1e3a5f; padding-top: 12px; }
+.cv-government .cv-sig-line { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 8px; border-top: 1px solid #000; width: 60%; }
+.cv-government .cv-sig-line span { font-size: 0.8125rem; color: #666; }
+
+/* ======================================================================
+   17. TRADES — Orange on charcoal, right panel
+   ====================================================================== */
+.cv-trades { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #292524; line-height: 1.5; }
+.cv-trades .cv-header { background: #1c1917; padding: 24px; color: #fff; }
+.cv-trades .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; }
+.cv-trades .cv-header .cv-trade-title { color: #ea580c; font-size: 1rem; margin-top: 4px; }
+
+.cv-trades .cv-columns { grid-template-columns: 1fr 280px; }
+.cv-trades .cv-col-panel { background: #fafaf9; border-left: 3px solid #ea580c; }
+
+.cv-trades .cv-section { margin-bottom: 20px; }
+.cv-trades .cv-section-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ea580c; border-bottom: 2px solid #ea580c; padding-bottom: 3px; margin-bottom: 10px; }
+.cv-trades .cv-objective { font-size: 0.9375rem; color: #57534e; }
+.cv-trades .cv-entry { margin-bottom: 14px; }
+.cv-trades .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-trades .cv-entry-date { font-size: 0.75rem; color: #ea580c; }
+.cv-trades .cv-entry-subtitle { color: #78716c; font-size: 0.8125rem; }
+.cv-trades .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-trades .cv-safety-section { background: #fef2f2; padding: 14px; border-radius: 6px; border-left: 3px solid #dc2626; margin-bottom: 16px; }
+.cv-trades .cv-skills-list { list-style: none; padding: 0; }
+.cv-trades .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid #e7e5e4; }
+.cv-trades .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-trades .cv-ref-entry strong { display: block; }
+.cv-trades .cv-ref-entry span { color: #78716c; font-size: 0.8125rem; }
+
+/* ======================================================================
+   18. MINING — Earth brown + gold
+   ====================================================================== */
+.cv-mining { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1c1917; line-height: 1.5; }
+.cv-mining .cv-header { background: linear-gradient(135deg, #451a03, #78350f); padding: 28px 24px; color: #fff; }
+.cv-mining .cv-header .cv-name { color: #fbbf24; font-size: 1.5rem; font-weight: 700; }
+.cv-mining .cv-header .cv-contact { font-size: 0.8125rem; color: #fde68a; margin-top: 6px; }
+.cv-mining .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-mining .cv-body { padding: 24px; }
+.cv-mining .cv-cert-banner { background: #fef3c7; padding: 14px 24px; border: 1px solid #fde68a; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.cv-mining .cv-cert-badge { background: #78350f; color: #fef3c7; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; font-weight: 600; }
+.cv-mining .cv-section { margin-bottom: 20px; }
+.cv-mining .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #78350f; border-bottom: 2px solid #78350f; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-mining .cv-objective { font-size: 0.9375rem; color: #57534e; }
+.cv-mining .cv-entry { margin-bottom: 14px; }
+.cv-mining .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-mining .cv-entry-date { font-size: 0.75rem; color: #78350f; }
+.cv-mining .cv-entry-subtitle { color: #78716c; font-size: 0.8125rem; }
+.cv-mining .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-mining .cv-skill-tag { display: inline-block; background: #78350f; color: #fef3c7; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-mining .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-mining .cv-ref-entry strong { display: block; }
+.cv-mining .cv-ref-entry span { color: #78716c; font-size: 0.8125rem; }
+
+/* ======================================================================
+   19. AGRICULTURE — Earth green
+   ====================================================================== */
+.cv-agriculture { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1f2937; line-height: 1.5; }
+.cv-agriculture .cv-header { background: #15803d; padding: 18px 24px; color: #fff; }
+.cv-agriculture .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; }
+.cv-agriculture .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-agriculture .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-agriculture .cv-body { padding: 24px; }
+.cv-agriculture .cv-section { margin-bottom: 20px; }
+.cv-agriculture .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; color: #15803d; border-bottom: 1px solid #bbf7d0; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-agriculture .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-agriculture .cv-entry { margin-bottom: 14px; }
+.cv-agriculture .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-agriculture .cv-entry-date { font-size: 0.75rem; color: #92400e; }
+.cv-agriculture .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-agriculture .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-agriculture .cv-agri-tag { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-agriculture .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-agriculture .cv-ref-entry strong { display: block; }
+.cv-agriculture .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   20. RETAIL — Purple, right sidebar with KPIs
+   ====================================================================== */
+.cv-retail { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1f2937; line-height: 1.5; }
+.cv-retail .cv-header { background: #7c3aed; padding: 24px; color: #fff; }
+.cv-retail .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; }
+.cv-retail .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-retail .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-retail .cv-columns { grid-template-columns: 1fr 220px; }
+.cv-retail .cv-col-panel { background: #f5f3ff; }
+
+.cv-retail .cv-section { margin-bottom: 20px; }
+.cv-retail .cv-section-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7c3aed; border-bottom: 2px solid #7c3aed; padding-bottom: 3px; margin-bottom: 10px; }
+.cv-retail .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-retail .cv-entry { margin-bottom: 14px; }
+.cv-retail .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-retail .cv-entry-date { font-size: 0.75rem; color: #7c3aed; }
+.cv-retail .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-retail .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-retail .cv-skills-list { list-style: none; padding: 0; }
+.cv-retail .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid #e9e5ff; }
+.cv-retail .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-retail .cv-ref-entry strong { display: block; color: #7c3aed; }
+.cv-retail .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   21. CREATIVE DESIGN — Indigo sidebar + coral accent
+   ====================================================================== */
+.cv-creative-design {
+    display: grid; grid-template-columns: 240px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333; line-height: 1.5; min-height: 600px;
+}
+.cv-creative-design .cv-sidebar { background: #1e1b4b; color: #fff; padding: 28px 18px; }
+.cv-creative-design .cv-sidebar .cv-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
+.cv-creative-design .cv-sidebar-section { margin-bottom: 18px; }
+.cv-creative-design .cv-sidebar-title { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 2px; color: #f43f5e; margin-bottom: 8px; }
+.cv-creative-design .cv-sidebar p { font-size: 0.8125rem; margin-bottom: 3px; opacity: 0.9; }
+.cv-creative-design .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-creative-design .cv-sidebar .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.cv-creative-design .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-creative-design .cv-sidebar .cv-ref-entry strong { display: block; color: #f43f5e; }
+.cv-creative-design .cv-sidebar .cv-ref-entry span { opacity: 0.7; font-size: 0.75rem; }
+
+.cv-creative-design .cv-main { padding: 28px 24px; }
+.cv-creative-design .cv-section { margin-bottom: 22px; }
+.cv-creative-design .cv-section-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; color: #1e1b4b; border-bottom: 2px solid #f43f5e; padding-bottom: 4px; margin-bottom: 12px; }
+.cv-creative-design .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-creative-design .cv-entry { margin-bottom: 16px; border-left: 3px solid #f43f5e; padding-left: 12px; }
+.cv-creative-design .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-creative-design .cv-entry-date { font-size: 0.75rem; color: #f43f5e; font-weight: 500; }
+.cv-creative-design .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-creative-design .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+
+@media (max-width: 599px) { .cv-creative-design { grid-template-columns: 1fr; } }
+
+/* ======================================================================
+   22. SOCIAL WORK — Warm teal, mission box
+   ====================================================================== */
+.cv-socialwork { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #374151; line-height: 1.5; }
+.cv-socialwork .cv-header { background: #0d9488; padding: 24px; color: #fff; }
+.cv-socialwork .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; }
+.cv-socialwork .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-socialwork .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.5; }
+
+.cv-socialwork .cv-body { padding: 24px; }
+.cv-socialwork .cv-mission-box { background: #f0fdfa; border-left: 4px solid #0d9488; padding: 14px 18px; margin-bottom: 20px; font-style: italic; font-size: 0.9375rem; color: #134e4a; }
+.cv-socialwork .cv-section { margin-bottom: 20px; }
+.cv-socialwork .cv-section-title { font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #0d9488; border-bottom: 2px solid #0d9488; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-socialwork .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-socialwork .cv-entry { margin-bottom: 14px; }
+.cv-socialwork .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-socialwork .cv-entry-date { font-size: 0.75rem; color: #d97706; font-weight: 500; }
+.cv-socialwork .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-socialwork .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-socialwork .cv-sw-tag { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-socialwork .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-socialwork .cv-ref-entry strong { display: block; }
+.cv-socialwork .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   23. SECURITY — Near-black, authoritative
+   ====================================================================== */
+.cv-security { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1c1917; line-height: 1.5; }
+.cv-security .cv-header { background: #0c0a09; padding: 28px 24px; color: #fff; }
+.cv-security .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+.cv-security .cv-header .cv-contact { font-size: 0.8125rem; color: #a8a29e; margin-top: 6px; }
+.cv-security .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+
+.cv-security .cv-body { padding: 24px; }
+.cv-security .cv-clearance-bar { background: #f1f5f9; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+.cv-security .cv-clearance-badge { background: #1e3a5f; color: #fff; padding: 5px 14px; border-radius: 4px; font-size: 0.8125rem; font-weight: 600; }
+.cv-security .cv-section { margin-bottom: 20px; }
+.cv-security .cv-section-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #0c0a09; border-bottom: 3px solid #475569; padding-bottom: 4px; margin-bottom: 10px; }
+.cv-security .cv-objective { font-size: 0.9375rem; color: #57534e; }
+.cv-security .cv-entry { margin-bottom: 14px; border-left: 3px solid #475569; padding-left: 12px; }
+.cv-security .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-security .cv-entry-date { font-size: 0.75rem; color: #475569; }
+.cv-security .cv-entry-subtitle { color: #78716c; font-size: 0.8125rem; }
+.cv-security .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-security .cv-skill-tag { display: inline-block; background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; padding: 4px 12px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-security .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-security .cv-ref-entry strong { display: block; }
+.cv-security .cv-ref-entry span { color: #78716c; font-size: 0.8125rem; }
+
+/* ======================================================================
+   24. LOGISTICS — Deep blue, route bar, right panel
+   ====================================================================== */
+.cv-logistics { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1f2937; line-height: 1.5; }
+.cv-logistics .cv-header { background: #1e3a5f; padding: 24px; color: #fff; }
+.cv-logistics .cv-header .cv-name { font-size: 1.5rem; font-weight: 700; }
+.cv-logistics .cv-header .cv-contact { font-size: 0.8125rem; margin-top: 4px; opacity: 0.9; }
+.cv-logistics .cv-header .cv-contact .sep { margin: 0 6px; opacity: 0.4; }
+.cv-logistics .cv-route-bar { height: 6px; background: linear-gradient(90deg, #3b82f6, #1e40af); }
+
+.cv-logistics .cv-columns { grid-template-columns: 1fr 260px; }
+.cv-logistics .cv-col-panel { background: #eff6ff; border-left: 1px solid #bfdbfe; }
+
+.cv-logistics .cv-licence-badge { display: inline-block; background: #dbeafe; color: #1e40af; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 0.9375rem; margin-bottom: 16px; }
+.cv-logistics .cv-section { margin-bottom: 20px; }
+.cv-logistics .cv-section-title { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #1e3a5f; border-bottom: 2px solid #3b82f6; padding-bottom: 3px; margin-bottom: 10px; }
+.cv-logistics .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-logistics .cv-entry { margin-bottom: 14px; }
+.cv-logistics .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-logistics .cv-entry-date { font-size: 0.75rem; color: #3b82f6; font-weight: 500; }
+.cv-logistics .cv-entry-subtitle { color: #64748b; font-size: 0.8125rem; }
+.cv-logistics .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; }
+.cv-logistics .cv-skills-list { list-style: none; padding: 0; }
+.cv-logistics .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid #bfdbfe; }
+.cv-logistics .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-logistics .cv-ref-entry strong { display: block; }
+.cv-logistics .cv-ref-entry span { color: #64748b; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   PRINT STYLES — All templates
+   ====================================================================== */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .app-header,
+    .progress-bar,
+    .wizard-nav,
+    .toast,
+    .step-title,
+    .step-description,
+    .template-chooser,
+    .cv-actions {
+        display: none !important;
+    }
+
+    .wizard-step {
+        display: block !important;
+    }
+
+    .wizard-container {
+        padding: 0;
+        max-width: none;
+    }
+
+    .cv-preview {
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .cv-classic { padding: 20px; }
+
+    .cv-modern { grid-template-columns: 200px 1fr; }
+    .cv-elegant { grid-template-columns: 190px 1fr; }
+    .cv-compact .cv-columns { grid-template-columns: 1fr 1fr; }
+
+    .cv-modern .cv-sidebar,
+    .cv-elegant .cv-sidebar,
+    .cv-executive .cv-header,
+    .cv-compact .cv-header,
+    .cv-compact .cv-col-left,
+    .cv-healthcare .cv-sidebar,
+    .cv-tech .cv-header,
+    .cv-teaching .cv-header,
+    .cv-engineering .cv-header,
+    .cv-hospitality .cv-header,
+    .cv-hospitality .cv-strengths-bar,
+    .cv-government .cv-header,
+    .cv-trades .cv-header,
+    .cv-mining .cv-header,
+    .cv-mining .cv-cert-banner,
+    .cv-agriculture .cv-header,
+    .cv-retail .cv-header,
+    .cv-creative-design .cv-sidebar,
+    .cv-socialwork .cv-header,
+    .cv-security .cv-header,
+    .cv-security .cv-clearance-bar,
+    .cv-logistics .cv-header,
+    .cv-logistics .cv-route-bar,
+    .cv-logistics .cv-col-panel,
+    .cv-trades .cv-col-panel,
+    .cv-engineering .cv-col-panel,
+    .cv-retail .cv-col-panel {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .cv-creative .accent-bar,
+    .cv-creative .cv-entry,
+    .cv-timeline .cv-tl-list::before,
+    .cv-timeline .cv-tl-dot,
+    .cv-executive .cv-skill-tag,
+    .cv-creative .cv-skill-pill,
+    .cv-timeline .cv-skill-tag,
+    .cv-tech .cv-code-tag,
+    .cv-teaching .cv-teach-tag,
+    .cv-teaching .cv-philosophy-box,
+    .cv-mining .cv-cert-badge,
+    .cv-security .cv-clearance-badge,
+    .cv-logistics .cv-licence-badge,
+    .cv-socialwork .cv-mission-box,
+    .cv-trades .cv-safety-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .cv-healthcare { grid-template-columns: 180px 1fr; }
+    .cv-creative-design { grid-template-columns: 210px 1fr; }
+
+    .cv-section { page-break-inside: avoid; }
+    .cv-entry { page-break-inside: avoid; }
+    .cv-tl-item { page-break-inside: avoid; }
+
+    .cv-minimalist, .cv-ats, .cv-graduate, .cv-career-change, .cv-exec-modern,
+    .cv-academic, .cv-consulting, .cv-nonprofit, .cv-marketing,
+    .cv-data-science, .cv-aviation, .cv-media {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ======================================================================
+   25. MINIMALIST — Ultra-clean, maximum whitespace
+   ====================================================================== */
+.cv-minimalist {
+    padding: 40px 32px;
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    color: #333;
+    line-height: 1.7;
+}
+.cv-minimalist .cv-header { margin-bottom: 28px; }
+.cv-minimalist .cv-name {
+    font-size: 2rem; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: #4A4A4A;
+}
+.cv-minimalist .cv-contact { font-size: 0.8125rem; color: #888; margin-top: 6px; }
+.cv-minimalist .cv-contact span + span::before { content: ' | '; color: #ccc; }
+.cv-minimalist .cv-section { margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e5e5e5; }
+.cv-minimalist .cv-section-title {
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #4A4A4A; margin-bottom: 12px;
+}
+.cv-minimalist .cv-objective { font-size: 0.9375rem; color: #666; border: none; padding: 0; }
+.cv-minimalist .cv-entry { margin-bottom: 16px; }
+.cv-minimalist .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-minimalist .cv-entry-title { font-weight: 500; font-size: 0.9375rem; color: #333; }
+.cv-minimalist .cv-entry-date { font-size: 0.75rem; color: #999; }
+.cv-minimalist .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #666; }
+.cv-minimalist .cv-duties li { margin-bottom: 2px; }
+.cv-minimalist .cv-skills-inline { font-size: 0.875rem; color: #555; }
+.cv-minimalist .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-minimalist .cv-ref-entry strong { display: block; }
+.cv-minimalist .cv-ref-entry span { color: #888; font-size: 0.8125rem; }
+
+/* ======================================================================
+   26. ATS-FRIENDLY — Maximum ATS compatibility, no decoration
+   ====================================================================== */
+.cv-ats {
+    padding: 28px 24px;
+    font-family: Arial, Calibri, sans-serif;
+    color: #000;
+    line-height: 1.5;
+    font-size: 0.9375rem;
+}
+.cv-ats .cv-header { text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #1B2A4A; }
+.cv-ats .cv-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; color: #1B2A4A; }
+.cv-ats .cv-contact { font-size: 0.875rem; color: #333; margin-top: 4px; }
+.cv-ats .cv-section { margin-bottom: 16px; }
+.cv-ats .cv-section-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #1B2A4A; border-bottom: 1px solid #1B2A4A; padding-bottom: 3px; margin-bottom: 10px;
+}
+.cv-ats .cv-entry { margin-bottom: 12px; }
+.cv-ats .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-ats .cv-entry-subtitle { color: #333; font-size: 0.875rem; }
+.cv-ats .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-ats .cv-duties li { margin-bottom: 2px; }
+.cv-ats p { font-size: 0.9375rem; }
+
+/* ======================================================================
+   27. GRADUATE — Education-first, entry-level focus
+   ====================================================================== */
+.cv-graduate {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+.cv-graduate .cv-header { padding: 24px 24px 20px; position: relative; }
+.cv-graduate .cv-accent-bar { height: 5px; background: #4A6FA5; position: absolute; top: 0; left: 0; right: 0; }
+.cv-graduate .cv-name { font-size: 1.5rem; font-weight: 700; color: #4A6FA5; }
+.cv-graduate .cv-contact { font-size: 0.8125rem; color: #666; margin-top: 4px; }
+.cv-graduate .cv-contact span + span::before { content: ' | '; color: #ccc; }
+.cv-graduate .cv-body { padding: 0 24px 24px; }
+.cv-graduate .cv-section { margin-bottom: 20px; }
+.cv-graduate .cv-section-title {
+    font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #4A6FA5; border-bottom: 2px solid #4A6FA5; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-graduate .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-graduate .cv-entry { margin-bottom: 14px; }
+.cv-graduate .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-graduate .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-graduate .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-graduate .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-graduate .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-graduate .cv-duties li { margin-bottom: 2px; }
+.cv-graduate .cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.cv-graduate .cv-grad-tag {
+    background: #eef2f7; color: #4A6FA5; padding: 5px 14px; border-radius: 20px; font-size: 0.8125rem; font-weight: 500;
+}
+.cv-graduate .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-graduate .cv-ref-entry strong { display: block; color: #4A6FA5; }
+.cv-graduate .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   28. CAREER CHANGE — Skills-first functional format
+   ====================================================================== */
+.cv-career-change {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+.cv-career-change .cv-header {
+    padding: 24px; border-bottom: 3px solid #355E3B;
+}
+.cv-career-change .cv-name { font-size: 1.5rem; font-weight: 700; color: #355E3B; }
+.cv-career-change .cv-contact { font-size: 0.8125rem; color: #666; margin-top: 4px; }
+.cv-career-change .cv-contact span { margin: 0 4px; }
+.cv-career-change .cv-contact .sep { color: #355E3B; }
+.cv-career-change .cv-body { padding: 24px; }
+.cv-career-change .cv-profile-box {
+    background: #f0f5f1; border-left: 4px solid #355E3B; padding: 16px 18px; margin-bottom: 20px; border-radius: 0 6px 6px 0;
+}
+.cv-career-change .cv-profile-box .cv-section-title { margin-bottom: 6px; font-size: 0.875rem; font-weight: 700; color: #355E3B; text-transform: uppercase; letter-spacing: 0.5px; }
+.cv-career-change .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-career-change .cv-section { margin-bottom: 20px; }
+.cv-career-change .cv-section-title {
+    font-size: 0.9375rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #355E3B; border-bottom: 2px solid #355E3B; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-career-change .cv-skill-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; }
+.cv-career-change .cv-skills-list { list-style: disc; padding-left: 20px; font-size: 0.875rem; }
+.cv-career-change .cv-skills-list li { margin-bottom: 3px; }
+.cv-career-change .cv-entry { margin-bottom: 14px; }
+.cv-career-change .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-career-change .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-career-change .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-career-change .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-career-change .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-career-change .cv-duties li { margin-bottom: 2px; }
+.cv-career-change .cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.cv-career-change .cv-skill-tag { background: #f0f5f1; color: #355E3B; padding: 5px 14px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-career-change .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-career-change .cv-ref-entry strong { display: block; }
+.cv-career-change .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   29. EXECUTIVE MODERN — Bold dark header, two-column body
+   ====================================================================== */
+.cv-exec-modern {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #333;
+    line-height: 1.5;
+}
+.cv-exec-modern .cv-header {
+    background: #3B3F45; color: #fff; padding: 32px 28px; text-align: center;
+}
+.cv-exec-modern .cv-name { font-size: 1.75rem; font-weight: 700; letter-spacing: 1px; }
+.cv-exec-modern .cv-tagline { font-size: 0.875rem; font-style: italic; opacity: 0.85; margin-top: 6px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.cv-exec-modern .cv-contact { font-size: 0.8125rem; margin-top: 10px; opacity: 0.8; }
+.cv-exec-modern .cv-contact span + span::before { content: ' | '; opacity: 0.5; }
+.cv-exec-modern .cv-columns { display: grid; grid-template-columns: 1fr 260px; }
+.cv-exec-modern .cv-col-main { padding: 24px; }
+.cv-exec-modern .cv-col-panel { padding: 24px 20px; background: #f7f7f7; border-left: 1px solid #e5e5e5; }
+.cv-exec-modern .cv-section { margin-bottom: 22px; }
+.cv-exec-modern .cv-section-title {
+    font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #3B3F45; border-bottom: 2px solid #3B3F45; padding-bottom: 4px; margin-bottom: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.cv-exec-modern .cv-entry { margin-bottom: 16px; }
+.cv-exec-modern .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-exec-modern .cv-entry-title { font-weight: 700; font-size: 0.9375rem; color: #3B3F45; }
+.cv-exec-modern .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-exec-modern .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-exec-modern .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-exec-modern .cv-duties li { margin-bottom: 2px; }
+.cv-exec-modern .cv-skills-list { list-style: none; padding: 0; }
+.cv-exec-modern .cv-skills-list li { font-size: 0.8125rem; padding: 4px 0; border-bottom: 1px solid #e5e5e5; }
+.cv-exec-modern .cv-ref-entry { margin-bottom: 10px; font-size: 0.875rem; }
+.cv-exec-modern .cv-ref-entry strong { display: block; color: #3B3F45; }
+.cv-exec-modern .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+.cv-exec-modern p { font-size: 0.875rem; }
+@media (max-width: 599px) { .cv-exec-modern .cv-columns { grid-template-columns: 1fr; } .cv-exec-modern .cv-col-panel { border-left: none; border-top: 1px solid #e5e5e5; } }
+
+/* ======================================================================
+   30. ACADEMIC — Research-focused, clean serif
+   ====================================================================== */
+.cv-academic {
+    padding: 28px 24px;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #222;
+    line-height: 1.6;
+}
+.cv-academic .cv-header { text-align: center; margin-bottom: 20px; border-bottom: 3px double #1B2A4A; padding-bottom: 14px; }
+.cv-academic .cv-name { font-size: 1.5rem; font-weight: 700; color: #1B2A4A; letter-spacing: 0.5px; }
+.cv-academic .cv-contact { font-size: 0.8125rem; color: #555; margin-top: 4px; }
+.cv-academic .cv-contact span { margin: 0 4px; }
+.cv-academic .cv-contact .sep { color: #999; }
+.cv-academic .cv-body { padding: 0; }
+.cv-academic .cv-section { margin-bottom: 18px; }
+.cv-academic .cv-section-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #1B2A4A; border-bottom: 1px solid #1B2A4A; padding-bottom: 3px; margin-bottom: 10px;
+}
+.cv-academic .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-academic .cv-entry { margin-bottom: 14px; }
+.cv-academic .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-academic .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-academic .cv-entry-subtitle { color: #555; font-size: 0.875rem; font-style: italic; }
+.cv-academic .cv-entry-date { font-size: 0.8125rem; color: #888; }
+.cv-academic .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; color: #444; }
+.cv-academic .cv-duties li { margin-bottom: 2px; }
+.cv-academic .cv-academic-skills { font-size: 0.9375rem; color: #444; }
+.cv-academic .cv-ref-entry { margin-bottom: 10px; font-size: 0.9375rem; }
+.cv-academic .cv-ref-entry strong { display: block; }
+.cv-academic .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   31. CONSULTING — Clean, dense, results-focused
+   ====================================================================== */
+.cv-consulting {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #222;
+    line-height: 1.5;
+}
+.cv-consulting .cv-header {
+    padding: 20px 24px; border-top: 4px solid #2D2D2D; border-bottom: 1px solid #e5e5e5;
+}
+.cv-consulting .cv-name { font-size: 1.5rem; font-weight: 700; color: #2D2D2D; text-transform: uppercase; letter-spacing: 1px; }
+.cv-consulting .cv-contact { font-size: 0.8125rem; color: #666; margin-top: 4px; }
+.cv-consulting .cv-contact span { margin: 0 4px; }
+.cv-consulting .cv-contact .sep { color: #ccc; }
+.cv-consulting .cv-body { padding: 20px 24px; }
+.cv-consulting .cv-value-prop {
+    background: #f8f8f8; padding: 14px 18px; margin-bottom: 20px; border-radius: 4px; font-size: 0.9375rem; color: #444;
+}
+.cv-consulting .cv-section { margin-bottom: 20px; }
+.cv-consulting .cv-section-title {
+    font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    color: #2D2D2D; border-bottom: 2px solid #2D2D2D; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-consulting .cv-comp-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.cv-consulting .cv-comp-item {
+    background: #f0f0f0; padding: 5px 14px; font-size: 0.8125rem; font-weight: 500; border-radius: 3px; color: #333;
+}
+.cv-consulting .cv-entry { margin-bottom: 16px; }
+.cv-consulting .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-consulting .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-consulting .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-consulting .cv-entry-date { font-size: 0.75rem; color: #999; }
+.cv-consulting .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #444; }
+.cv-consulting .cv-duties li { margin-bottom: 2px; }
+.cv-consulting .cv-ref-entry { margin-bottom: 8px; font-size: 0.875rem; }
+.cv-consulting .cv-ref-entry strong { display: block; }
+.cv-consulting .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   32. NONPROFIT — Warm teal sidebar, mission-driven
+   ====================================================================== */
+.cv-nonprofit {
+    display: grid; grid-template-columns: 220px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333; line-height: 1.5; min-height: 600px;
+}
+.cv-nonprofit .cv-sidebar { background: #2C6E6F; color: #fff; padding: 28px 18px; }
+.cv-nonprofit .cv-sidebar .cv-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; word-break: break-word; }
+.cv-nonprofit .cv-sidebar-section { margin-bottom: 20px; }
+.cv-nonprofit .cv-sidebar-title {
+    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 8px;
+}
+.cv-nonprofit .cv-sidebar p { font-size: 0.8125rem; margin-bottom: 3px; }
+.cv-nonprofit .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-nonprofit .cv-sidebar .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.cv-nonprofit .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-nonprofit .cv-sidebar .cv-ref-entry strong { display: block; font-size: 0.875rem; }
+.cv-nonprofit .cv-sidebar .cv-ref-entry span { opacity: 0.8; font-size: 0.75rem; }
+.cv-nonprofit .cv-main { padding: 28px 24px; }
+.cv-nonprofit .cv-mission-stmt {
+    background: #f0fafa; border-left: 4px solid #2C6E6F; padding: 14px 16px; margin-bottom: 20px; border-radius: 0 6px 6px 0;
+    font-size: 0.9375rem; color: #444; font-style: italic;
+}
+.cv-nonprofit .cv-section { margin-bottom: 22px; }
+.cv-nonprofit .cv-section-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #2C6E6F; border-bottom: 2px solid #2C6E6F; padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-nonprofit .cv-entry { margin-bottom: 16px; }
+.cv-nonprofit .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-nonprofit .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-nonprofit .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-nonprofit .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-nonprofit .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-nonprofit .cv-duties li { margin-bottom: 2px; }
+@media (max-width: 599px) { .cv-nonprofit { grid-template-columns: 1fr; } .cv-nonprofit .cv-sidebar { padding: 20px 16px; } .cv-nonprofit .cv-main { padding: 20px 16px; } }
+
+/* ======================================================================
+   33. MARKETING — Burgundy header, two-column body
+   ====================================================================== */
+.cv-marketing {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333; line-height: 1.5;
+}
+.cv-marketing .cv-header { background: #6B2737; color: #fff; padding: 24px; }
+.cv-marketing .cv-name { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+.cv-marketing .cv-contact { font-size: 0.8125rem; margin-top: 6px; opacity: 0.9; }
+.cv-marketing .cv-contact span { margin: 0 4px; }
+.cv-marketing .cv-contact .sep { opacity: 0.5; }
+.cv-marketing .cv-columns { display: grid; grid-template-columns: 1fr 220px; }
+.cv-marketing .cv-col-main { padding: 24px; }
+.cv-marketing .cv-col-panel { padding: 24px 18px; background: #fdf2f4; border-left: 1px solid #f5d0d6; }
+.cv-marketing .cv-section { margin-bottom: 22px; }
+.cv-marketing .cv-section-title {
+    font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: #6B2737; border-bottom: 2px solid #6B2737; padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-marketing .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-marketing .cv-entry { margin-bottom: 16px; }
+.cv-marketing .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-marketing .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-marketing .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-marketing .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-marketing .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-marketing .cv-duties li { margin-bottom: 2px; }
+.cv-marketing .cv-skills-list { list-style: none; padding: 0; }
+.cv-marketing .cv-skills-list li { font-size: 0.8125rem; padding: 4px 0; border-bottom: 1px solid #f5d0d6; color: #6B2737; }
+.cv-marketing .cv-ref-entry { margin-bottom: 10px; font-size: 0.875rem; }
+.cv-marketing .cv-ref-entry strong { display: block; color: #6B2737; }
+.cv-marketing .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+@media (max-width: 599px) { .cv-marketing .cv-columns { grid-template-columns: 1fr; } .cv-marketing .cv-col-panel { border-left: none; border-top: 1px solid #f5d0d6; } }
+
+/* ======================================================================
+   34. DATA SCIENCE — Slate blue sidebar, technical focus
+   ====================================================================== */
+.cv-data-science {
+    display: grid; grid-template-columns: 230px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333; line-height: 1.5; min-height: 600px;
+}
+.cv-data-science .cv-sidebar { background: #5B7B9A; color: #fff; padding: 28px 18px; }
+.cv-data-science .cv-sidebar .cv-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; word-break: break-word; }
+.cv-data-science .cv-sidebar-section { margin-bottom: 20px; }
+.cv-data-science .cv-sidebar-title {
+    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 8px;
+}
+.cv-data-science .cv-sidebar p { font-size: 0.8125rem; margin-bottom: 3px; }
+.cv-data-science .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-data-science .cv-sidebar .cv-skills-list li {
+    font-size: 0.8125rem; padding: 3px 8px; margin-bottom: 4px;
+    background: rgba(255,255,255,0.12); border-radius: 3px; font-family: 'Consolas', 'Monaco', monospace;
+}
+.cv-data-science .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-data-science .cv-sidebar .cv-ref-entry strong { display: block; font-size: 0.875rem; }
+.cv-data-science .cv-sidebar .cv-ref-entry span { opacity: 0.8; font-size: 0.75rem; }
+.cv-data-science .cv-main { padding: 28px 24px; }
+.cv-data-science .cv-section { margin-bottom: 22px; }
+.cv-data-science .cv-section-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #5B7B9A; border-bottom: 2px solid #5B7B9A; padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-data-science .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-data-science .cv-entry { margin-bottom: 16px; }
+.cv-data-science .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-data-science .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-data-science .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-data-science .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-data-science .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-data-science .cv-duties li { margin-bottom: 2px; }
+@media (max-width: 599px) { .cv-data-science { grid-template-columns: 1fr; } .cv-data-science .cv-sidebar { padding: 20px 16px; } .cv-data-science .cv-main { padding: 20px 16px; } }
+
+/* ======================================================================
+   35. AVIATION — Navy, structured, badge-style certifications
+   ====================================================================== */
+.cv-aviation {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333; line-height: 1.5;
+}
+.cv-aviation .cv-header { background: #1B2A4A; color: #fff; padding: 24px; text-align: center; }
+.cv-aviation .cv-name { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.cv-aviation .cv-contact { font-size: 0.8125rem; margin-top: 6px; opacity: 0.9; }
+.cv-aviation .cv-contact span { margin: 0 4px; }
+.cv-aviation .cv-contact .sep { opacity: 0.5; }
+.cv-aviation .cv-body { padding: 24px; }
+.cv-aviation .cv-licence-strip {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 12px; background: #f0f4f8; border-radius: 6px;
+}
+.cv-aviation .cv-avi-badge {
+    background: #1B2A4A; color: #fff; padding: 5px 14px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.cv-aviation .cv-section { margin-bottom: 22px; }
+.cv-aviation .cv-section-title {
+    font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: #1B2A4A; border-bottom: 2px solid #1B2A4A; padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-aviation .cv-objective { font-size: 0.9375rem; color: #555; }
+.cv-aviation .cv-entry { margin-bottom: 16px; }
+.cv-aviation .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-aviation .cv-entry-title { font-weight: 700; font-size: 0.9375rem; color: #1B2A4A; }
+.cv-aviation .cv-entry-subtitle { color: #666; font-size: 0.8125rem; }
+.cv-aviation .cv-entry-date { font-size: 0.75rem; color: #888; }
+.cv-aviation .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-aviation .cv-duties li { margin-bottom: 2px; }
+.cv-aviation .cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.cv-aviation .cv-skill-tag { background: #eef2f7; color: #1B2A4A; padding: 5px 14px; border-radius: 4px; font-size: 0.8125rem; }
+.cv-aviation .cv-ref-entry { margin-bottom: 10px; font-size: 0.875rem; }
+.cv-aviation .cv-ref-entry strong { display: block; color: #1B2A4A; }
+.cv-aviation .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+/* ======================================================================
+   36. MEDIA — Editorial, warm taupe, serif/slab headers
+   ====================================================================== */
+.cv-media {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #333; line-height: 1.6;
+}
+.cv-media .cv-header { padding: 28px 24px; border-bottom: 3px solid #8A7968; }
+.cv-media .cv-name { font-size: 2rem; font-weight: 700; color: #8A7968; letter-spacing: -0.5px; }
+.cv-media .cv-contact { font-size: 0.8125rem; color: #888; margin-top: 6px; }
+.cv-media .cv-contact span { margin: 0 4px; }
+.cv-media .cv-contact .sep { color: #8A7968; }
+.cv-media .cv-body { padding: 24px; }
+.cv-media .cv-section { margin-bottom: 22px; }
+.cv-media .cv-section-title {
+    font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: #8A7968; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid #d5cec5;
+}
+.cv-media .cv-objective { font-size: 0.9375rem; color: #555; font-style: italic; }
+.cv-media .cv-beat-areas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.cv-media .cv-beat-tag {
+    background: #f5f0eb; color: #8A7968; padding: 5px 14px; border-radius: 20px; font-size: 0.8125rem; font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.cv-media .cv-entry { margin-bottom: 16px; }
+.cv-media .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.cv-media .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-media .cv-entry-subtitle { color: #666; font-size: 0.8125rem; font-style: italic; }
+.cv-media .cv-entry-date { font-size: 0.75rem; color: #999; }
+.cv-media .cv-duties { margin-top: 4px; padding-left: 18px; font-size: 0.8125rem; color: #555; }
+.cv-media .cv-duties li { margin-bottom: 2px; }
+.cv-media .cv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.cv-media .cv-skill-tag { background: #f5f0eb; color: #8A7968; padding: 5px 14px; border-radius: 20px; font-size: 0.8125rem; }
+.cv-media .cv-ref-entry { margin-bottom: 10px; font-size: 0.9375rem; }
+.cv-media .cv-ref-entry strong { display: block; }
+.cv-media .cv-ref-entry span { color: #888; font-size: 0.8125rem; }
+
+/* ======================================================================
+   ACCENT COLOR OVERRIDES — When --cv-accent is set via the color picker,
+   these rules recolor each template's key accent elements.
+   Uses .cv-preview[style] as qualifier so defaults remain when no color set.
+   ====================================================================== */
+
+/* ── CLASSIC ── */
+.cv-preview[style] .cv-classic .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-classic .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── MODERN ── */
+.cv-preview[style] .cv-modern .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-modern .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── SA FORMAL ── */
+.cv-preview[style] .cv-sa-formal .cv-section-title { border-left-color: var(--cv-accent); }
+
+/* ── EXECUTIVE ── */
+.cv-preview[style] .cv-executive .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-executive .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-executive .cv-entry-title { color: var(--cv-accent); }
+.cv-preview[style] .cv-executive .cv-ref-entry strong { color: var(--cv-accent); }
+
+/* ── CREATIVE ── */
+.cv-preview[style] .cv-creative .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-creative .accent-bar { background: var(--cv-accent); }
+.cv-preview[style] .cv-creative .cv-entry-date { color: var(--cv-accent); }
+.cv-preview[style] .cv-creative .cv-skill-pill { color: var(--cv-accent); }
+
+/* ── ELEGANT ── */
+.cv-preview[style] .cv-elegant .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-elegant .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── COMPACT ── */
+.cv-preview[style] .cv-compact .cv-section-title { border-bottom-color: var(--cv-accent); color: var(--cv-accent); }
+
+/* ── TIMELINE ── */
+.cv-preview[style] .cv-timeline .cv-section-title { color: var(--cv-accent); }
+.cv-preview[style] .cv-timeline .cv-tl-dot { background: var(--cv-accent); }
+.cv-preview[style] .cv-timeline .cv-tl-marker::before { background: var(--cv-accent); }
+
+/* ── HEALTHCARE ── */
+.cv-preview[style] .cv-healthcare .cv-sidebar { border-left-color: var(--cv-accent); }
+.cv-preview[style] .cv-healthcare .cv-sidebar .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-healthcare .cv-sidebar-title { color: var(--cv-accent); }
+.cv-preview[style] .cv-healthcare .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── TECH ── */
+.cv-preview[style] .cv-tech .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-tech .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── TEACHING ── */
+.cv-preview[style] .cv-teaching .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-teaching .cv-section-title { color: var(--cv-accent); }
+.cv-preview[style] .cv-teaching .cv-philosophy-box { border-color: var(--cv-accent); }
+
+/* ── ENGINEERING ── */
+.cv-preview[style] .cv-engineering .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-engineering .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── FINANCE ── */
+.cv-preview[style] .cv-finance .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-finance .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-finance .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── LEGAL ── */
+.cv-preview[style] .cv-legal .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-legal .cv-section-title { border-bottom-color: var(--cv-accent); }
+
+/* ── HOSPITALITY ── */
+.cv-preview[style] .cv-hospitality .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-hospitality .cv-strength-pill { background: var(--cv-accent); }
+.cv-preview[style] .cv-hospitality .cv-section-title { color: var(--cv-accent); }
+
+/* ── GOVERNMENT ── */
+.cv-preview[style] .cv-government .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-government .cv-section-title { border-left-color: var(--cv-accent); }
+
+/* ── TRADES ── */
+.cv-preview[style] .cv-trades .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-trades .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── MINING ── */
+.cv-preview[style] .cv-mining .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-mining .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-mining .cv-cert-badge { background: var(--cv-accent); }
+
+/* ── AGRICULTURE ── */
+.cv-preview[style] .cv-agriculture .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-agriculture .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── RETAIL ── */
+.cv-preview[style] .cv-retail .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-retail .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── CREATIVE DESIGN ── */
+.cv-preview[style] .cv-creative-design .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-creative-design .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── SOCIAL WORK ── */
+.cv-preview[style] .cv-socialwork .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-socialwork .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-socialwork .cv-mission-box { border-color: var(--cv-accent); }
+
+/* ── SECURITY ── */
+.cv-preview[style] .cv-security .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-security .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-security .cv-clearance-badge { background: var(--cv-accent); }
+
+/* ── LOGISTICS ── */
+.cv-preview[style] .cv-logistics .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-logistics .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-logistics .cv-licence-badge { background: var(--cv-accent); }
+
+/* ── MINIMALIST ── */
+.cv-preview[style] .cv-minimalist .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-minimalist .cv-section-title { color: var(--cv-accent); }
+
+/* ── ATS ── */
+.cv-preview[style] .cv-ats .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-ats .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-ats .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── GRADUATE ── */
+.cv-preview[style] .cv-graduate .cv-accent-bar { background: var(--cv-accent); }
+.cv-preview[style] .cv-graduate .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-graduate .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-graduate .cv-ref-entry strong { color: var(--cv-accent); }
+
+/* ── CAREER CHANGE ── */
+.cv-preview[style] .cv-career-change .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-career-change .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-career-change .cv-profile-box { border-left-color: var(--cv-accent); }
+.cv-preview[style] .cv-career-change .cv-profile-box .cv-section-title { color: var(--cv-accent); }
+.cv-preview[style] .cv-career-change .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── EXECUTIVE MODERN ── */
+.cv-preview[style] .cv-exec-modern .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-exec-modern .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-exec-modern .cv-entry-title { color: var(--cv-accent); }
+
+/* ── ACADEMIC ── */
+.cv-preview[style] .cv-academic .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-academic .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-academic .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── CONSULTING ── */
+.cv-preview[style] .cv-consulting .cv-header { border-top-color: var(--cv-accent); }
+.cv-preview[style] .cv-consulting .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── NONPROFIT ── */
+.cv-preview[style] .cv-nonprofit .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-nonprofit .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-nonprofit .cv-mission-stmt { border-left-color: var(--cv-accent); }
+
+/* ── MARKETING ── */
+.cv-preview[style] .cv-marketing .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-marketing .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── DATA SCIENCE ── */
+.cv-preview[style] .cv-data-science .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-data-science .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── AVIATION ── */
+.cv-preview[style] .cv-aviation .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-aviation .cv-avi-badge { background: var(--cv-accent); }
+.cv-preview[style] .cv-aviation .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-aviation .cv-entry-title { color: var(--cv-accent); }
+
+/* ── MEDIA ── */
+.cv-preview[style] .cv-media .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-media .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-media .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-media .cv-beat-tag { color: var(--cv-accent); }
+
+
+/* ======================================================================
+   37. PROFESSIONAL — Clean serif, conservative, suits any industry
+   ====================================================================== */
+.cv-professional {
+    padding: 32px 28px;
+    font-family: 'Cambria', Georgia, serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-professional .cv-header {
+    text-align: center;
+    border-bottom: 3px solid #2c3e50;
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+}
+.cv-professional .cv-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.cv-professional .cv-contact { font-size: 0.875rem; color: #555; }
+.cv-professional .cv-contact span + .sep { margin: 0 8px; color: #bbb; }
+.cv-professional .cv-body { }
+.cv-professional .cv-section { margin-bottom: 18px; }
+.cv-professional .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #2c3e50;
+    border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-professional .cv-objective { font-size: 0.9375rem; color: #444; line-height: 1.6; }
+.cv-professional .cv-entry { margin-bottom: 14px; }
+.cv-professional .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-professional .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-professional .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-professional .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-professional .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-professional .cv-duties li { margin-bottom: 2px; }
+.cv-professional .cv-skill-pill {
+    display: inline-block; padding: 4px 14px; margin: 3px 4px; border-radius: 20px;
+    background: #ecf0f1; font-size: 0.8125rem; color: #2c3e50;
+}
+.cv-professional .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-professional .cv-ref-entry strong { display: block; }
+.cv-professional .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   38. INFOGRAPHIC — Visual skill bars, icon-style layout
+   ====================================================================== */
+.cv-infographic {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+    min-height: 600px;
+}
+.cv-infographic .cv-sidebar {
+    background: #2c3e50; color: #fff; padding: 28px 18px;
+}
+.cv-infographic .cv-sidebar .cv-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; word-break: break-word; }
+.cv-infographic .cv-sidebar .cv-contact { font-size: 0.75rem; opacity: 0.9; margin-bottom: 24px; }
+.cv-infographic .cv-sidebar .cv-contact p { margin-bottom: 4px; }
+.cv-infographic .cv-sidebar-section { margin-bottom: 20px; }
+.cv-infographic .cv-sidebar-title {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-infographic .cv-skill-bar-wrap { margin-bottom: 10px; }
+.cv-infographic .cv-skill-bar-label { font-size: 0.8125rem; display: block; margin-bottom: 3px; }
+.cv-infographic .cv-skill-bar {
+    width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden;
+}
+.cv-infographic .cv-skill-bar-fill {
+    height: 100%; background: #1abc9c; border-radius: 4px;
+}
+.cv-infographic .cv-lang-item { font-size: 0.8125rem; padding: 2px 0; }
+.cv-infographic .cv-sidebar p { font-size: 0.8125rem; }
+.cv-infographic .cv-main { padding: 28px 24px; }
+.cv-infographic .cv-section { margin-bottom: 20px; }
+.cv-infographic .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #2c3e50;
+    border-bottom: 2px solid #2c3e50; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-infographic .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-infographic .cv-entry { margin-bottom: 14px; }
+.cv-infographic .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-infographic .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-infographic .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-infographic .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-infographic .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-infographic .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-infographic .cv-ref-entry strong { display: block; }
+.cv-infographic .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   39. SIMPLE — Bare-minimum design, ultra-readable
+   ====================================================================== */
+.cv-simple {
+    padding: 28px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+.cv-simple .cv-header {
+    margin-bottom: 20px;
+}
+.cv-simple .cv-name {
+    font-size: 1.5rem; font-weight: 700; color: #111; margin-bottom: 4px;
+}
+.cv-simple .cv-contact { font-size: 0.875rem; color: #666; }
+.cv-simple .cv-section { margin-bottom: 18px; }
+.cv-simple .cv-section-title {
+    font-size: 0.9375rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #111; margin-bottom: 8px;
+}
+.cv-simple .cv-entry { margin-bottom: 12px; }
+.cv-simple .cv-entry-title { font-weight: 700; font-size: 0.9375rem; }
+.cv-simple .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-simple .cv-entry-date { font-size: 0.8125rem; color: #888; }
+.cv-simple .cv-duties { padding-left: 18px; font-size: 0.875rem; margin-top: 4px; }
+.cv-simple .cv-duties li { margin-bottom: 2px; }
+.cv-simple p { font-size: 0.9375rem; }
+.cv-simple .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-simple .cv-ref-entry strong { display: block; }
+.cv-simple .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   40. BANKING — Conservative financial services
+   ====================================================================== */
+.cv-banking {
+    padding: 32px 28px;
+    font-family: 'Cambria', Georgia, serif;
+    color: #1a1a2e;
+    line-height: 1.55;
+}
+.cv-banking .cv-header {
+    text-align: center;
+    border-bottom: 3px double #1a3c5e;
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+}
+.cv-banking .cv-name {
+    font-size: 1.625rem; font-weight: 700; color: #1a3c5e;
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
+}
+.cv-banking .cv-contact { font-size: 0.875rem; color: #555; }
+.cv-banking .cv-contact span + .sep { margin: 0 8px; color: #bbb; }
+.cv-banking .cv-body { }
+.cv-banking .cv-section { margin-bottom: 18px; }
+.cv-banking .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #1a3c5e;
+    border-bottom: 1px solid #c0c8d0; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-banking .cv-objective { font-size: 0.9375rem; color: #333; }
+.cv-banking .cv-entry { margin-bottom: 14px; }
+.cv-banking .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-banking .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-banking .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-banking .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-banking .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-banking .cv-skill-pill {
+    display: inline-block; padding: 4px 14px; margin: 3px 4px; border-radius: 4px;
+    background: #eef2f6; font-size: 0.8125rem; color: #1a3c5e; border: 1px solid #d0d8e0;
+}
+.cv-banking .cv-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.cv-banking .cv-table th { text-align: left; border-bottom: 2px solid #1a3c5e; padding: 6px 8px; font-size: 0.8125rem; color: #1a3c5e; }
+.cv-banking .cv-table td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+
+
+/* ======================================================================
+   41. MEDICAL DOCTOR — Specialized healthcare for doctors/specialists
+   ====================================================================== */
+.cv-medical-doctor {
+    padding: 32px 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-medical-doctor .cv-header {
+    text-align: center;
+    border-bottom: 3px solid #1a5276;
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+}
+.cv-medical-doctor .cv-name {
+    font-size: 1.75rem; font-weight: 700; color: #1a5276;
+    margin-bottom: 4px;
+}
+.cv-medical-doctor .cv-title-bar { margin-bottom: 8px; }
+.cv-medical-doctor .cv-speciality {
+    display: inline-block; background: #1a5276; color: #fff; padding: 3px 14px;
+    border-radius: 4px; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.5px;
+}
+.cv-medical-doctor .cv-contact { font-size: 0.875rem; color: #555; }
+.cv-medical-doctor .cv-contact span + .sep { margin: 0 8px; color: #bbb; }
+.cv-medical-doctor .cv-body { }
+.cv-medical-doctor .cv-section { margin-bottom: 18px; }
+.cv-medical-doctor .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #1a5276;
+    border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-medical-doctor .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-medical-doctor .cv-entry { margin-bottom: 14px; }
+.cv-medical-doctor .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-medical-doctor .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-medical-doctor .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-medical-doctor .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-medical-doctor .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-medical-doctor .cv-skill-pill {
+    display: inline-block; padding: 4px 14px; margin: 3px 4px; border-radius: 20px;
+    background: #eaf2f8; font-size: 0.8125rem; color: #1a5276;
+}
+.cv-medical-doctor .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-medical-doctor .cv-ref-entry strong { display: block; }
+.cv-medical-doctor .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   42. HR / PEOPLE — Human resources professionals
+   ====================================================================== */
+.cv-hr {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+    min-height: 600px;
+}
+.cv-hr .cv-sidebar {
+    background: #6c3483; color: #fff; padding: 28px 18px;
+}
+.cv-hr .cv-sidebar .cv-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; word-break: break-word; }
+.cv-hr .cv-sidebar .cv-contact { font-size: 0.75rem; opacity: 0.9; margin-bottom: 24px; }
+.cv-hr .cv-sidebar .cv-contact p { margin-bottom: 4px; }
+.cv-hr .cv-sidebar-section { margin-bottom: 20px; }
+.cv-hr .cv-sidebar-title {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 8px;
+}
+.cv-hr .cv-sidebar .cv-skills-list { list-style: none; padding: 0; }
+.cv-hr .cv-sidebar .cv-skills-list li { font-size: 0.8125rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.cv-hr .cv-sidebar .cv-ref-entry { font-size: 0.8125rem; margin-bottom: 10px; }
+.cv-hr .cv-sidebar .cv-ref-entry strong { display: block; font-size: 0.875rem; }
+.cv-hr .cv-sidebar .cv-ref-entry span { opacity: 0.8; font-size: 0.75rem; }
+.cv-hr .cv-main { padding: 28px 24px; }
+.cv-hr .cv-section { margin-bottom: 20px; }
+.cv-hr .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #6c3483;
+    border-bottom: 2px solid #6c3483; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-hr .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-hr .cv-entry { margin-bottom: 14px; }
+.cv-hr .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-hr .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-hr .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-hr .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-hr .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+
+
+/* ======================================================================
+   43. PROJECT MANAGER — PM-focused with methodology tags
+   ====================================================================== */
+.cv-project-manager {
+    padding: 32px 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-project-manager .cv-header {
+    text-align: center;
+    background: #1b4332;
+    color: #fff;
+    padding: 24px 20px;
+    margin: -32px -28px 22px;
+}
+.cv-project-manager .cv-name {
+    font-size: 1.625rem; font-weight: 700; margin-bottom: 6px;
+}
+.cv-project-manager .cv-contact { font-size: 0.8125rem; opacity: 0.9; }
+.cv-project-manager .cv-contact span { color: #fff; }
+.cv-project-manager .cv-contact .sep { margin: 0 8px; opacity: 0.6; }
+.cv-project-manager .cv-method-tags {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px;
+}
+.cv-project-manager .cv-method-tag {
+    display: inline-block; padding: 3px 12px; border-radius: 20px;
+    background: rgba(255,255,255,0.2); font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+}
+.cv-project-manager .cv-body { }
+.cv-project-manager .cv-section { margin-bottom: 18px; }
+.cv-project-manager .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #1b4332;
+    border-bottom: 2px solid #1b4332; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-project-manager .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-project-manager .cv-entry { margin-bottom: 14px; }
+.cv-project-manager .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-project-manager .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-project-manager .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-project-manager .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-project-manager .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-project-manager .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-project-manager .cv-ref-entry strong { display: block; }
+.cv-project-manager .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   44. PHARMACY — Pharmaceutical industry specific
+   ====================================================================== */
+.cv-pharmacy {
+    padding: 32px 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-pharmacy .cv-header {
+    text-align: center;
+    border-bottom: 3px solid #0e6655;
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+}
+.cv-pharmacy .cv-name {
+    font-size: 1.625rem; font-weight: 700; color: #0e6655; margin-bottom: 8px;
+}
+.cv-pharmacy .cv-contact { font-size: 0.875rem; color: #555; }
+.cv-pharmacy .cv-contact span + .sep { margin: 0 8px; color: #bbb; }
+.cv-pharmacy .cv-body { }
+.cv-pharmacy .cv-section { margin-bottom: 18px; }
+.cv-pharmacy .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #0e6655;
+    border-bottom: 1px solid #b2d8cc; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-pharmacy .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-pharmacy .cv-entry { margin-bottom: 14px; }
+.cv-pharmacy .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-pharmacy .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-pharmacy .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-pharmacy .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-pharmacy .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-pharmacy .cv-skill-pill {
+    display: inline-block; padding: 4px 14px; margin: 3px 4px; border-radius: 20px;
+    background: #e8f5e9; font-size: 0.8125rem; color: #0e6655;
+}
+.cv-pharmacy .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-pharmacy .cv-ref-entry strong { display: block; }
+.cv-pharmacy .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   45. REAL ESTATE — Property sector focus
+   ====================================================================== */
+.cv-real-estate {
+    padding: 32px 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-real-estate .cv-header {
+    text-align: center;
+    background: #7b241c;
+    color: #fff;
+    padding: 24px 20px;
+    margin: -32px -28px 22px;
+}
+.cv-real-estate .cv-name {
+    font-size: 1.625rem; font-weight: 700; margin-bottom: 6px;
+}
+.cv-real-estate .cv-contact { font-size: 0.8125rem; opacity: 0.9; }
+.cv-real-estate .cv-contact span { color: #fff; }
+.cv-real-estate .cv-contact .sep { margin: 0 8px; opacity: 0.6; }
+.cv-real-estate .cv-body { }
+.cv-real-estate .cv-section { margin-bottom: 18px; }
+.cv-real-estate .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #7b241c;
+    border-bottom: 2px solid #7b241c; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-real-estate .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-real-estate .cv-highlight-strip {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px;
+}
+.cv-real-estate .cv-highlight-item {
+    display: inline-block; padding: 6px 16px; background: #7b241c; color: #fff;
+    border-radius: 4px; font-size: 0.8125rem; font-weight: 600;
+}
+.cv-real-estate .cv-entry { margin-bottom: 14px; }
+.cv-real-estate .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-real-estate .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-real-estate .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-real-estate .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-real-estate .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-real-estate .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-real-estate .cv-ref-entry strong { display: block; }
+.cv-real-estate .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   46. TOURISM GUIDE — Tour guiding / travel industry
+   ====================================================================== */
+.cv-tourism {
+    padding: 32px 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.55;
+}
+.cv-tourism .cv-header {
+    text-align: center;
+    background: linear-gradient(135deg, #1e8449, #27ae60);
+    color: #fff;
+    padding: 24px 20px;
+    margin: -32px -28px 22px;
+    border-radius: 0;
+}
+.cv-tourism .cv-name {
+    font-size: 1.625rem; font-weight: 700; margin-bottom: 6px;
+}
+.cv-tourism .cv-contact { font-size: 0.8125rem; opacity: 0.9; }
+.cv-tourism .cv-contact span { color: #fff; }
+.cv-tourism .cv-contact .sep { margin: 0 6px; opacity: 0.6; }
+.cv-tourism .cv-body { }
+.cv-tourism .cv-section { margin-bottom: 18px; }
+.cv-tourism .cv-section-title {
+    font-size: 1.0625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #1e8449;
+    border-bottom: 2px solid #1e8449; padding-bottom: 4px; margin-bottom: 10px;
+}
+.cv-tourism .cv-objective { font-size: 0.9375rem; color: #444; }
+.cv-tourism .cv-lang-strip {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
+}
+.cv-tourism .cv-lang-badge {
+    display: inline-block; padding: 4px 14px; background: #d5f5e3; color: #1e8449;
+    border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
+}
+.cv-tourism .cv-entry { margin-bottom: 14px; }
+.cv-tourism .cv-entry-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.cv-tourism .cv-entry-title { font-weight: 700; font-size: 1rem; }
+.cv-tourism .cv-entry-subtitle { color: #555; font-size: 0.875rem; }
+.cv-tourism .cv-entry-date { font-size: 0.8125rem; color: #777; font-style: italic; }
+.cv-tourism .cv-duties { margin-top: 4px; padding-left: 20px; font-size: 0.875rem; }
+.cv-tourism .cv-skill-pill {
+    display: inline-block; padding: 4px 14px; margin: 3px 4px; border-radius: 20px;
+    background: #d5f5e3; font-size: 0.8125rem; color: #1e8449;
+}
+.cv-tourism .cv-ref-entry { margin-bottom: 8px; font-size: 0.9375rem; }
+.cv-tourism .cv-ref-entry strong { display: block; }
+.cv-tourism .cv-ref-entry span { color: #666; font-size: 0.8125rem; }
+
+
+/* ======================================================================
+   RESPONSIVE — New two-column templates
+   ====================================================================== */
+@media (max-width: 599px) {
+    .cv-infographic,
+    .cv-hr {
+        grid-template-columns: 1fr;
+    }
+    .cv-infographic .cv-sidebar,
+    .cv-hr .cv-sidebar {
+        padding: 20px 16px;
+    }
+    .cv-infographic .cv-main,
+    .cv-hr .cv-main {
+        padding: 20px 16px;
+    }
+}
+
+
+/* ======================================================================
+   ACCENT COLOUR OVERRIDES — New templates
+   ====================================================================== */
+
+/* ── PROFESSIONAL ── */
+.cv-preview[style] .cv-professional .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-professional .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-professional .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── INFOGRAPHIC ── */
+.cv-preview[style] .cv-infographic .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-infographic .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-infographic .cv-skill-bar-fill { background: var(--cv-accent); }
+
+/* ── SIMPLE ── */
+.cv-preview[style] .cv-simple .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-simple .cv-section-title { color: var(--cv-accent); }
+
+/* ── BANKING ── */
+.cv-preview[style] .cv-banking .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-banking .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-banking .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-banking .cv-table th { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── MEDICAL DOCTOR ── */
+.cv-preview[style] .cv-medical-doctor .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-medical-doctor .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-medical-doctor .cv-speciality { background: var(--cv-accent); }
+.cv-preview[style] .cv-medical-doctor .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── HR ── */
+.cv-preview[style] .cv-hr .cv-sidebar { background: var(--cv-accent); }
+.cv-preview[style] .cv-hr .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── PROJECT MANAGER ── */
+.cv-preview[style] .cv-project-manager .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-project-manager .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── PHARMACY ── */
+.cv-preview[style] .cv-pharmacy .cv-header { border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-pharmacy .cv-name { color: var(--cv-accent); }
+.cv-preview[style] .cv-pharmacy .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+
+/* ── REAL ESTATE ── */
+.cv-preview[style] .cv-real-estate .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-real-estate .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-real-estate .cv-highlight-item { background: var(--cv-accent); }
+
+/* ── TOURISM ── */
+.cv-preview[style] .cv-tourism .cv-header { background: var(--cv-accent); }
+.cv-preview[style] .cv-tourism .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
+.cv-preview[style] .cv-tourism .cv-lang-badge { color: var(--cv-accent); }
