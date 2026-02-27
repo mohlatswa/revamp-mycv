@@ -74,12 +74,13 @@ const Settings = (() => {
         apply(DEFAULTS);
     }
 
-    /** Export all CV data as a JSON file download */
+    /** Export all CV data as a JSON file download (excludes sensitive auth/admin keys) */
     function exportData() {
+        var SENSITIVE_KEYS = ['cv_auth_users', 'cv_auth_session', 'cv_admin_settings', 'cv_subscription'];
         var data = {};
         for (var i = 0; i < localStorage.length; i++) {
             var key = localStorage.key(i);
-            if (key.startsWith('cv_') || key === 'cv_generator_data') {
+            if ((key.startsWith('cv_') || key === 'cv_generator_data') && SENSITIVE_KEYS.indexOf(key) === -1) {
                 try {
                     data[key] = JSON.parse(localStorage.getItem(key));
                 } catch (e) {
@@ -108,8 +109,12 @@ const Settings = (() => {
             var reader = new FileReader();
             reader.onload = function (e) {
                 try {
+                    var BLOCKED_KEYS = ['cv_auth_users', 'cv_auth_session', 'cv_admin_settings', 'cv_subscription'];
                     var data = JSON.parse(e.target.result);
                     Object.keys(data).forEach(function (key) {
+                        // Only allow safe cv_ data keys; block auth, session, and admin keys
+                        if (BLOCKED_KEYS.indexOf(key) !== -1) return;
+                        if (!key.startsWith('cv_') && key !== 'cv_generator_data') return;
                         if (typeof data[key] === 'object') {
                             localStorage.setItem(key, JSON.stringify(data[key]));
                         } else {

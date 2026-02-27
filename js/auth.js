@@ -141,10 +141,10 @@ const Auth = (() => {
         const users = _getUsers();
         const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
         if (!user) {
-            throw new Error('Invalid login credentials. No account found with this email.');
+            throw new Error('Invalid login credentials. Please check your email and password.');
         }
         if (user.password !== password) {
-            throw new Error('Invalid login credentials. Incorrect password.');
+            throw new Error('Invalid login credentials. Please check your email and password.');
         }
         const session = _saveLocalSession(user);
         if (_authChangeCallback) _authChangeCallback('SIGNED_IN', session);

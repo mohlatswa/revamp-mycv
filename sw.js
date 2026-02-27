@@ -1,4 +1,4 @@
-const CACHE_NAME = 'revamp-mycv-v17';
+const CACHE_NAME = 'revamp-mycv-v18';
 
 const APP_SHELL = [
     './',
@@ -20,6 +20,7 @@ const APP_SHELL = [
     './js/settings.js',
     './js/session-timer.js',
     './js/skills-data.js',
+    './js/ats-scorer.js',
     './js/cv-renderer.js',
     './js/pdf-export.js',
     './js/summary-generator.js',

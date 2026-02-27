@@ -118,6 +118,7 @@
             tr.innerHTML =
                 '<td><strong>' + esc(user.full_name || '—') + '</strong></td>' +
                 '<td>' + esc(user.email) + '</td>' +
+                '<td>' + esc(user.phone || '—') + '</td>' +
                 '<td><span class="role-badge role-' + (user.role || 'user') + '">' + formatRole(user.role) + '</span></td>' +
                 '<td><span class="sub-badge ' + subClass + '">' + subLabel + '</span></td>' +
                 '<td>' + created + '</td>' +

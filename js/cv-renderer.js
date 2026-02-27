@@ -118,9 +118,11 @@ const CVRenderer = (() => {
         return formatDate(job.startDate) + ' \u2013 ' + (job.currentJob ? 'Present' : formatDate(job.endDate));
     }
 
-    // Photo helper — returns img tag or empty string
+    // Photo helper — returns img tag or empty string (validates data URL to prevent XSS)
     function photoImg(p, cls) {
         if (!p.photo) return '';
+        // Only allow data:image/* URLs to prevent injection
+        if (!/^data:image\/[a-zA-Z+]+;base64,/.test(p.photo)) return '';
         return '<img src="' + p.photo + '" alt="Photo" class="' + (cls || 'cv-photo') + '">';
     }
 
@@ -137,10 +139,10 @@ const CVRenderer = (() => {
         };
     }
 
-    // ── Common section builders ──────────────
-    function secTitle(t) { return '<div class="cv-section-title">' + t + '</div>'; }
-    function secOpen() { return '<div class="cv-section">'; }
-    function secClose() { return '</div>'; }
+    // ── Common section builders (semantic HTML for ATS) ──
+    function secTitle(t) { return '<h3 class="cv-section-title">' + t + '</h3>'; }
+    function secOpen() { return '<section class="cv-section">'; }
+    function secClose() { return '</section>'; }
 
     function buildExperience(exp, withRow) {
         let h = '';
@@ -167,7 +169,8 @@ const CVRenderer = (() => {
     }
 
     function buildSkillTags(sk, cls) {
-        return '<div class="cv-skills-wrap">' + sk.map(s => '<span class="' + (cls||'cv-skill-tag') + '">' + esc(s) + '</span>').join('') + '</div>';
+        return '<div class="cv-skills-wrap">' + sk.map(s => '<span class="' + (cls||'cv-skill-tag') + '">' + esc(s) + '</span>').join('') + '</div>' +
+            '<p class="cv-ats-skills-text">' + sk.map(s => esc(s)).join(', ') + '</p>';
     }
 
     function buildSkillList(sk) {
@@ -194,7 +197,7 @@ const CVRenderer = (() => {
     function renderClassic(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-classic"><div class="cv-header">' + photoImg(p) + '<div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('') + '</div></div>';
-        if (obj) h += secOpen() + secTitle('Career Objective') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Work Experience') + buildExperience(exp, false) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, false) + secClose();
         if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillList(sk) + secClose();
@@ -217,7 +220,7 @@ const CVRenderer = (() => {
         if (p.driversLicence) h += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Licence</div><p>' + esc(p.driversLicence) + '</p></div>';
         if (ref.length) { h += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">References</div>'; ref.forEach(r => { h += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); h += '</div>'; }
         h += '</div><div class="cv-main">';
-        if (obj) h += secOpen() + secTitle('Career Objective') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Work Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         return h + '</div></div>';
@@ -239,10 +242,10 @@ const CVRenderer = (() => {
         if (p.email) h += '<tr><td class="cv-label">Email</td><td>' + esc(p.email) + '</td></tr>';
         h += '<tr><td class="cv-label">Address</td><td>' + fullAddress(p) + '</td></tr>';
         h += '</tbody></table>' + secClose();
-        if (obj) h += secOpen() + secTitle('CAREER OBJECTIVE') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('PROFESSIONAL SUMMARY') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('WORK EXPERIENCE') + buildExperience(exp, true) + secClose();
         if (edu.length) { h += secOpen() + secTitle('EDUCATION &amp; QUALIFICATIONS') + '<table class="cv-table"><thead><tr><th>Institution</th><th>Qualification</th><th>Year</th></tr></thead><tbody>'; edu.forEach(e => { h += '<tr><td>' + esc(e.institution) + '</td><td>' + esc(e.qualification) + '</td><td>' + esc(e.year) + '</td></tr>'; }); h += '</tbody></table>' + secClose(); }
-        if (sk.length) h += secOpen() + secTitle('SKILLS &amp; COMPETENCIES') + buildSkillList(sk) + secClose();
+        if (sk.length) h += secOpen() + secTitle('SKILLS') + buildSkillList(sk) + secClose();
         if (ref.length) h += secOpen() + secTitle('REFERENCES') + buildRefsTable(ref) + secClose();
         return h + '</div>';
     }
@@ -266,12 +269,12 @@ const CVRenderer = (() => {
         let h = '<div class="cv-creative"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">';
         contact(p).forEach(c => { h += '<span>' + c + '</span>'; });
         h += '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>Profile</div><p class="cv-objective">' + esc(obj) + '</p>' + secClose();
-        if (exp.length) h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>Experience</div>' + buildExperience(exp, true) + secClose();
-        if (edu.length) h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>Education</div>' + buildEducation(edu, true) + secClose();
-        if (sk.length) h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>Skills</div>' + buildSkillTags(sk, 'cv-skill-pill') + secClose();
-        if (ln.length) h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>Languages</div>' + buildSkillTags(ln, 'cv-skill-pill') + secClose();
-        if (ref.length) { h += secOpen() + '<div class="cv-section-title"><span class="accent-bar"></span>References</div>'; ref.forEach(r => { h += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong> &mdash; ' + esc(r.relationship) + ' &middot; ' + esc(r.phone) + '</div>'; }); h += secClose(); }
+        if (obj) h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>Professional Summary</h3><p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (exp.length) h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>Experience</h3>' + buildExperience(exp, true) + secClose();
+        if (edu.length) h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>Education</h3>' + buildEducation(edu, true) + secClose();
+        if (sk.length) h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>Skills</h3>' + buildSkillTags(sk, 'cv-skill-pill') + secClose();
+        if (ln.length) h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>Languages</h3>' + buildSkillTags(ln, 'cv-skill-pill') + secClose();
+        if (ref.length) { h += secOpen() + '<h3 class="cv-section-title"><span class="accent-bar"></span>References</h3>'; ref.forEach(r => { h += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong> &mdash; ' + esc(r.relationship) + ' &middot; ' + esc(r.phone) + '</div>'; }); h += secClose(); }
         return h + '</div></div>';
     }
 
@@ -290,7 +293,7 @@ const CVRenderer = (() => {
         if (p.driversLicence) h += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Licence</div><p>' + esc(p.driversLicence) + '</p></div>';
         if (ref.length) { h += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">References</div>'; ref.forEach(r => { h += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); h += '</div>'; }
         h += '</div><div class="cv-main">';
-        if (obj) h += secOpen() + secTitle('Career Objective') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Work Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         return h + '</div></div>';
@@ -300,7 +303,7 @@ const CVRenderer = (() => {
     function renderCompact(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-compact"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">&middot;</span>') + '</div></div><div class="cv-columns"><div class="cv-col cv-col-left">';
-        if (obj) h += secOpen() + secTitle('Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillList(sk) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillList(ln) + secClose();
         if (ref.length) { h += secOpen() + secTitle('References'); ref.forEach(r => { h += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); h += secClose(); }
@@ -314,7 +317,7 @@ const CVRenderer = (() => {
     function renderTimeline(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-timeline"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">|</span>') + '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + secTitle('Career Objective') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         function tlList(items, isFn) { let o = '<div class="cv-tl-list">'; items.forEach(i => { o += '<div class="cv-tl-item"><div class="cv-tl-marker"><div class="cv-tl-dot"></div></div><div class="cv-tl-content">' + isFn(i) + '</div></div>'; }); return o + '</div>'; }
         if (exp.length) h += secOpen() + secTitle('Work Experience') + tlList(exp, j => '<div class="cv-entry-title">' + esc(j.jobTitle) + '</div><div class="cv-entry-subtitle">' + esc(j.company) + '</div><div class="cv-entry-date">' + dr(j) + '</div>' + duties(j.duties)) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + tlList(edu, e => '<div class="cv-entry-title">' + esc(e.qualification) + '</div><div class="cv-entry-subtitle">' + esc(e.institution) + '</div>' + (e.year?'<div class="cv-entry-date">'+esc(e.year)+'</div>':'')) + secClose();
@@ -368,8 +371,8 @@ const CVRenderer = (() => {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let header = '<div class="cv-name"><span class="prompt">&gt;_</span> ' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">|</span>') + '</div>';
         let body = '';
-        if (obj) body += secOpen() + secTitle('About') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
-        if (sk.length) body += secOpen() + secTitle('Tech Stack') + buildSkillTags(sk, 'cv-code-tag') + secClose();
+        if (obj) body += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (sk.length) body += secOpen() + secTitle('Technical Skills') + buildSkillTags(sk, 'cv-code-tag') + secClose();
         if (exp.length) body += secOpen() + secTitle('Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) body += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         if (ln.length) body += secOpen() + secTitle('Languages') + buildSkillTags(ln, 'cv-code-tag') + secClose();
@@ -385,7 +388,7 @@ const CVRenderer = (() => {
         if (obj) body += '<div class="cv-philosophy-box"><p>' + esc(obj) + '</p></div>';
         if (exp.length) body += secOpen() + secTitle('Teaching Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) body += secOpen() + secTitle('Education & Qualifications') + buildEducation(edu, true) + secClose();
-        if (sk.length) body += secOpen() + secTitle('Teaching Skills & Methods') + buildSkillTags(sk, 'cv-teach-tag') + secClose();
+        if (sk.length) body += secOpen() + secTitle('Teaching Skills') + buildSkillTags(sk, 'cv-teach-tag') + secClose();
         if (ln.length) body += secOpen() + secTitle('Languages') + buildSkillTags(ln, 'cv-teach-tag') + secClose();
         if (ref.length) body += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return headerBody('cv-teaching', header, body);
@@ -415,7 +418,7 @@ const CVRenderer = (() => {
         if (obj) h += secOpen() + secTitle('Professional Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Professional Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) { h += secOpen() + secTitle('Education & Qualifications') + '<table class="cv-table"><thead><tr><th>Institution</th><th>Qualification</th><th>Year</th></tr></thead><tbody>'; edu.forEach(e => { h += '<tr><td>' + esc(e.institution) + '</td><td>' + esc(e.qualification) + '</td><td>' + esc(e.year) + '</td></tr>'; }); h += '</tbody></table>' + secClose(); }
-        if (sk.length) h += secOpen() + secTitle('Technical Proficiencies') + buildSkillTags(sk, 'cv-fin-tag') + secClose();
+        if (sk.length) h += secOpen() + secTitle('Financial Skills') + buildSkillTags(sk, 'cv-fin-tag') + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln, 'cv-fin-tag') + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return h + '</div></div>';
@@ -428,7 +431,7 @@ const CVRenderer = (() => {
         if (obj) h += secOpen() + secTitle('Professional Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Legal Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
-        if (sk.length) h += secOpen() + secTitle('Areas of Practice') + '<p class="cv-areas">' + sk.map(s => esc(s)).join(', ') + '</p>' + secClose();
+        if (sk.length) h += secOpen() + secTitle('Legal Skills') + '<p class="cv-areas">' + sk.map(s => esc(s)).join(', ') + '</p>' + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + '<p class="cv-areas">' + ln.map(l => esc(l)).join(', ') + '</p>' + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return h + '</div></div>';
@@ -469,10 +472,10 @@ const CVRenderer = (() => {
         if (p.email) h += '<tr><td class="cv-label">Email</td><td>' + esc(p.email) + '</td></tr>';
         h += '<tr><td class="cv-label">Address</td><td>' + fullAddress(p) + '</td></tr>';
         h += '</tbody></table>' + secClose();
-        if (obj) h += secOpen() + secTitle('CAREER OBJECTIVE') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('PROFESSIONAL SUMMARY') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('WORK EXPERIENCE') + buildExperience(exp, true) + secClose();
         if (edu.length) { h += secOpen() + secTitle('EDUCATION &amp; QUALIFICATIONS') + '<table class="cv-table"><thead><tr><th>Institution</th><th>Qualification</th><th>Year</th></tr></thead><tbody>'; edu.forEach(e => { h += '<tr><td>' + esc(e.institution) + '</td><td>' + esc(e.qualification) + '</td><td>' + esc(e.year) + '</td></tr>'; }); h += '</tbody></table>' + secClose(); }
-        if (sk.length) h += secOpen() + secTitle('KEY COMPETENCIES') + buildSkillList(sk) + secClose();
+        if (sk.length) h += secOpen() + secTitle('SKILLS') + buildSkillList(sk) + secClose();
         if (ref.length) h += secOpen() + secTitle('REFERENCES') + buildRefsTable(ref) + secClose();
         h += '<div class="cv-declaration"><p><em>I hereby declare that the information provided above is true and correct.</em></p><div class="cv-sig-line"><span>Signature</span><span>Date</span></div></div>';
         return h + '</div>';
@@ -483,13 +486,13 @@ const CVRenderer = (() => {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let header = '<div class="cv-name">' + esc(p.fullName) + '</div>' + (p.driversLicence ? '<div class="cv-trade-title">' + esc(p.driversLicence) + '</div>' : '');
         let left = '';
-        if (obj) left += secOpen() + secTitle('Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) left += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) left += secOpen() + secTitle('Trade Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) left += secOpen() + secTitle('Qualifications') + buildEducation(edu, true) + secClose();
         if (ref.length) left += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
 
         let right = '';
-        if (sk.length) right += '<div class="cv-safety-section">' + secTitle('Skills & Certifications') + buildSkillList(sk) + '</div>';
+        if (sk.length) right += '<div class="cv-safety-section">' + secTitle('Trade Skills') + buildSkillList(sk) + '</div>';
         if (ln.length) right += secOpen() + secTitle('Languages') + buildSkillList(ln) + secClose();
         return twoPanelRight('cv-trades', header, left, right);
     }
@@ -512,10 +515,10 @@ const CVRenderer = (() => {
     function renderAgriculture(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-agriculture"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">&middot;</span>') + '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + secTitle('Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) h += secOpen() + secTitle('Agricultural Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education & Training') + buildEducation(edu, true) + secClose();
-        if (sk.length) h += secOpen() + secTitle('Farm Skills & Equipment') + buildSkillTags(sk, 'cv-agri-tag') + secClose();
+        if (sk.length) h += secOpen() + secTitle('Agricultural Skills') + buildSkillTags(sk, 'cv-agri-tag') + secClose();
         if (p.driversLicence) h += secOpen() + secTitle('Driver\'s Licence') + '<p class="cv-entry-subtitle">' + esc(p.driversLicence) + '</p>' + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln, 'cv-agri-tag') + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
@@ -532,7 +535,7 @@ const CVRenderer = (() => {
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         h += '</div><div class="cv-col-panel">';
-        if (sk.length) h += secOpen() + secTitle('Key Skills') + buildSkillList(sk) + secClose();
+        if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillList(sk) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillList(ln) + secClose();
         h += '</div></div></div>';
         return h;
@@ -547,7 +550,7 @@ const CVRenderer = (() => {
         if (p.email) side += '<p>' + esc(p.email) + '</p>';
         { const a = fullAddress(p); if (a) side += '<p>' + a + '</p>'; }
         side += '</div>';
-        if (sk.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Tools & Skills</div>' + buildSkillList(sk) + '</div>';
+        if (sk.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Design Skills</div>' + buildSkillList(sk) + '</div>';
         if (ln.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div>' + buildSkillList(ln) + '</div>';
         if (ref.length) { side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">References</div>'; ref.forEach(r => { side += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); side += '</div>'; }
 
@@ -566,7 +569,7 @@ const CVRenderer = (() => {
         if (obj) body += '<div class="cv-mission-box"><p>' + esc(obj) + '</p></div>';
         if (exp.length) body += secOpen() + secTitle('Community & Social Work Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) body += secOpen() + secTitle('Education & Qualifications') + buildEducation(edu, true) + secClose();
-        if (sk.length) body += secOpen() + secTitle('Skills & Competencies') + buildSkillTags(sk, 'cv-sw-tag') + secClose();
+        if (sk.length) body += secOpen() + secTitle('Skills') + buildSkillTags(sk, 'cv-sw-tag') + secClose();
         if (ln.length) body += secOpen() + secTitle('Languages & Cultural Competency') + buildSkillTags(ln, 'cv-sw-tag') + secClose();
         if (ref.length) body += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return headerBody('cv-socialwork', header, body);
@@ -599,7 +602,7 @@ const CVRenderer = (() => {
 
         let right = '';
         if (p.driversLicence) right += '<div class="cv-licence-badge">' + esc(p.driversLicence) + '</div>';
-        if (sk.length) right += secOpen() + secTitle('Skills & Systems') + buildSkillList(sk) + secClose();
+        if (sk.length) right += secOpen() + secTitle('Skills') + buildSkillList(sk) + secClose();
         if (ln.length) right += secOpen() + secTitle('Languages') + buildSkillList(ln) + secClose();
         return '<div class="cv-logistics"><div class="cv-header">' + header + '</div><div class="cv-route-bar"></div><div class="cv-columns"><div class="cv-col-main">' + left + '</div><div class="cv-col-panel">' + right + '</div></div></div>';
     }
@@ -643,9 +646,9 @@ const CVRenderer = (() => {
     function renderGraduate(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-graduate"><div class="cv-header"><div class="cv-accent-bar"></div><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('') + '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + secTitle('Career Objective') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
-        if (sk.length) h += secOpen() + secTitle('Skills & Competencies') + buildSkillTags(sk, 'cv-grad-tag') + secClose();
+        if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillTags(sk, 'cv-grad-tag') + secClose();
         if (exp.length) h += secOpen() + secTitle('Experience & Internships') + buildExperience(exp, true) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln, 'cv-grad-tag') + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
@@ -657,7 +660,7 @@ const CVRenderer = (() => {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-career-change"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">&middot;</span>') + '</div></div><div class="cv-body">';
         if (obj) h += '<div class="cv-profile-box"><div class="cv-section-title">Professional Profile</div><p class="cv-objective">' + esc(obj) + '</p></div>';
-        if (sk.length) { h += secOpen() + secTitle('Key Transferable Skills'); const half = Math.ceil(sk.length / 2); h += '<div class="cv-skill-cols"><ul class="cv-skills-list">' + sk.slice(0, half).map(s => '<li>' + esc(s) + '</li>').join('') + '</ul><ul class="cv-skills-list">' + sk.slice(half).map(s => '<li>' + esc(s) + '</li>').join('') + '</ul></div>' + secClose(); }
+        if (sk.length) { h += secOpen() + secTitle('Skills'); const half = Math.ceil(sk.length / 2); h += '<div class="cv-skill-cols"><ul class="cv-skills-list">' + sk.slice(0, half).map(s => '<li>' + esc(s) + '</li>').join('') + '</ul><ul class="cv-skills-list">' + sk.slice(half).map(s => '<li>' + esc(s) + '</li>').join('') + '</ul></div>' + secClose(); }
         if (edu.length) h += secOpen() + secTitle('Education & Qualifications') + buildEducation(edu, true) + secClose();
         if (exp.length) h += secOpen() + secTitle('Career History') + buildExperience(exp, true) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln) + secClose();
@@ -693,7 +696,7 @@ const CVRenderer = (() => {
         if (obj) h += secOpen() + secTitle('Research Interests') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         if (exp.length) h += secOpen() + secTitle('Academic & Research Experience') + buildExperience(exp, true) + secClose();
-        if (sk.length) h += secOpen() + secTitle('Research Skills & Methods') + '<p class="cv-academic-skills">' + sk.map(s => esc(s)).join(', ') + '</p>' + secClose();
+        if (sk.length) h += secOpen() + secTitle('Research Skills') + '<p class="cv-academic-skills">' + sk.map(s => esc(s)).join(', ') + '</p>' + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + '<p class="cv-academic-skills">' + ln.map(l => esc(l)).join(', ') + '</p>' + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return h + '</div></div>';
@@ -720,7 +723,7 @@ const CVRenderer = (() => {
         if (p.email) side += '<p>' + esc(p.email) + '</p>';
         { const a = fullAddress(p); if (a) side += '<p>' + a + '</p>'; }
         side += '</div>';
-        if (sk.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Key Skills</div>' + buildSkillList(sk) + '</div>';
+        if (sk.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Skills</div>' + buildSkillList(sk) + '</div>';
         if (ln.length) side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div>' + buildSkillList(ln) + '</div>';
         if (ref.length) { side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">References</div>'; ref.forEach(r => { side += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); side += '</div>'; }
 
@@ -741,7 +744,7 @@ const CVRenderer = (() => {
         if (edu.length) h += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         h += '</div><div class="cv-col-panel">';
-        if (sk.length) h += secOpen() + secTitle('Skills & Tools') + buildSkillList(sk) + secClose();
+        if (sk.length) h += secOpen() + secTitle('Marketing Skills') + buildSkillList(sk) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillList(ln) + secClose();
         return h + '</div></div></div>';
     }
@@ -759,7 +762,7 @@ const CVRenderer = (() => {
         if (ref.length) { side += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">References</div>'; ref.forEach(r => { side += '<div class="cv-ref-entry"><strong>' + esc(r.name) + '</strong><span>' + esc(r.relationship) + '<br>' + esc(r.phone) + '</span></div>'; }); side += '</div>'; }
 
         let main = '';
-        if (obj) main += secOpen() + secTitle('Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) main += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) main += secOpen() + secTitle('Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) main += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         return twoColSidebar('cv-data-science', side, main);
@@ -835,7 +838,7 @@ const CVRenderer = (() => {
         if (p.driversLicence) sidebar += '<div class="cv-sidebar-section"><div class="cv-sidebar-title">Licence</div><p>' + esc(p.driversLicence) + '</p></div>';
 
         let main = '';
-        if (obj) main += secOpen() + secTitle('About Me') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) main += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (exp.length) main += secOpen() + secTitle('Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) main += secOpen() + secTitle('Education') + buildEducation(edu, true) + secClose();
         if (ref.length) main += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
@@ -847,7 +850,7 @@ const CVRenderer = (() => {
     function renderSimple(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-simple"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).join(' | ') + '</div></div>';
-        if (obj) h += '<div class="cv-section"><div class="cv-section-title">About</div><p>' + esc(obj) + '</p></div>';
+        if (obj) h += '<div class="cv-section"><div class="cv-section-title">Professional Summary</div><p>' + esc(obj) + '</p></div>';
         if (exp.length) h += '<div class="cv-section"><div class="cv-section-title">Experience</div>' + buildExperience(exp, false) + '</div>';
         if (edu.length) h += '<div class="cv-section"><div class="cv-section-title">Education</div>' + buildEducation(edu, false) + '</div>';
         if (sk.length) h += '<div class="cv-section"><div class="cv-section-title">Skills</div><p>' + sk.map(s => esc(s)).join(', ') + '</p></div>';
@@ -860,8 +863,8 @@ const CVRenderer = (() => {
     function renderBanking(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-banking"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">|</span>') + '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + secTitle('Career Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
-        if (sk.length) h += secOpen() + secTitle('Key Competencies') + buildSkillTags(sk, 'cv-skill-pill') + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillTags(sk, 'cv-skill-pill') + secClose();
         if (exp.length) h += secOpen() + secTitle('Professional Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education & Qualifications') + buildEducation(edu, true) + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln) + secClose();
@@ -878,7 +881,7 @@ const CVRenderer = (() => {
         if (obj) h += secOpen() + secTitle('Professional Profile') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (edu.length) h += secOpen() + secTitle('Medical Education & Training') + buildEducation(edu, true) + secClose();
         if (exp.length) h += secOpen() + secTitle('Clinical Experience') + buildExperience(exp, true) + secClose();
-        if (sk.length > 1) h += secOpen() + secTitle('Specialisations & Skills') + buildSkillTags(sk.slice(1), 'cv-skill-pill') + secClose();
+        if (sk.length > 1) h += secOpen() + secTitle('Clinical Skills') + buildSkillTags(sk.slice(1), 'cv-skill-pill') + secClose();
         if (ln.length) h += secOpen() + secTitle('Languages') + buildSkillTags(ln) + secClose();
         if (p.driversLicence) h += secOpen() + secTitle('Registration') + '<p>' + esc(p.driversLicence) + '</p>' + secClose();
         if (ref.length) h += secOpen() + secTitle('Professional References') + buildRefs(ref) + secClose();
@@ -957,11 +960,11 @@ const CVRenderer = (() => {
     function renderTourism(data) {
         const { p, exp, edu, sk, ref, obj, ln } = D(data);
         let h = '<div class="cv-tourism"><div class="cv-header"><div class="cv-name">' + esc(p.fullName) + '</div><div class="cv-contact">' + contact(p).map(c => '<span>' + c + '</span>').join('<span class="sep">&bull;</span>') + '</div></div><div class="cv-body">';
-        if (obj) h += secOpen() + secTitle('About Me') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
+        if (obj) h += secOpen() + secTitle('Professional Summary') + '<p class="cv-objective">' + esc(obj) + '</p>' + secClose();
         if (ln.length) h += '<div class="cv-lang-strip">' + ln.map(l => '<span class="cv-lang-badge">' + esc(l) + '</span>').join('') + '</div>';
         if (exp.length) h += secOpen() + secTitle('Guiding Experience') + buildExperience(exp, true) + secClose();
         if (edu.length) h += secOpen() + secTitle('Education & Certifications') + buildEducation(edu, true) + secClose();
-        if (sk.length) h += secOpen() + secTitle('Skills & Specialisations') + buildSkillTags(sk, 'cv-skill-pill') + secClose();
+        if (sk.length) h += secOpen() + secTitle('Skills') + buildSkillTags(sk, 'cv-skill-pill') + secClose();
         if (p.driversLicence) h += secOpen() + secTitle('Licence & Permits') + '<p>' + esc(p.driversLicence) + '</p>' + secClose();
         if (ref.length) h += secOpen() + secTitle('References') + buildRefs(ref) + secClose();
         return h + '</div></div>';

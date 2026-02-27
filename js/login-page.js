@@ -110,6 +110,8 @@
             clearErrors();
 
             const fullName = document.getElementById('register-name').value.trim();
+            const phoneEl = document.getElementById('register-phone');
+            const phone = phoneEl ? phoneEl.value.trim() : '';
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value;
             const confirm = document.getElementById('register-confirm').value;
@@ -130,7 +132,7 @@
             setLoading(true);
             try {
                 await Auth.signUp(email, password, fullName);
-                sendSignupNotification(fullName, email);
+                sendSignupNotification(fullName, email, phone);
                 _registeredEmail = email;
 
                 if (Auth.isLocalMode()) {
@@ -334,14 +336,14 @@
     }
 
     /** Send signup notification email via Web3Forms */
-    function sendSignupNotification(fullName, email) {
+    function sendSignupNotification(fullName, email, phone) {
         if (!APP_CONFIG.WEB3FORMS_KEY || APP_CONFIG.WEB3FORMS_KEY.includes('YOUR_')) return;
         var payload = JSON.stringify({
             access_key: APP_CONFIG.WEB3FORMS_KEY,
             subject: 'New Signup: ' + fullName,
             from_name: 'Revamp MyCV',
             to: APP_CONFIG.NOTIFICATION_EMAIL,
-            message: 'A new user has registered on Revamp MyCV.\n\nFull Name: ' + fullName + '\nEmail Address: ' + email + '\nDate: ' + new Date().toLocaleString('en-ZA')
+            message: 'A new user has registered on Revamp MyCV.\n\nFull Name: ' + fullName + '\nCellphone: ' + (phone || 'Not provided') + '\nEmail Address: ' + email + '\nDate: ' + new Date().toLocaleString('en-ZA')
         });
         if (navigator.sendBeacon) {
             navigator.sendBeacon(

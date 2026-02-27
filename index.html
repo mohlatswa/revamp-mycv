@@ -337,6 +337,10 @@
                         <label for="duties">Main Duties</label>
                         <textarea id="duties" name="duties" rows="3"
                             placeholder="Describe your main responsibilities, one per line&#10;e.g. Assisted customers with purchases&#10;Packed and sorted goods"></textarea>
+                        <div class="action-verb-helper" id="action-verb-helper">
+                            <label class="hint">Action verbs (click to insert):</label>
+                            <div class="action-verb-chips" id="action-verb-chips"></div>
+                        </div>
                     </div>
 
                     <button type="button" class="btn btn-secondary" id="btn-add-experience">Add This Job</button>
@@ -539,6 +543,18 @@
                         <button type="button" class="color-dot" data-color="#5C6B4F" title="Muted Olive" style="background:#5C6B4F"></button>
                         <button type="button" class="color-dot" data-color="#831843" title="Wine" style="background:#831843"></button>
                         <button type="button" class="color-dot" data-color="#4c1d95" title="Deep Purple" style="background:#4c1d95"></button>
+                        <button type="button" class="color-dot" data-color="#1e3a5f" title="Midnight Blue" style="background:#1e3a5f"></button>
+                        <button type="button" class="color-dot" data-color="#a0522d" title="Rust" style="background:#a0522d"></button>
+                        <button type="button" class="color-dot" data-color="#047857" title="Emerald" style="background:#047857"></button>
+                        <button type="button" class="color-dot" data-color="#0e7490" title="Cyan Dark" style="background:#0e7490"></button>
+                        <button type="button" class="color-dot" data-color="#b45309" title="Amber Dark" style="background:#b45309"></button>
+                        <button type="button" class="color-dot" data-color="#6b21a8" title="Royal Purple" style="background:#6b21a8"></button>
+                        <button type="button" class="color-dot" data-color="#991b1b" title="Deep Red" style="background:#991b1b"></button>
+                        <button type="button" class="color-dot" data-color="#0d9488" title="Teal" style="background:#0d9488"></button>
+                        <button type="button" class="color-dot" data-color="#6b7280" title="Cool Grey" style="background:#6b7280"></button>
+                        <button type="button" class="color-dot" data-color="#b8590e" title="Burnt Sienna" style="background:#b8590e"></button>
+                        <button type="button" class="color-dot" data-color="#14532d" title="Pine" style="background:#14532d"></button>
+                        <button type="button" class="color-dot" data-color="#1d4ed8" title="Royal Blue" style="background:#1d4ed8"></button>
                     </div>
                     <div class="color-custom-row">
                         <input type="color" id="customColor" value="#1a6b3c" title="Pick any colour">
@@ -554,12 +570,41 @@
                 <button type="button" class="btn btn-secondary" id="btn-print">
                     Print CV
                 </button>
+                <button type="button" class="btn btn-secondary" id="btn-copy-ats-text">
+                    Copy ATS Text
+                </button>
                 <button type="button" class="btn btn-secondary" id="btn-save-cv">
                     Save CV
                 </button>
                 <button type="button" class="btn btn-success" id="btn-finish-cv">
                     Finish &amp; Save
                 </button>
+            </div>
+
+            <!-- ATS Score Panel -->
+            <div class="ats-score-panel" id="ats-score-panel">
+                <div class="ats-score-header">
+                    <div class="ats-ring-wrap">
+                        <svg class="ats-ring" viewBox="0 0 120 120">
+                            <circle class="ats-ring-bg" cx="60" cy="60" r="52" />
+                            <circle class="ats-ring-fill" id="ats-ring-fill" cx="60" cy="60" r="52" />
+                        </svg>
+                        <div class="ats-score-number" id="ats-score-number">0</div>
+                    </div>
+                    <div class="ats-score-info">
+                        <div class="ats-grade" id="ats-grade">--</div>
+                        <div class="ats-label">ATS Score</div>
+                        <button type="button" class="ats-toggle-btn" id="ats-toggle-details">Show details</button>
+                    </div>
+                </div>
+                <div class="ats-details" id="ats-details" style="display:none">
+                    <div class="ats-checklist" id="ats-checklist"></div>
+                    <div class="ats-tips" id="ats-tips"></div>
+                    <div class="ats-keywords-section" id="ats-keywords-section" style="display:none">
+                        <h4>Suggested Keywords</h4>
+                        <div class="ats-keyword-chips" id="ats-keyword-chips"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="cv-preview" class="cv-preview"></div>
@@ -825,10 +870,12 @@
                     <h3>Pro</h3>
                     <div class="paywall-tier-price">R49<span>/month</span></div>
                     <ul class="paywall-tier-features">
-                        <li>Unlimited PDF downloads</li>
                         <li>14 profession templates (30 total)</li>
+                        <li>Unlimited PDF downloads</li>
                         <li>Save up to 10 CVs</li>
-                        <li>Full AI summary generator</li>
+                        <li>Full ATS score + improvement tips</li>
+                        <li>Achievement bullet helper</li>
+                        <li>Copy ATS Text</li>
                     </ul>
                     <button type="button" class="btn-subscribe" data-tier="pro">Subscribe Pro</button>
                 </div>
@@ -839,8 +886,9 @@
                     <ul class="paywall-tier-features">
                         <li>All 46 templates (16 + 30)</li>
                         <li>Unlimited saved CVs</li>
+                        <li>Full ATS + keyword suggestions</li>
                         <li>WhatsApp priority support</li>
-                        <li>Cover letter builder (coming soon)</li>
+                        <li>Cover letter builder (soon)</li>
                     </ul>
                     <button type="button" class="btn-subscribe btn-subscribe-premium" data-tier="premium">Subscribe Premium</button>
                 </div>
@@ -888,20 +936,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="js/config.js?v=17"></script>
-    <script src="js/auth.js?v=17"></script>
-    <script src="js/subscription.js?v=17"></script>
-    <script src="js/cv-parser.js?v=17"></script>
-    <script src="js/skills-data.js?v=17"></script>
-    <script src="js/storage.js?v=17"></script>
-    <script src="js/cv-manager.js?v=17"></script>
-    <script src="js/settings.js?v=17"></script>
-    <script src="js/session-timer.js?v=17"></script>
-    <script src="js/wizard.js?v=17"></script>
-    <script src="js/summary-generator.js?v=17"></script>
-    <script src="js/cv-renderer.js?v=17"></script>
-    <script src="js/pdf-export.js?v=17"></script>
-    <script src="js/app.js?v=17"></script>
+    <script src="js/config.js?v=18"></script>
+    <script src="js/auth.js?v=18"></script>
+    <script src="js/subscription.js?v=18"></script>
+    <script src="js/cv-parser.js?v=18"></script>
+    <script src="js/skills-data.js?v=18"></script>
+    <script src="js/ats-scorer.js?v=18"></script>
+    <script src="js/storage.js?v=18"></script>
+    <script src="js/cv-manager.js?v=18"></script>
+    <script src="js/settings.js?v=18"></script>
+    <script src="js/session-timer.js?v=18"></script>
+    <script src="js/wizard.js?v=18"></script>
+    <script src="js/summary-generator.js?v=18"></script>
+    <script src="js/cv-renderer.js?v=18"></script>
+    <script src="js/pdf-export.js?v=18"></script>
+    <script src="js/app.js?v=18"></script>
 
     <!-- Inline subscription email notification for paywall -->
     <script>
@@ -971,5 +1020,21 @@
         }
     })();
     </script>
+
+    <!-- Support Footer -->
+    <footer class="support-footer">
+        <span>Need help?</span>
+        <a href="mailto:revamp.mycv@outlook.com">revamp.mycv@outlook.com</a>
+        <span class="sep">|</span>
+        <a href="tel:0727879085">072 787 9085</a>
+    </footer>
+
+    <!-- WhatsApp Live Chat Widget -->
+    <a href="https://wa.me/27727879085?text=Hi%2C%20I%20need%20help%20with%20Revamp%20MyCV"
+       class="whatsapp-float" target="_blank" rel="noopener" title="Chat with us on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
 </body>
 </html>

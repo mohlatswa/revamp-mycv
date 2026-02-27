@@ -55,6 +55,8 @@
         setupCVManager();
         setupDisabilityOther();
         setupSettings();
+        setupActionVerbHelper();
+        setupCopyATSText();
         registerServiceWorker();
     });
 
@@ -213,8 +215,8 @@
         }
         setVal('objective', p.objective);
 
-        // Restore photo
-        if (p.photo) {
+        // Restore photo (validate data URL to prevent XSS)
+        if (p.photo && /^data:image\/[a-zA-Z+]+;base64,/.test(p.photo)) {
             const preview = document.getElementById('photo-preview');
             if (preview) {
                 preview.innerHTML = '<img src="' + p.photo + '" alt="Photo">';
@@ -852,6 +854,7 @@
         const previewEl = document.getElementById('cv-preview');
         previewEl.innerHTML = CVRenderer.render(data, template);
         applyAccentColor(CVStorage.getAccentColor());
+        updateATSScore(data);
     }
 
     // ============================
@@ -1494,6 +1497,265 @@
             return `${day} ${months[d.getMonth()]} ${d.getFullYear()}`;
         } catch (e) {
             return '—';
+        }
+    }
+
+    // ============================
+    // ATS SCORE
+    // ============================
+    async function updateATSScore(data) {
+        if (typeof ATSScorer === 'undefined') return;
+        const panel = document.getElementById('ats-score-panel');
+        if (!panel) return;
+
+        const result = ATSScorer.score(data);
+
+        // Update ring
+        const circumference = 2 * Math.PI * 52; // r=52
+        const offset = circumference - (result.total / 100) * circumference;
+        const ringFill = document.getElementById('ats-ring-fill');
+        if (ringFill) {
+            ringFill.style.strokeDasharray = circumference;
+            ringFill.style.strokeDashoffset = offset;
+            // Color the ring based on grade
+            const colors = { 'ats-excellent': '#16a34a', 'ats-good': '#2563eb', 'ats-fair': '#d97706', 'ats-needs-work': '#dc2626' };
+            ringFill.style.stroke = colors[result.gradeClass] || '#1a6b3c';
+        }
+
+        // Update score number
+        const scoreNum = document.getElementById('ats-score-number');
+        if (scoreNum) scoreNum.textContent = result.total;
+
+        // Update grade
+        const gradeEl = document.getElementById('ats-grade');
+        if (gradeEl) {
+            gradeEl.textContent = result.grade;
+            gradeEl.className = 'ats-grade ' + result.gradeClass;
+        }
+
+        // Tier gating for details
+        let tier = 'free';
+        try { tier = await Subscription.getTier(); } catch (e) {}
+
+        const detailsEl = document.getElementById('ats-details');
+        const toggleBtn = document.getElementById('ats-toggle-details');
+
+        if (tier === 'free') {
+            if (toggleBtn) toggleBtn.textContent = 'Upgrade for details';
+            if (toggleBtn) toggleBtn.onclick = () => showPaywall();
+        } else {
+            // Pro / Premium — show checklist and tips
+            if (toggleBtn) {
+                toggleBtn.onclick = () => {
+                    const showing = detailsEl.style.display !== 'none';
+                    detailsEl.style.display = showing ? 'none' : 'block';
+                    toggleBtn.textContent = showing ? 'Show details' : 'Hide details';
+                };
+            }
+
+            // Build checklist
+            const checklistEl = document.getElementById('ats-checklist');
+            if (checklistEl) {
+                checklistEl.innerHTML = result.results.map(r =>
+                    '<div class="ats-check-item">' +
+                    '<span class="ats-check-icon ' + (r.pass ? 'pass' : 'fail') + '">' + (r.pass ? '\u2713' : '\u2717') + '</span>' +
+                    '<span class="ats-check-label">' + esc(r.label) + '</span>' +
+                    '<span class="ats-check-pts">' + r.points + '/' + r.max + '</span>' +
+                    '</div>'
+                ).join('');
+            }
+
+            // Build tips (only for failing criteria)
+            const tipsEl = document.getElementById('ats-tips');
+            if (tipsEl) {
+                const failingTips = result.results.filter(r => !r.pass);
+                tipsEl.innerHTML = failingTips.map(r =>
+                    '<div class="ats-tip-item">' + esc(r.tip) + '</div>'
+                ).join('');
+            }
+
+            // Premium — show keyword suggestions
+            if (tier === 'premium' && typeof PROFESSION_KEYWORDS !== 'undefined') {
+                const kwSection = document.getElementById('ats-keywords-section');
+                const kwChips = document.getElementById('ats-keyword-chips');
+                const template = CVStorage.getTemplate();
+                const keywords = PROFESSION_KEYWORDS[template];
+                if (keywords && keywords.length && kwSection && kwChips) {
+                    kwSection.style.display = 'block';
+                    const currentSkills = (data.step4 || []).map(s => s.toLowerCase());
+                    kwChips.innerHTML = keywords.map(kw => {
+                        const added = currentSkills.includes(kw.toLowerCase());
+                        return '<span class="ats-keyword-chip' + (added ? ' added' : '') + '" data-keyword="' + kw.replace(/"/g, '&quot;') + '">' + kw + (added ? ' \u2713' : '') + '</span>';
+                    }).join('');
+
+                    // Click to add keyword to skills
+                    kwChips.querySelectorAll('.ats-keyword-chip:not(.added)').forEach(chip => {
+                        chip.addEventListener('click', () => {
+                            const kw = chip.dataset.keyword;
+                            const skills = CVStorage.getStep('step4') || [];
+                            if (!skills.includes(kw)) {
+                                skills.push(kw);
+                                CVStorage.saveStep('step4', skills);
+                                chip.classList.add('added');
+                                chip.textContent = kw + ' \u2713';
+                                showToast('Added "' + kw + '" to your skills');
+                                renderCVPreview();
+                            }
+                        });
+                    });
+                } else if (kwSection) {
+                    kwSection.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    // ============================
+    // ACTION VERB HELPER (Step 2)
+    // ============================
+    function setupActionVerbHelper() {
+        if (typeof ACTION_VERBS === 'undefined') return;
+        const chipsEl = document.getElementById('action-verb-chips');
+        const dutiesEl = document.getElementById('duties');
+        if (!chipsEl || !dutiesEl) return;
+
+        function getTemplateCategory() {
+            const template = CVStorage.getTemplate();
+            if (ACTION_VERBS[template]) return template;
+            return 'general';
+        }
+
+        function renderVerbs() {
+            const cat = getTemplateCategory();
+            const verbs = [...(ACTION_VERBS[cat] || []), ...(cat !== 'general' ? ACTION_VERBS.general.slice(0, 5) : [])];
+            const unique = [...new Set(verbs)].slice(0, 15);
+            chipsEl.innerHTML = unique.map(v =>
+                '<span class="action-verb-chip" data-verb="' + v.replace(/"/g, '&quot;') + '">' + v + '</span>'
+            ).join('');
+
+            chipsEl.querySelectorAll('.action-verb-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const verb = chip.dataset.verb;
+                    const pos = dutiesEl.selectionStart || dutiesEl.value.length;
+                    const before = dutiesEl.value.substring(0, pos);
+                    const after = dutiesEl.value.substring(pos);
+                    const needsNewline = before.length > 0 && !before.endsWith('\n');
+                    dutiesEl.value = before + (needsNewline ? '\n' : '') + verb + ' ';
+                    dutiesEl.focus();
+                    dutiesEl.selectionStart = dutiesEl.selectionEnd = dutiesEl.value.length;
+                });
+            });
+        }
+
+        renderVerbs();
+    }
+
+    // ============================
+    // COPY ATS TEXT
+    // ============================
+    function setupCopyATSText() {
+        const btn = document.getElementById('btn-copy-ats-text');
+        if (!btn) return;
+
+        btn.addEventListener('click', () => {
+            const data = CVStorage.getAll();
+            const p = data.step1 || {};
+            const exp = data.step2 || [];
+            const edu = data.step3 || [];
+            const sk = data.step4 || [];
+            const ref = data.step5 || [];
+            const obj = (p.objective || '').trim();
+
+            let text = '';
+
+            // Header
+            text += (p.fullName || '').toUpperCase() + '\n';
+            const contactParts = [];
+            if (p.phone) contactParts.push(p.phone);
+            if (p.email) contactParts.push(p.email);
+            const loc = [p.address, p.location, p.province].filter(Boolean).join(', ');
+            if (loc) contactParts.push(loc);
+            text += contactParts.join(' | ') + '\n\n';
+
+            // Professional Summary
+            if (obj) {
+                text += 'PROFESSIONAL SUMMARY\n';
+                text += obj + '\n\n';
+            }
+
+            // Work Experience
+            if (exp.length) {
+                text += 'WORK EXPERIENCE\n';
+                exp.forEach(j => {
+                    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    function fmtDate(ds) {
+                        if (!ds) return '';
+                        const d = new Date(ds + '-01');
+                        return months[d.getMonth()] + ' ' + d.getFullYear();
+                    }
+                    const dateRange = fmtDate(j.startDate) + ' \u2013 ' + (j.currentJob ? 'Present' : fmtDate(j.endDate));
+                    text += j.jobTitle + ' \u2014 ' + j.company + ' (' + dateRange + ')\n';
+                    if (j.duties) {
+                        j.duties.split('\n').map(l => l.trim()).filter(Boolean).forEach(d => {
+                            text += '\u2022 ' + d + '\n';
+                        });
+                    }
+                    text += '\n';
+                });
+            }
+
+            // Education
+            if (edu.length) {
+                text += 'EDUCATION\n';
+                edu.forEach(e => {
+                    text += e.qualification + ' \u2014 ' + e.institution + (e.year ? ' (' + e.year + ')' : '') + '\n';
+                });
+                text += '\n';
+            }
+
+            // Skills
+            if (sk.length) {
+                text += 'SKILLS\n';
+                text += sk.join(', ') + '\n\n';
+            }
+
+            // Languages
+            const langs = (p.languages || '').split(',').map(l => l.trim()).filter(Boolean);
+            if (langs.length) {
+                text += 'LANGUAGES\n';
+                text += langs.join(', ') + '\n\n';
+            }
+
+            // References
+            if (ref.length) {
+                text += 'REFERENCES\n';
+                ref.forEach(r => {
+                    text += r.name + ' \u2014 ' + r.relationship + ' \u2014 ' + r.phone + '\n';
+                });
+            }
+
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text.trim()).then(() => {
+                    showToast('ATS text copied!');
+                }).catch(() => {
+                    fallbackCopy(text.trim());
+                });
+            } else {
+                fallbackCopy(text.trim());
+            }
+        });
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('ATS text copied!');
         }
     }
 
