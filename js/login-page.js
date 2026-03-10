@@ -48,10 +48,8 @@
         setupPasswordToggles();
         setupAdminSetup();
 
-        // If admin needs first-run setup, show setup form immediately
-        if (Auth.isLocalMode() && Auth.adminNeedsSetup()) {
-            showAdminSetupForm();
-        }
+        // Admin setup is shown only when the admin tries to log in (NEEDS_SETUP error),
+        // not automatically — so regular visitors see the normal login/register forms.
     });
 
     function setupGreeting() {
