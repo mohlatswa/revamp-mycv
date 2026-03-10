@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a6b3c">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Admin — Revamp MyCV</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>RM</text></svg>">
@@ -72,6 +74,10 @@
                     <span class="stat-number" id="stat-downloads">0</span>
                     <span class="stat-label">Downloads</span>
                 </div>
+                <div class="stat-card stat-card-suspended">
+                    <span class="stat-number" id="stat-suspended">0</span>
+                    <span class="stat-label">Suspended</span>
+                </div>
             </div>
 
             <!-- Admin Tabs -->
@@ -79,6 +85,7 @@
                 <button type="button" class="admin-tab active" data-panel="panel-users">Users</button>
                 <button type="button" class="admin-tab" data-panel="panel-subscriptions">Subscriptions</button>
                 <button type="button" class="admin-tab" data-panel="panel-settings">System Settings</button>
+                <button type="button" class="admin-tab" data-panel="panel-audit">Audit Log</button>
             </div>
 
             <!-- ═══ USERS PANEL ═══ -->
@@ -95,6 +102,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Role</th>
+                                <th>Status</th>
                                 <th>Subscription</th>
                                 <th>Created</th>
                                 <th>Actions</th>
@@ -202,12 +210,72 @@
                         </div>
                         <button type="button" class="btn btn-primary btn-sm" id="btn-save-email-settings" style="margin-top:8px">Save Settings</button>
                     </div>
+                    <div class="settings-card">
+                        <h3>User Emails (Send TO Users)</h3>
+                        <p class="settings-desc">Send welcome &amp; subscription emails directly to the user's email. Use <strong>Option A</strong> (easiest) or <strong>Option B</strong>.</p>
+                        <p class="settings-desc" style="font-weight:600;margin-top:12px">Option A: Google Apps Script (Recommended)</p>
+                        <p class="settings-desc">Paste the deployed Google Apps Script URL. See instructions below.</p>
+                        <div class="auth-field">
+                            <label for="set-google-script-url">Google Apps Script URL</label>
+                            <input type="text" id="set-google-script-url" placeholder="https://script.google.com/macros/s/.../exec">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-google-script" style="margin-top:8px">Save Google Script URL</button>
+                        <details style="margin-top:12px;font-size:0.8rem;color:#555">
+                            <summary style="cursor:pointer;font-weight:600">Setup Instructions (3 minutes)</summary>
+                            <ol style="margin-top:8px;padding-left:20px;line-height:1.8">
+                                <li>Go to <a href="https://script.google.com" target="_blank">script.google.com</a> and click <strong>New Project</strong></li>
+                                <li>Delete everything and paste the script from the file <strong>google-email-script.js</strong> in your project</li>
+                                <li>Click <strong>Deploy &gt; New deployment</strong></li>
+                                <li>Type = <strong>Web app</strong>, Execute as = <strong>Me</strong>, Access = <strong>Anyone</strong></li>
+                                <li>Click <strong>Deploy</strong>, authorize when prompted</li>
+                                <li>Copy the <strong>Web app URL</strong> and paste it above</li>
+                            </ol>
+                        </details>
+                        <hr style="margin:16px 0;border:none;border-top:1px solid #e5e7eb">
+                        <p class="settings-desc" style="font-weight:600">Option B: EmailJS</p>
+                        <p class="settings-desc">Alternative: use <a href="https://www.emailjs.com/" target="_blank">emailjs.com</a> (free: 200/month).</p>
+                        <div class="auth-field">
+                            <label for="set-emailjs-public-key">Public Key</label>
+                            <input type="text" id="set-emailjs-public-key" placeholder="e.g. abc123XYZ">
+                        </div>
+                        <div class="auth-field">
+                            <label for="set-emailjs-service-id">Service ID</label>
+                            <input type="text" id="set-emailjs-service-id" placeholder="e.g. service_outlook">
+                        </div>
+                        <div class="auth-field">
+                            <label for="set-emailjs-template-id">Template ID</label>
+                            <input type="text" id="set-emailjs-template-id" placeholder="e.g. template_welcome">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-save-emailjs" style="margin-top:8px">Save EmailJS Settings</button>
+                    </div>
                     <div class="settings-card settings-card-danger">
                         <h3>Danger Zone</h3>
                         <p class="settings-desc">Irreversible actions.</p>
                         <button type="button" class="btn btn-danger btn-sm" id="btn-clear-all-downloads">Reset All Download Counts</button>
                         <button type="button" class="btn btn-danger btn-sm" id="btn-clear-all-subs" style="margin-top:8px">Cancel All Subscriptions</button>
                     </div>
+                </div>
+            </div>
+            <!-- ═══ AUDIT LOG PANEL ═══ -->
+            <div class="admin-panel" id="panel-audit">
+                <div class="admin-toolbar">
+                    <h2>Audit Log</h2>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-clear-audit">Clear Log</button>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Action</th>
+                                <th>Actor</th>
+                                <th>Target</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-tbody"></tbody>
+                    </table>
+                    <p class="admin-empty" id="no-audit" style="display:none">No audit events recorded.</p>
                 </div>
             </div>
         </div>
@@ -285,6 +353,20 @@
         </div>
     </div>
 
+    <!-- Suspend Confirmation Modal -->
+    <div class="modal-overlay" id="suspend-modal">
+        <div class="modal-card">
+            <h3 id="suspend-modal-title">Suspend User</h3>
+            <p id="suspend-confirm-text">Are you sure you want to suspend this user?</p>
+            <input type="hidden" id="suspend-user-id">
+            <input type="hidden" id="suspend-action">
+            <div class="modal-actions">
+                <button type="button" class="btn btn-danger" id="btn-confirm-suspend">Suspend</button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-suspend">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Subscription Modal -->
     <div class="modal-overlay" id="sub-modal">
         <div class="modal-card">
@@ -325,8 +407,9 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/admin-page.js"></script>
+    <script src="js/config.js?v=24"></script>
+    <script src="js/auth.js?v=24"></script>
+    <script src="js/audit-log.js?v=24"></script>
+    <script src="js/admin-page.js?v=24"></script>
 </body>
 </html>

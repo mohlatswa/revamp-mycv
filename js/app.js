@@ -57,6 +57,7 @@
         setupSettings();
         setupActionVerbHelper();
         setupCopyATSText();
+        setupFindJobs();
         registerServiceWorker();
     });
 
@@ -97,6 +98,8 @@
         // Check subscription status and show tier badge + expiry countdown
         try {
             const tier = await Subscription.getTier();
+            const expired = await Subscription.isExpired();
+
             if (tier === 'pro' || tier === 'premium') {
                 badge.textContent = tier.toUpperCase();
                 badge.style.display = 'inline-block';
@@ -116,6 +119,25 @@
                         expirySpan.style.display = 'inline-block';
                     }
                 }
+            } else if (expired) {
+                // Subscription has expired — revoke privileges and prompt renewal
+                const expiredPlan = await Subscription.getExpiredPlan();
+                const planLabel = expiredPlan ? expiredPlan.charAt(0).toUpperCase() + expiredPlan.slice(1) : 'Pro';
+
+                // Hide the PRO badge or show EXPIRED state
+                badge.textContent = 'EXPIRED';
+                badge.style.display = 'inline-block';
+                badge.classList.add('badge-expired');
+
+                const expirySpan = document.getElementById('subscription-expiry');
+                if (expirySpan) {
+                    expirySpan.textContent = 'Subscription ended';
+                    expirySpan.className = 'subscription-expiry expiry-urgent';
+                    expirySpan.style.display = 'inline-block';
+                }
+
+                // Show renewal toast
+                showToast('Your ' + planLabel + ' subscription has expired. Renew to regain full access.', 6000);
             }
         } catch (e) {
             // Subscription check failed — continue without badge
@@ -192,36 +214,33 @@
     function loadSavedData() {
         const data = CVStorage.getAll();
 
-        // Step 1: Personal info
-        const p = data.step1 || {};
-        setVal('fullName', p.fullName);
-        setVal('phone', p.phone);
-        setVal('email', p.email);
-        setVal('address', p.address);
-        setVal('location', p.location);
-        setVal('province', p.province);
-        setVal('dateOfBirth', p.dateOfBirth);
-        setVal('gender', p.gender);
-        setVal('nationality', p.nationality);
-        setVal('maritalStatus', p.maritalStatus);
-        setVal('languages', p.languages);
-        setVal('driversLicence', p.driversLicence);
-        setVal('disability', p.disability);
-        setVal('disabilityOther', p.disabilityOther);
-        // Show "Other" input if disability is "Other"
-        if (p.disability === 'Other') {
-            var otherGroup = document.getElementById('disabilityOtherGroup');
-            if (otherGroup) otherGroup.style.display = '';
-        }
-        setVal('objective', p.objective);
+        // Step 1: Restore saved personal info into form fields
+        const s1 = data.step1 || {};
+        setVal('fullName', s1.fullName);
+        setVal('phone', s1.phone);
+        setVal('email', s1.email);
+        setVal('address', s1.address);
+        setVal('location', s1.location);
+        setVal('province', s1.province);
+        setVal('dateOfBirth', s1.dateOfBirth);
+        setVal('gender', s1.gender);
+        setVal('nationality', s1.nationality);
+        setVal('maritalStatus', s1.maritalStatus);
+        setVal('languages', s1.languages);
+        setVal('driversLicence', s1.driversLicence);
+        setVal('disability', s1.disability);
+        setVal('disabilityOther', s1.disabilityOther);
+        setVal('objective', s1.objective);
 
-        // Restore photo (validate data URL to prevent XSS)
-        if (p.photo && /^data:image\/[a-zA-Z+]+;base64,/.test(p.photo)) {
+        // Restore photo preview if saved
+        if (s1.photo) {
             const preview = document.getElementById('photo-preview');
             if (preview) {
-                preview.innerHTML = '<img src="' + p.photo + '" alt="Photo">';
-                const removeBtn = document.getElementById('btn-remove-photo');
-                if (removeBtn) removeBtn.style.display = 'inline';
+                const img = document.createElement('img');
+                img.src = s1.photo;
+                img.alt = 'Photo';
+                preview.textContent = '';
+                preview.appendChild(img);
             }
         }
 
@@ -305,7 +324,11 @@
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const dataUrl = ev.target.result;
-                preview.innerHTML = '<img src="' + dataUrl + '" alt="Photo">';
+                const img = document.createElement('img');
+                img.src = dataUrl;
+                img.alt = 'Photo';
+                preview.textContent = '';
+                preview.appendChild(img);
                 removeBtn.style.display = 'inline';
 
                 // Save to storage
@@ -338,15 +361,8 @@
 
         if (!banner || !fileInput) return;
 
-        // Hide banner if user already has data saved
-        const existing = CVStorage.getAll();
-        if (existing.step1 && existing.step1.fullName) {
-            banner.style.display = 'none';
-        }
-
         dismissBtn.addEventListener('click', () => {
-            banner.classList.add('dismissed');
-            setTimeout(() => { banner.style.display = 'none'; }, 300);
+            banner.classList.add('compact');
         });
 
         fileInput.addEventListener('change', async (e) => {
@@ -373,6 +389,8 @@
                     if (p.maritalStatus) { document.getElementById('maritalStatus').value = p.maritalStatus; }
                     if (p.languages) setVal('languages', p.languages);
                     if (p.driversLicence) { document.getElementById('driversLicence').value = p.driversLicence; }
+                    if (p.dateOfBirth) setVal('dateOfBirth', p.dateOfBirth);
+                    if (p.objective) setVal('objective', p.objective);
                     savePersonalInfo();
                 }
 
@@ -852,7 +870,7 @@
         const data = CVStorage.getAll();
         const template = CVStorage.getTemplate();
         const previewEl = document.getElementById('cv-preview');
-        previewEl.innerHTML = CVRenderer.render(data, template);
+        previewEl.innerHTML = sanitizeHTML(CVRenderer.render(data, template));
         applyAccentColor(CVStorage.getAccentColor());
         updateATSScore(data);
     }
@@ -895,6 +913,13 @@
         const name = (data.step1.fullName || 'my-cv').replace(/\s+/g, '-').toLowerCase();
         const previewEl = document.getElementById('cv-preview');
         PDFExport.downloadPDF(previewEl, `${name}-cv.pdf`);
+
+        // Track download for trust stats
+        if (typeof Reviews !== 'undefined') {
+            Reviews.incrementDownloadCount();
+            const cvsEl = document.getElementById('stat-cvs-created');
+            if (cvsEl) cvsEl.textContent = Reviews.getDownloadCount().toLocaleString();
+        }
 
         // Auto-save CV on download (skip if saved within last 60 seconds)
         const now = Date.now();
@@ -1068,6 +1093,8 @@
 
             if (planEl) planEl.textContent = tier.charAt(0).toUpperCase() + tier.slice(1);
 
+            const expired = await Subscription.isExpired();
+
             if (tier !== 'free') {
                 const expiry = await Subscription.getSubscriptionExpiry();
                 if (expiry) {
@@ -1081,6 +1108,19 @@
                     }
                 }
                 if (upgradeBtn && tier === 'premium') upgradeBtn.style.display = 'none';
+            } else if (expired) {
+                // Subscription expired — show renewal prompt in settings
+                const expiredPlan = await Subscription.getExpiredPlan();
+                const planLabel = expiredPlan ? expiredPlan.charAt(0).toUpperCase() + expiredPlan.slice(1) : 'Pro';
+                if (planEl) planEl.textContent = planLabel + ' (Expired)';
+                if (planEl) planEl.style.color = '#dc2626';
+                if (expiryEl) expiryEl.textContent = 'Your subscription has ended. Renew to regain access.';
+                if (expiryEl) expiryEl.style.color = '#dc2626';
+                if (startedEl) startedEl.textContent = '—';
+                if (upgradeBtn) {
+                    upgradeBtn.textContent = 'Renew ' + planLabel;
+                    upgradeBtn.style.display = 'inline-flex';
+                }
             } else {
                 if (expiryEl) expiryEl.textContent = '—';
                 if (startedEl) startedEl.textContent = '—';
@@ -1109,6 +1149,10 @@
         return div.innerHTML;
     }
 
+    function sanitizeHTML(html) {
+        return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(html) : html;
+    }
+
     function formatDateShort(dateStr) {
         if (!dateStr) return '';
         const d = new Date(dateStr + '-01');
@@ -1116,12 +1160,12 @@
         return `${months[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    function showToast(message) {
+    function showToast(message, duration) {
         const toast = document.getElementById('toast');
         if (!toast) return;
         toast.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
+        setTimeout(() => toast.classList.remove('show'), duration || 3000);
     }
 
     // ============================
@@ -1379,7 +1423,7 @@
         const previewEl = document.getElementById('cv-preview');
         const originalHTML = previewEl.innerHTML;
         const template = cv.template || 'classic';
-        previewEl.innerHTML = CVRenderer.render(cv.data, template);
+        previewEl.innerHTML = sanitizeHTML(CVRenderer.render(cv.data, template));
 
         // Generate PDF (await so html2pdf finishes before we restore)
         const name = (cv.data.step1 && cv.data.step1.fullName || 'cv').replace(/\s+/g, '-').toLowerCase();
@@ -1440,11 +1484,11 @@
                 </div>
                 ${details ? `<div class="cv-card-details">${details}</div>` : ''}
                 <div class="cv-card-actions">
-                    <button data-action="load" data-id="${cv.id}" title="Load this CV">Load</button>
-                    <button data-action="download" data-id="${cv.id}" class="btn-cv-download" title="Download PDF">Download</button>
-                    <button data-action="rename" data-id="${cv.id}" title="Rename">Rename</button>
-                    <button data-action="duplicate" data-id="${cv.id}" title="Duplicate">Copy</button>
-                    <button data-action="delete" data-id="${cv.id}" class="btn-cv-delete" title="Delete">Del</button>
+                    <button data-action="load" data-id="${esc(cv.id)}" title="Load this CV">Load</button>
+                    <button data-action="download" data-id="${esc(cv.id)}" class="btn-cv-download" title="Download PDF">Download</button>
+                    <button data-action="rename" data-id="${esc(cv.id)}" title="Rename">Rename</button>
+                    <button data-action="duplicate" data-id="${esc(cv.id)}" title="Duplicate">Copy</button>
+                    <button data-action="delete" data-id="${esc(cv.id)}" class="btn-cv-delete" title="Delete">Del</button>
                 </div>
             </div>`;
         }).join('');
@@ -1481,8 +1525,8 @@
                     </div>
                 </div>
                 <div class="cv-card-actions">
-                    <button data-action="restore" data-id="${cv.id}" class="btn-cv-restore" title="Restore this CV">Restore</button>
-                    <button data-action="permanent-delete" data-id="${cv.id}" class="btn-cv-delete" title="Delete forever">Delete Forever</button>
+                    <button data-action="restore" data-id="${esc(cv.id)}" class="btn-cv-restore" title="Restore this CV">Restore</button>
+                    <button data-action="permanent-delete" data-id="${esc(cv.id)}" class="btn-cv-delete" title="Delete forever">Delete Forever</button>
                 </div>
             </div>`;
         }).join('');
@@ -1636,13 +1680,34 @@
             chipsEl.querySelectorAll('.action-verb-chip').forEach(chip => {
                 chip.addEventListener('click', () => {
                     const verb = chip.dataset.verb;
+
+                    // Deselect: remove the verb from textarea and restore chip
+                    if (chip.classList.contains('used')) {
+                        const lines = dutiesEl.value.split('\n');
+                        const filtered = lines.map(line => {
+                            const trimmed = line.trimStart();
+                            // Line is only the verb (with optional trailing space)
+                            if (trimmed === verb || trimmed === verb + ' ') return null;
+                            // Line starts with verb + space and nothing else meaningful after
+                            if (trimmed.startsWith(verb + ' ') && trimmed.substring(verb.length).trim() === '') return null;
+                            // Line starts with verb + space followed by more text — strip the verb
+                            if (trimmed.startsWith(verb + ' ')) return line.replace(verb + ' ', '');
+                            return line;
+                        }).filter(l => l !== null);
+                        dutiesEl.value = filtered.join('\n');
+                        chip.classList.remove('used');
+                        dutiesEl.focus();
+                        return;
+                    }
+
+                    // Select: insert verb at cursor position
                     const pos = dutiesEl.selectionStart || dutiesEl.value.length;
                     const before = dutiesEl.value.substring(0, pos);
-                    const after = dutiesEl.value.substring(pos);
                     const needsNewline = before.length > 0 && !before.endsWith('\n');
                     dutiesEl.value = before + (needsNewline ? '\n' : '') + verb + ' ';
                     dutiesEl.focus();
                     dutiesEl.selectionStart = dutiesEl.selectionEnd = dutiesEl.value.length;
+                    chip.classList.add('used');
                 });
             });
         }
@@ -1757,6 +1822,70 @@
             document.body.removeChild(ta);
             showToast('ATS text copied!');
         }
+    }
+
+    // ============================
+    // FIND JOBS
+    // ============================
+    function setupFindJobs() {
+        const toggle = document.getElementById('find-jobs-toggle');
+        const content = document.getElementById('find-jobs-content');
+        const arrow = document.getElementById('find-jobs-arrow');
+        if (!toggle || !content) return;
+
+        toggle.addEventListener('click', () => {
+            const isOpen = content.style.display !== 'none';
+            content.style.display = isOpen ? 'none' : 'block';
+            if (arrow) arrow.classList.toggle('open', !isOpen);
+        });
+
+        const grid = document.getElementById('find-jobs-grid');
+        const agenciesGrid = document.getElementById('find-jobs-grid-agencies');
+        if (!grid) return;
+
+        function handleJobCardClick(e) {
+            const card = e.target.closest('.job-site-card');
+            if (!card) return;
+            e.preventDefault();
+
+            const jobTitleInput = document.getElementById('jobTitle');
+            const query = jobTitleInput ? jobTitleInput.value.trim() : '';
+            const encoded = encodeURIComponent(query);
+            const site = card.dataset.site;
+
+            const urls = {
+                // ── Job Boards ──
+                indeed:         query ? 'https://za.indeed.com/jobs?q=' + encoded + '&l=South+Africa' : 'https://za.indeed.com/',
+                linkedin:       query ? 'https://www.linkedin.com/jobs/search/?keywords=' + encoded + '&location=South+Africa' : 'https://www.linkedin.com/jobs/',
+                careers24:      query ? 'https://www.careers24.com/jobs/?kw=' + encoded : 'https://www.careers24.com/',
+                pnet:           query ? 'https://www.pnet.co.za/jobs/' + encoded.toLowerCase().replace(/%20/g, '-') + '-jobs' : 'https://www.pnet.co.za/',
+                jobmail:        query ? 'https://www.jobmail.co.za/search?q=' + encoded : 'https://www.jobmail.co.za/',
+                careerjunction: query ? 'https://www.careerjunction.co.za/jobs/results?keywords=' + encoded : 'https://www.careerjunction.co.za/',
+                gumtree:        query ? 'https://www.gumtree.co.za/s-jobs/v1c8p1?q=' + encoded : 'https://www.gumtree.co.za/s-jobs/v1c8p1',
+                adzuna:         query ? 'https://www.adzuna.co.za/search?q=' + encoded : 'https://www.adzuna.co.za/',
+                dpsa:           'https://www.dpsa.gov.za/',
+                // ── Recruitment Agencies ──
+                hays:           query ? 'https://www.hays.com/en/jobs?q=' + encoded + '&location=south-africa' : 'https://www.hays.com/en/jobs',
+                michaelpage:    query ? 'https://www.page.com/jobs?country=south-africa&search=' + encoded : 'https://www.page.com/jobs?country=south-africa',
+                roberthalf:     query ? 'https://www.roberthalf.co.za/jobs?keyword=' + encoded : 'https://www.roberthalf.co.za/jobs',
+                kelly:          query ? 'https://www.kelly.co.za/jobs?search=' + encoded : 'https://www.kelly.co.za/jobs',
+                adcorp:         'https://www.adcorp.co.za/',
+                isilumko:       query ? 'https://www.isilumko.co.za/jobs/?search=' + encoded : 'https://www.isilumko.co.za/jobs/',
+                dante:          query ? 'https://dantesa.co.za/jobs/?search=' + encoded : 'https://dantesa.co.za/jobs/',
+                express:        'https://www.expresspros.co.za/',
+                quest:          query ? 'https://www.quest.co.za/jobs/?search=' + encoded : 'https://www.quest.co.za/jobs/',
+                workforce:      'https://www.workforce.co.za/',
+                unique:         'https://www.unique.co.za/',
+                kontak:         query ? 'https://www.kontak.co.za/vacancies/?search=' + encoded : 'https://www.kontak.co.za/vacancies/',
+                network:        query ? 'https://www.networkrecruitment.co.za/vacancies/?search=' + encoded : 'https://www.networkrecruitment.co.za/'
+            };
+
+            const url = urls[site];
+            if (url) window.open(url, '_blank', 'noopener');
+        }
+
+        grid.addEventListener('click', handleJobCardClick);
+        if (agenciesGrid) agenciesGrid.addEventListener('click', handleJobCardClick);
     }
 
     // ============================

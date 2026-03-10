@@ -1,4 +1,4 @@
-const CACHE_NAME = 'revamp-mycv-v18';
+const CACHE_NAME = 'revamp-mycv-v21';
 
 const APP_SHELL = [
     './',

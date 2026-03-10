@@ -27,13 +27,16 @@
         setupUserModal();
         setupResetModal();
         setupDeleteModal();
+        setupSuspendModal();
         setupSubModal();
         setupSettings();
+        setupAuditLog();
         document.getElementById('btn-add-user').addEventListener('click', openAddModal);
         document.getElementById('btn-add-sub').addEventListener('click', openAddSubModal);
 
         renderUsers();
         renderSubscriptions();
+        renderAuditLog();
         loadSettings();
     });
 
@@ -56,12 +59,29 @@
             return single ? [single] : [];
         } catch { return []; }
     }
+    function _subIntegrity(sub) {
+        const fields = (sub.user_id || '') + '|' + (sub.status || '') + '|' + (sub.plan || '') + '|' + (sub.amount || 0) + '|' + (sub.started_at || '');
+        let h = 0x1a6b3c;
+        const str = 'rmcv_' + fields;
+        for (let i = 0; i < str.length; i++) {
+            h = Math.imul(h ^ str.charCodeAt(i), 0x5bd1e995);
+            h ^= h >>> 15;
+        }
+        return 'sig_' + (h >>> 0).toString(36);
+    }
+
     function saveAllSubs(subs) {
         localStorage.setItem(LOCAL_SUBS_ALL_KEY, JSON.stringify(subs));
-        // Keep legacy key in sync for Subscription module
+        // Keep legacy key in sync for Subscription module (with integrity signature)
         const active = subs.find(s => s.status === 'active');
-        if (active) localStorage.setItem(LOCAL_SUBSCRIPTION_KEY, JSON.stringify(active));
-        else localStorage.removeItem(LOCAL_SUBSCRIPTION_KEY);
+        if (active) {
+            const signed = { ...active };
+            delete signed._sig;
+            signed._sig = _subIntegrity(signed);
+            localStorage.setItem(LOCAL_SUBSCRIPTION_KEY, JSON.stringify(signed));
+        } else {
+            localStorage.removeItem(LOCAL_SUBSCRIPTION_KEY);
+        }
     }
 
     function getDownloads() {
@@ -115,22 +135,56 @@
             const subLabel = sub ? sub.status : 'none';
             const subClass = sub ? 'sub-' + sub.status : 'sub-none';
 
+            const isSuspended = user.suspended === true;
+            const statusLabel = isSuspended ? 'Suspended' : 'Active';
+            const statusClass = isSuspended ? 'status-suspended' : 'status-active';
+            const suspendBtnClass = isSuspended ? 'btn-unsuspend' : 'btn-suspend';
+            const suspendBtnLabel = isSuspended ? 'Unsuspend' : 'Suspend';
+
+            const isVerified = user.verified !== false;
+            const verifyLabel = isVerified ? 'Verified' : 'Unverified';
+            const verifyClass = isVerified ? 'status-active' : 'status-suspended';
+
+            var isSuperAdmin = user.role === 'super_admin';
+            var deleteDisabled = isSuperAdmin ? ' disabled title="Super Admin cannot be deleted" style="opacity:0.4;cursor:not-allowed"' : ' title="Delete"';
+            var suspendDisabled = isSuperAdmin ? ' disabled title="Super Admin cannot be suspended" style="opacity:0.4;cursor:not-allowed"' : ' title="' + suspendBtnLabel + '"';
+
             tr.innerHTML =
                 '<td><strong>' + esc(user.full_name || '—') + '</strong></td>' +
                 '<td>' + esc(user.email) + '</td>' +
                 '<td>' + esc(user.phone || '—') + '</td>' +
                 '<td><span class="role-badge role-' + (user.role || 'user') + '">' + formatRole(user.role) + '</span></td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span>' +
+                    ' <span class="status-badge ' + verifyClass + '" style="font-size:0.7rem">' + verifyLabel + '</span></td>' +
                 '<td><span class="sub-badge ' + subClass + '">' + subLabel + '</span></td>' +
                 '<td>' + created + '</td>' +
                 '<td class="actions-cell">' +
                     '<button class="btn-action btn-edit" title="Edit">Edit</button>' +
+                    '<button class="btn-action ' + suspendBtnClass + '"' + suspendDisabled + '>' + suspendBtnLabel + '</button>' +
                     '<button class="btn-action btn-reset-pw" title="Reset Password">Reset</button>' +
-                    '<button class="btn-action btn-delete" title="Delete">Delete</button>' +
+                    (!isVerified && !isSuperAdmin ? '<button class="btn-action btn-verify" title="Mark as verified">Verify</button>' : '') +
+                    '<button class="btn-action btn-delete"' + deleteDisabled + '>Delete</button>' +
                 '</td>';
 
             tr.querySelector('.btn-edit').addEventListener('click', () => openEditModal(user));
+            if (!isSuperAdmin) {
+                tr.querySelector('.' + suspendBtnClass).addEventListener('click', () => openSuspendModal(user));
+            }
             tr.querySelector('.btn-reset-pw').addEventListener('click', () => openResetModal(user));
-            tr.querySelector('.btn-delete').addEventListener('click', () => openDeleteModal(user));
+            const verifyBtn = tr.querySelector('.btn-verify');
+            if (verifyBtn) {
+                verifyBtn.addEventListener('click', () => {
+                    const users = getUsers();
+                    const u = users.find(x => x.id === user.id);
+                    if (u) { u.verified = true; saveUsers(users); }
+                    _audit('user.verify', user.email, 'Email marked as verified');
+                    renderUsers();
+                    showToast(user.email + ' verified.');
+                });
+            }
+            if (!isSuperAdmin) {
+                tr.querySelector('.btn-delete').addEventListener('click', () => openDeleteModal(user));
+            }
             tbody.appendChild(tr);
         });
 
@@ -148,6 +202,7 @@
         document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'super_admin' || u.role === 'admin').length;
         document.getElementById('stat-subscribers').textContent = subs.filter(s => s.status === 'active').length;
         document.getElementById('stat-downloads').textContent = totalDl;
+        document.getElementById('stat-suspended').textContent = users.filter(u => u.suspended === true).length;
     }
 
     function formatRole(r) { return r === 'super_admin' ? 'Super Admin' : r === 'admin' ? 'Admin' : 'User'; }
@@ -217,6 +272,7 @@
             saveUsers(users);
             closeModal('user-modal');
             renderUsers();
+            _audit(id ? 'user.update' : 'user.create', email, id ? 'Role: ' + role : 'New user, role: ' + role);
             showToast(id ? 'User updated.' : 'User created.');
         });
         document.getElementById('btn-cancel-modal').addEventListener('click', () => closeModal('user-modal'));
@@ -253,6 +309,7 @@
             users[idx].password = pw;
             saveUsers(users);
             closeModal('reset-modal');
+            _audit('user.password_reset', users[idx].email, 'Password reset by admin');
             showToast('Password reset for ' + users[idx].email);
         });
         document.getElementById('btn-cancel-reset').addEventListener('click', () => closeModal('reset-modal'));
@@ -263,6 +320,11 @@
     // ════════════════════════════════════════
 
     function openDeleteModal(user) {
+        // Block deletion of super_admin accounts entirely
+        if (user.role === 'super_admin') {
+            showToast('Super Admin accounts cannot be deleted.');
+            return;
+        }
         document.getElementById('delete-user-id').value = user.id;
         document.getElementById('delete-confirm-text').textContent = 'Delete "' + user.email + '"? This cannot be undone.';
         showModal('delete-modal');
@@ -271,20 +333,33 @@
     function setupDeleteModal() {
         document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
             const id = document.getElementById('delete-user-id').value;
+
+            // Double-check: prevent deleting super_admin accounts
+            const users = getUsers();
+            const target = users.find(u => u.id === id);
+            if (target && target.role === 'super_admin') {
+                closeModal('delete-modal');
+                showToast('Super Admin accounts cannot be deleted.');
+                return;
+            }
+
+            // Prevent deleting your own account
             const currentUser = await Auth.getUser();
             if (currentUser && currentUser.id === id) {
                 closeModal('delete-modal');
                 showToast('You cannot delete your own account.');
                 return;
             }
-            const users = getUsers();
+
             const idx = users.findIndex(u => u.id === id);
             if (idx > -1) {
+                const deletedEmail = users[idx].email;
                 users.splice(idx, 1);
                 saveUsers(users);
                 // Also remove their subscription
                 const subs = getAllSubs().filter(s => s.user_id !== id);
                 saveAllSubs(subs);
+                _audit('user.delete', deletedEmail, 'User and subscriptions removed');
             }
             closeModal('delete-modal');
             renderUsers();
@@ -292,6 +367,58 @@
             showToast('User deleted.');
         });
         document.getElementById('btn-cancel-delete').addEventListener('click', () => closeModal('delete-modal'));
+    }
+
+    // ════════════════════════════════════════
+    // SUSPEND / UNSUSPEND MODAL
+    // ════════════════════════════════════════
+
+    function openSuspendModal(user) {
+        const isSuspended = user.suspended === true;
+        document.getElementById('suspend-user-id').value = user.id;
+        document.getElementById('suspend-action').value = isSuspended ? 'unsuspend' : 'suspend';
+        document.getElementById('suspend-modal-title').textContent = isSuspended ? 'Unsuspend User' : 'Suspend User';
+        document.getElementById('suspend-confirm-text').textContent = isSuspended
+            ? 'Unsuspend "' + user.email + '"? They will be able to sign in again.'
+            : 'Suspend "' + user.email + '"? They will not be able to sign in.';
+        const confirmBtn = document.getElementById('btn-confirm-suspend');
+        confirmBtn.textContent = isSuspended ? 'Unsuspend' : 'Suspend';
+        confirmBtn.className = isSuspended ? 'btn btn-primary' : 'btn btn-danger';
+        showModal('suspend-modal');
+    }
+
+    function setupSuspendModal() {
+        document.getElementById('btn-confirm-suspend').addEventListener('click', async () => {
+            const id = document.getElementById('suspend-user-id').value;
+            const action = document.getElementById('suspend-action').value;
+
+            // Prevent suspending yourself
+            const currentUser = await Auth.getUser();
+            if (currentUser && currentUser.id === id) {
+                closeModal('suspend-modal');
+                showToast('You cannot suspend your own account.');
+                return;
+            }
+
+            const users = getUsers();
+            const user = users.find(u => u.id === id);
+            if (!user) { closeModal('suspend-modal'); return; }
+
+            // Prevent suspending super_admin accounts
+            if (action === 'suspend' && user.role === 'super_admin') {
+                closeModal('suspend-modal');
+                showToast('Super Admin accounts cannot be suspended.');
+                return;
+            }
+
+            user.suspended = action === 'suspend';
+            saveUsers(users);
+            closeModal('suspend-modal');
+            renderUsers();
+            _audit(action === 'suspend' ? 'user.suspend' : 'user.unsuspend', user.email, '');
+            showToast(action === 'suspend' ? 'User suspended.' : 'User unsuspended.');
+        });
+        document.getElementById('btn-cancel-suspend').addEventListener('click', () => closeModal('suspend-modal'));
     }
 
     // ════════════════════════════════════════
@@ -333,6 +460,7 @@
                     saveAllSubs(allSubs);
                     renderSubscriptions();
                     renderUsers();
+                    _audit('sub.cancel', getUserEmail(sub.user_id), 'Subscription cancelled');
                     showToast('Subscription cancelled.');
                 }
             });
@@ -423,6 +551,7 @@
             closeModal('sub-modal');
             renderSubscriptions();
             renderUsers();
+            _audit(editId ? 'sub.update' : 'sub.create', getUserEmail(userId), 'Status: ' + status);
             showToast(editId ? 'Subscription updated.' : 'Subscription added.');
         });
         document.getElementById('btn-cancel-sub').addEventListener('click', () => closeModal('sub-modal'));
@@ -443,6 +572,10 @@
         document.getElementById('set-ga-id').value = s.gaMeasurementId || '';
         document.getElementById('set-web3forms-key').value = s.web3formsKey || '';
         document.getElementById('set-notify-email').value = s.notificationEmail || '';
+        document.getElementById('set-google-script-url').value = s.googleScriptUrl || '';
+        document.getElementById('set-emailjs-public-key').value = s.emailjsPublicKey || '';
+        document.getElementById('set-emailjs-service-id').value = s.emailjsServiceId || '';
+        document.getElementById('set-emailjs-template-id').value = s.emailjsTemplateId || '';
     }
 
     function setupSettings() {
@@ -491,10 +624,27 @@
             showToast('Email notification settings saved.');
         });
 
+        document.getElementById('btn-save-google-script').addEventListener('click', () => {
+            const s = getSettings();
+            s.googleScriptUrl = document.getElementById('set-google-script-url').value.trim();
+            saveSettings(s);
+            showToast('Google Apps Script URL saved.');
+        });
+
+        document.getElementById('btn-save-emailjs').addEventListener('click', () => {
+            const s = getSettings();
+            s.emailjsPublicKey = document.getElementById('set-emailjs-public-key').value.trim();
+            s.emailjsServiceId = document.getElementById('set-emailjs-service-id').value.trim();
+            s.emailjsTemplateId = document.getElementById('set-emailjs-template-id').value.trim();
+            saveSettings(s);
+            showToast('EmailJS settings saved.');
+        });
+
         document.getElementById('btn-clear-all-downloads').addEventListener('click', () => {
             if (confirm('Reset ALL download counts to zero?')) {
                 localStorage.setItem(LOCAL_DOWNLOADS_KEY, JSON.stringify({}));
                 updateStats();
+                _audit('system.reset_downloads', '', 'All download counts reset to zero');
                 showToast('All download counts reset.');
             }
         });
@@ -506,6 +656,7 @@
                 saveAllSubs(subs);
                 renderSubscriptions();
                 renderUsers();
+                _audit('system.cancel_all_subs', '', 'All active subscriptions cancelled');
                 showToast('All subscriptions cancelled.');
             }
         });
@@ -544,6 +695,64 @@
         t.textContent = msg;
         t.classList.add('show');
         setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    async function _getAdminEmail() {
+        try {
+            const user = await Auth.getUser();
+            return user && user.email ? user.email : 'admin';
+        } catch { return 'admin'; }
+    }
+
+    function _audit(action, target, details) {
+        _getAdminEmail().then(actor => {
+            if (typeof AuditLog !== 'undefined') AuditLog.log(action, actor, target, details);
+        });
+    }
+
+    // ════════════════════════════════════════
+    // AUDIT LOG
+    // ════════════════════════════════════════
+
+    function setupAuditLog() {
+        const clearBtn = document.getElementById('btn-clear-audit');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if (confirm('Clear the entire audit log?')) {
+                    if (typeof AuditLog !== 'undefined') AuditLog.clear();
+                    renderAuditLog();
+                    showToast('Audit log cleared.');
+                }
+            });
+        }
+    }
+
+    function renderAuditLog() {
+        const tbody = document.getElementById('audit-tbody');
+        const noAudit = document.getElementById('no-audit');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (typeof AuditLog === 'undefined') {
+            if (noAudit) noAudit.style.display = 'block';
+            return;
+        }
+
+        const entries = AuditLog.getAll();
+        if (!entries.length) { if (noAudit) noAudit.style.display = 'block'; return; }
+        if (noAudit) noAudit.style.display = 'none';
+
+        entries.forEach(entry => {
+            const tr = document.createElement('tr');
+            const ts = entry.ts ? new Date(entry.ts).toLocaleString('en-ZA') : '—';
+            tr.innerHTML =
+                '<td style="white-space:nowrap">' + esc(ts) + '</td>' +
+                '<td><span class="role-badge">' + esc(entry.action) + '</span></td>' +
+                '<td>' + esc(entry.actor) + '</td>' +
+                '<td>' + esc(entry.target) + '</td>' +
+                '<td>' + esc(entry.details) + '</td>';
+            tbody.appendChild(tr);
+        });
     }
 
 })();

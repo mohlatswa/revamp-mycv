@@ -13,9 +13,14 @@ const CVParser = (() => {
      */
     async function parse(file) {
         let text = '';
+        const name = file.name.toLowerCase();
 
-        if (file.name.endsWith('.pdf')) {
+        if (name.endsWith('.pdf')) {
             text = await extractPDF(file);
+        } else if (name.endsWith('.docx')) {
+            text = await extractDOCX(file);
+        } else if (name.endsWith('.doc')) {
+            throw new Error('Old .doc format is not supported. Please save your CV as .pdf or .docx and try again.');
         } else {
             text = await file.text();
         }
@@ -25,6 +30,94 @@ const CVParser = (() => {
         }
 
         return extractData(text);
+    }
+
+    /** Extract text from .docx (ZIP containing XML) */
+    async function extractDOCX(file) {
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+
+            // .docx is a ZIP file — use the browser's DecompressionStream if available,
+            // otherwise fall back to manual ZIP parsing for the document.xml entry
+            const bytes = new Uint8Array(arrayBuffer);
+            const xmlText = findDocumentXml(bytes);
+            if (!xmlText) throw new Error('Could not read document content.');
+
+            // Strip XML tags to get plain text, preserving paragraph breaks
+            const text = xmlText
+                .replace(/<\/w:p>/g, '\n')
+                .replace(/<\/w:r>/g, ' ')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&apos;/g, "'")
+                .replace(/\r\n/g, '\n')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+
+            return text;
+        } catch (e) {
+            throw new Error('Could not read this Word document. Try saving as PDF and uploading again.');
+        }
+    }
+
+    /** Manually locate and extract word/document.xml from a ZIP byte array */
+    function findDocumentXml(bytes) {
+        // ZIP local file headers start with PK\x03\x04
+        // We scan for the word/document.xml entry
+        const target = 'word/document.xml';
+        const decoder = new TextDecoder('utf-8', { fatal: false });
+
+        for (let i = 0; i < bytes.length - 30; i++) {
+            // Local file header signature
+            if (bytes[i] !== 0x50 || bytes[i + 1] !== 0x4B || bytes[i + 2] !== 0x03 || bytes[i + 3] !== 0x04) continue;
+
+            const nameLen = bytes[i + 26] | (bytes[i + 27] << 8);
+            const extraLen = bytes[i + 28] | (bytes[i + 29] << 8);
+            const compressionMethod = bytes[i + 8] | (bytes[i + 9] << 8);
+            const compressedSize = bytes[i + 18] | (bytes[i + 19] << 8) | (bytes[i + 20] << 16) | (bytes[i + 21] << 24);
+
+            const nameStart = i + 30;
+            const name = decoder.decode(bytes.slice(nameStart, nameStart + nameLen));
+
+            if (name === target) {
+                const dataStart = nameStart + nameLen + extraLen;
+
+                if (compressionMethod === 0) {
+                    // Stored (no compression)
+                    return decoder.decode(bytes.slice(dataStart, dataStart + compressedSize));
+                } else if (compressionMethod === 8 && typeof DecompressionStream !== 'undefined') {
+                    // Deflate — use DecompressionStream
+                    const compressed = bytes.slice(dataStart, dataStart + compressedSize);
+                    // DecompressionStream expects raw deflate
+                    const ds = new DecompressionStream('raw');
+                    const writer = ds.writable.getWriter();
+                    writer.write(compressed);
+                    writer.close();
+                    const reader = ds.readable.getReader();
+                    const chunks = [];
+                    return new Promise(async (resolve) => {
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            chunks.push(value);
+                        }
+                        const totalLen = chunks.reduce((sum, c) => sum + c.length, 0);
+                        const result = new Uint8Array(totalLen);
+                        let offset = 0;
+                        for (const chunk of chunks) {
+                            result.set(chunk, offset);
+                            offset += chunk.length;
+                        }
+                        resolve(decoder.decode(result));
+                    });
+                }
+            }
+        }
+        return null;
     }
 
     /** Extract text from PDF using pdf.js */
@@ -133,6 +226,35 @@ const CVParser = (() => {
             const codeMap = { 'a': 'Code A (Motorcycle)', 'b': 'Code B (Light Motor)', 'c1': 'Code C1 (Heavy Vehicle)', 'c': 'Code C (Extra Heavy)', 'eb': 'Code EB (Articulated)', 'ec1': 'Code EC1', 'ec': 'Code EC' };
             p.driversLicence = codeMap[licenceMatch[1].toLowerCase()] || '';
         }
+
+        // Date of birth
+        const dobMatch = text.match(/(?:date\s*of\s*birth|d\.?o\.?b\.?|born)\s*[:\-]?\s*(\d{1,2}[\s\/\-]\w+[\s\/\-]\d{4}|\d{4}[\-\/]\d{2}[\-\/]\d{2}|\d{1,2}[\s\/\-]\d{1,2}[\s\/\-]\d{4})/i);
+        if (dobMatch) {
+            const raw = dobMatch[1].trim();
+            const isoMatch = raw.match(/^(\d{4})[\-\/](\d{2})[\-\/](\d{2})$/);
+            if (isoMatch) {
+                p.dateOfBirth = isoMatch[0];
+            } else {
+                const parts = raw.split(/[\s\/\-]+/);
+                if (parts.length === 3) {
+                    const months = { january:'01', february:'02', march:'03', april:'04', may:'05', june:'06', july:'07', august:'08', september:'09', october:'10', november:'11', december:'12', jan:'01', feb:'02', mar:'03', apr:'04', jun:'06', jul:'07', aug:'08', sep:'09', oct:'10', nov:'11', dec:'12' };
+                    let day = parts[0], month = parts[1], year = parts[2];
+                    if (months[month.toLowerCase()]) month = months[month.toLowerCase()];
+                    if (month.length === 1) month = '0' + month;
+                    if (day.length === 1) day = '0' + day;
+                    if (year.length === 4 && month.length === 2 && day.length === 2) {
+                        p.dateOfBirth = year + '-' + month + '-' + day;
+                    }
+                }
+            }
+        }
+
+        // Objective / Profile / Summary
+        const objText = extractSection(text, [
+            'profile', 'summary', 'objective', 'career objective',
+            'professional summary', 'about me', 'personal statement', 'career summary'
+        ]);
+        if (objText) p.objective = objText.substring(0, 500).trim();
 
         return p;
     }
@@ -316,7 +438,7 @@ const CVParser = (() => {
 
     /** Extract text under a section heading */
     function extractSection(text, headings) {
-        const allHeadings = ['personal', 'contact', 'profile', 'summary', 'objective', 'work experience', 'professional experience', 'employment', 'experience', 'education', 'qualifications', 'training', 'skills', 'competencies', 'abilities', 'references', 'referees', 'hobbies', 'interests', 'achievements', 'awards', 'languages', 'additional'];
+        const allHeadings = ['personal', 'contact', 'profile', 'summary', 'objective', 'career objective', 'professional summary', 'about me', 'personal statement', 'career summary', 'work experience', 'professional experience', 'employment', 'experience', 'education', 'qualifications', 'training', 'skills', 'competencies', 'abilities', 'references', 'referees', 'hobbies', 'interests', 'achievements', 'awards', 'languages', 'additional'];
 
         for (const heading of headings) {
             // Match heading (case-insensitive, possibly with colon or line break after)

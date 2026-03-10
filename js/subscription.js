@@ -2,6 +2,10 @@
  * Subscription & payment module — Paystack integration + download tracking.
  * Supports 3-tier system: free, pro, premium.
  * Falls back to localStorage tracking when Supabase is not configured.
+ *
+ * EXPIRY ENFORCEMENT: Subscriptions automatically expire after
+ * SUBSCRIPTION_DURATION_DAYS (default 30). Once expired, the user
+ * reverts to the free tier and must renew to regain paid features.
  */
 const Subscription = (() => {
     'use strict';
@@ -12,6 +16,8 @@ const Subscription = (() => {
 
     function init() {
         supabase = Auth.getClient(); // null in local mode
+        // Run expiry check on init so stale subscriptions are caught immediately
+        _enforceExpiry();
     }
 
     // ── Local storage helpers ──
@@ -22,57 +28,176 @@ const Subscription = (() => {
         } catch { return {}; }
     }
 
+    /** Compute a deterministic integrity hash for subscription data */
+    function _integrity(sub) {
+        const fields = (sub.user_id || '') + '|' + (sub.status || '') + '|' + (sub.plan || '') + '|' + (sub.amount || 0) + '|' + (sub.started_at || '');
+        let h = 0x1a6b3c;
+        const str = 'rmcv_' + fields;
+        for (let i = 0; i < str.length; i++) {
+            h = Math.imul(h ^ str.charCodeAt(i), 0x5bd1e995);
+            h ^= h >>> 15;
+        }
+        return 'sig_' + (h >>> 0).toString(36);
+    }
+
+    /** Save a local subscription with integrity signature */
+    function _saveLocalSubscription(sub) {
+        const data = { ...sub };
+        delete data._sig;
+        data._sig = _integrity(data);
+        localStorage.setItem(LOCAL_SUBSCRIPTION_KEY, JSON.stringify(data));
+    }
+
     function _getLocalSubscription() {
         try {
-            return JSON.parse(localStorage.getItem(LOCAL_SUBSCRIPTION_KEY));
+            const sub = JSON.parse(localStorage.getItem(LOCAL_SUBSCRIPTION_KEY));
+            if (!sub) return null;
+            if (sub._sig) {
+                const sig = sub._sig;
+                const check = { ...sub };
+                delete check._sig;
+                if (_integrity(check) !== sig) {
+                    console.warn('Subscription integrity check failed — data may be tampered');
+                    localStorage.removeItem(LOCAL_SUBSCRIPTION_KEY);
+                    return null;
+                }
+                delete sub._sig;
+            }
+            return sub;
         } catch { return null; }
+    }
+
+    /**
+     * Check if a subscription has expired based on started_at + duration.
+     * Returns true if the subscription is still within the valid period.
+     */
+    function _isSubscriptionValid(startedAt) {
+        if (!startedAt) return false;
+        const start = new Date(startedAt);
+        const expiry = new Date(start);
+        expiry.setDate(expiry.getDate() + APP_CONFIG.SUBSCRIPTION_DURATION_DAYS);
+        return new Date() < expiry;
+    }
+
+    /**
+     * Enforce expiry: mark expired subscriptions as 'expired' on every app load.
+     * This runs on init() so users can't retain privileges past their billing period.
+     */
+    async function _enforceExpiry() {
+        try {
+            if (supabase && !Auth.isLocalMode()) {
+                const user = await Auth.getUser();
+                if (!user) return;
+
+                const { data: sub } = await supabase
+                    .from('subscriptions')
+                    .select('id, started_at, status')
+                    .eq('user_id', user.id)
+                    .eq('status', 'active')
+                    .maybeSingle();
+
+                if (sub && sub.started_at && !_isSubscriptionValid(sub.started_at)) {
+                    // Subscription has expired — mark it in the database
+                    await supabase
+                        .from('subscriptions')
+                        .update({ status: 'expired' })
+                        .eq('id', sub.id);
+                }
+            } else {
+                // Local mode — check and expire local subscription
+                const sub = _getLocalSubscription();
+                if (sub && sub.status === 'active' && sub.started_at) {
+                    if (!_isSubscriptionValid(sub.started_at)) {
+                        sub.status = 'expired';
+                        _saveLocalSubscription(sub);
+                    }
+                }
+            }
+        } catch (e) {
+            // Expiry check failed silently — will be caught on next load
+        }
     }
 
     /** Get current download count and subscription status */
     async function getStatus() {
         if (supabase && !Auth.isLocalMode()) {
             const user = await Auth.getUser();
-            if (!user) return { downloads: 0, subscribed: false, plan: null };
+            if (!user) return { downloads: 0, subscribed: false, plan: null, expired: false };
 
             const { count } = await supabase
                 .from('downloads')
                 .select('*', { count: 'exact', head: true })
                 .eq('user_id', user.id);
 
+            // Check for active subscription
             const { data: sub } = await supabase
                 .from('subscriptions')
-                .select('status, plan')
+                .select('status, plan, started_at')
                 .eq('user_id', user.id)
-                .eq('status', 'active')
+                .in('status', ['active', 'expired'])
+                .order('started_at', { ascending: false })
+                .limit(1)
                 .maybeSingle();
 
-            return {
-                downloads: count || 0,
-                subscribed: !!(sub && sub.status === 'active'),
-                plan: sub ? sub.plan : null
-            };
+            let subscribed = false;
+            let expired = false;
+            let plan = null;
+
+            if (sub) {
+                plan = sub.plan;
+                if (sub.status === 'active' && sub.started_at && _isSubscriptionValid(sub.started_at)) {
+                    subscribed = true;
+                } else {
+                    expired = true;
+                    subscribed = false;
+                }
+            }
+
+            return { downloads: count || 0, subscribed, plan, expired };
         }
 
         // Local mode
         const user = await Auth.getUser();
-        if (!user) return { downloads: 0, subscribed: false, plan: null };
+        if (!user) return { downloads: 0, subscribed: false, plan: null, expired: false };
 
         const downloads = _getLocalDownloads();
         const userDownloads = downloads[user.id] || 0;
 
         const sub = _getLocalSubscription();
-        const subscribed = !!(sub && sub.user_id === user.id && sub.status === 'active');
-        const plan = (sub && sub.user_id === user.id) ? sub.plan : null;
+        let subscribed = false;
+        let expired = false;
+        let plan = null;
 
-        return { downloads: userDownloads, subscribed: subscribed, plan: plan };
+        if (sub && sub.user_id === user.id) {
+            plan = sub.plan;
+            if (sub.status === 'active' && sub.started_at && _isSubscriptionValid(sub.started_at)) {
+                subscribed = true;
+            } else {
+                expired = true;
+                subscribed = false;
+            }
+        }
+
+        return { downloads: userDownloads, subscribed, plan, expired };
+    }
+
+    /** Check if the current user is a super_admin */
+    async function _isSuperAdmin() {
+        try {
+            const user = await Auth.getUser();
+            return user && user.user_metadata && user.user_metadata.role === 'super_admin';
+        } catch { return false; }
     }
 
     /**
      * Get current tier: 'free', 'pro', or 'premium'.
+     * Super admins always get 'premium'.
+     * Expired subscriptions return 'free'.
      * Backward compat: existing plan='monthly' maps to 'pro'.
      */
     async function getTier() {
         try {
+            if (await _isSuperAdmin()) return 'premium';
             const status = await getStatus();
             if (!status.subscribed || !status.plan) return 'free';
             const plan = status.plan.toLowerCase();
@@ -84,16 +209,46 @@ const Subscription = (() => {
         }
     }
 
+    /**
+     * Check if the user's subscription has expired (was previously active).
+     * Used to show renewal prompts instead of fresh upgrade prompts.
+     */
+    async function isExpired() {
+        try {
+            if (await _isSuperAdmin()) return false;
+            const status = await getStatus();
+            return status.expired === true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get the previously subscribed plan name (even if expired).
+     * Useful for showing "Renew your Pro plan" instead of generic upgrade.
+     */
+    async function getExpiredPlan() {
+        try {
+            const status = await getStatus();
+            if (status.expired && status.plan) return status.plan;
+            return null;
+        } catch (e) {
+            return null;
+        }
+    }
+
     /** Max saved CVs allowed for current tier */
     async function getMaxSavedCVs() {
+        if (await _isSuperAdmin()) return Infinity;
         const tier = await getTier();
         if (tier === 'premium') return APP_CONFIG.PREMIUM_SAVED_CVS;
         if (tier === 'pro') return APP_CONFIG.PRO_SAVED_CVS;
         return APP_CONFIG.FREE_SAVED_CVS;
     }
 
-    /** Check if user can download (subscribed or free downloads remaining) */
+    /** Check if user can download (super_admin, subscribed, or free downloads remaining) */
     async function canDownload() {
+        if (await _isSuperAdmin()) return true;
         const status = await getStatus();
         if (status.subscribed) return true;
         return status.downloads < APP_CONFIG.FREE_DOWNLOADS;
@@ -197,7 +352,7 @@ const Subscription = (() => {
                         amount: amount,
                         started_at: new Date().toISOString()
                     };
-                    localStorage.setItem(LOCAL_SUBSCRIPTION_KEY, JSON.stringify(sub));
+                    _saveLocalSubscription(sub);
                 }
                 _sendSubscriptionNotification(email, planName, amount);
                 if (onSuccess) onSuccess({ reference: 'LOCAL_' + Date.now() });
@@ -274,5 +429,5 @@ const Subscription = (() => {
         }
     }
 
-    return { init, getStatus, getTier, getMaxSavedCVs, canDownload, recordDownload, startPayment, startPaymentForTier, getSubscriptionExpiry };
+    return { init, getStatus, getTier, isExpired, getExpiredPlan, getMaxSavedCVs, canDownload, recordDownload, startPayment, startPaymentForTier, getSubscriptionExpiry };
 })();

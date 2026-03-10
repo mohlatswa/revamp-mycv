@@ -179,6 +179,23 @@
 .sub-expired { background: #f3f4f6; color: #6b7280; }
 .sub-none { background: #f9fafb; color: #aaa; }
 
+/* ── Status Badges ── */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status-active { background: #d1fae5; color: #065f46; }
+.status-suspended { background: #fee2e2; color: #b91c1c; }
+
+/* ── Suspended stat card ── */
+.stat-card-suspended .stat-number { color: #b91c1c; }
+
 /* ── Action Buttons ── */
 .actions-cell { white-space: nowrap; }
 
@@ -197,6 +214,8 @@
 .btn-edit { background: #dbeafe; color: #1e40af; }
 .btn-reset-pw { background: #fef3c7; color: #92400e; }
 .btn-delete { background: #fee2e2; color: #b91c1c; }
+.btn-suspend { background: #fff7ed; color: #c2410c; }
+.btn-unsuspend { background: #d1fae5; color: #065f46; }
 
 .btn-sm {
     padding: 8px 16px;
@@ -342,8 +361,18 @@
     .stat-card { min-width: calc(50% - 10px); }
     .settings-grid { grid-template-columns: 1fr; }
 
-    .admin-table th:nth-child(5),
-    .admin-table td:nth-child(5) { display: none; }
+    /* Hide Phone(3), Subscription(6), Created(7) on mobile */
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3),
+    .admin-table th:nth-child(6),
+    .admin-table td:nth-child(6),
+    .admin-table th:nth-child(7),
+    .admin-table td:nth-child(7) { display: none; }
 
     .admin-tabs { overflow-x: auto; }
+
+    .btn-action {
+        padding: 4px 7px;
+        font-size: 0.625rem;
+    }
 }

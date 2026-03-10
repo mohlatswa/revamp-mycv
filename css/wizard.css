@@ -95,6 +95,8 @@
 /* === Wizard Steps === */
 .wizard-container {
     padding: 20px 16px;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .wizard-step {
@@ -125,22 +127,21 @@
 
 /* === Wizard Navigation === */
 .wizard-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--color-white);
-    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-    z-index: 100;
+    padding: 20px 0 10px;
+    margin-top: 24px;
+    border-top: 1px solid var(--color-border);
 }
 
 .wizard-nav .btn {
     flex: 1;
-    max-width: 200px;
+    max-width: 220px;
+    min-height: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
 }
 
 /* On step 6 (preview), hide the next button from nav */
@@ -150,13 +151,6 @@
 
 /* === Responsive === */
 @media (min-width: 600px) {
-    .wizard-nav {
-        max-width: 640px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: var(--radius) var(--radius) 0 0;
-    }
-
     .step-number {
         width: 36px;
         height: 36px;
@@ -165,6 +159,13 @@
 
     .step-label {
         font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .wizard-nav .btn {
+        font-size: 0.875rem;
+        padding: 12px 14px;
     }
 }
 
@@ -239,8 +240,30 @@
     transition: all 0.3s ease;
 }
 
-.cv-import-banner.dismissed {
+/* Compact mode: show only the small re-upload bar */
+.cv-import-banner .cv-import-compact {
     display: none;
+}
+
+.cv-import-banner.compact .cv-import-full {
+    display: none;
+}
+
+.cv-import-banner.compact .cv-import-compact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cv-import-banner.compact {
+    padding: 12px 16px;
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+.cv-import-compact-hint {
+    font-size: 0.8125rem;
+    color: #64748b;
 }
 
 .cv-import-content {

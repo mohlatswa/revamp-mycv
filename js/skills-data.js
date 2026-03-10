@@ -12,7 +12,17 @@ const SKILLS_DATA = {
         'Typing',
         'Point of Sale (POS) Systems',
         'Cellphone Repairs',
-        'Printing & Copying'
+        'Printing & Copying',
+        'PowerPoint',
+        'Google Workspace',
+        'Database Management',
+        'Troubleshooting',
+        'Networking Basics',
+        'Cybersecurity Awareness',
+        'Cloud Storage',
+        'Website Management',
+        'Software Installation',
+        'Hardware Maintenance'
     ],
     'Agriculture': [
         'Crop Farming',
@@ -26,7 +36,15 @@ const SKILLS_DATA = {
         'Poultry Farming',
         'Fruit Picking',
         'Soil Preparation',
-        'Vegetable Gardening'
+        'Vegetable Gardening',
+        'Greenhouse Management',
+        'Organic Farming',
+        'Farm Record Keeping',
+        'Aquaculture',
+        'Seed Selection',
+        'Farm Safety',
+        'Compost Making',
+        'Market Gardening'
     ],
     'Construction': [
         'Bricklaying',
@@ -40,7 +58,15 @@ const SKILLS_DATA = {
         'Roofing',
         'Concrete Mixing',
         'Scaffolding',
-        'Site Cleanup'
+        'Site Cleanup',
+        'Demolition',
+        'Drywall Installation',
+        'Glazing',
+        'Waterproofing',
+        'Steel Fixing',
+        'Paving',
+        'Surveying Assistance',
+        'Building Inspection'
     ],
     'Retail & Sales': [
         'Customer Service',
@@ -52,7 +78,17 @@ const SKILLS_DATA = {
         'Till Operation',
         'Product Knowledge',
         'Order Processing',
-        'Store Cleaning'
+        'Store Cleaning',
+        'Returns Processing',
+        'Inventory Management',
+        'Loss Prevention',
+        'Visual Display',
+        'Customer Complaints',
+        'Barcode Scanning',
+        'Price Marking',
+        'Store Opening/Closing',
+        'Promotions Setup',
+        'Online Orders'
     ],
     'Domestic Work': [
         'House Cleaning',
@@ -63,7 +99,16 @@ const SKILLS_DATA = {
         'Gardening',
         'Pet Care',
         'Household Management',
-        'Sewing & Mending'
+        'Sewing & Mending',
+        'Meal Planning',
+        'Window Cleaning',
+        'Grocery Shopping',
+        'Home Organisation',
+        'First Aid',
+        'Silver/Brass Polishing',
+        'Floor Polishing',
+        'Plant Care',
+        'Appliance Operation'
     ],
     'Healthcare': [
         'First Aid',
@@ -75,7 +120,17 @@ const SKILLS_DATA = {
         'Vital Signs Monitoring',
         'Medication Administration',
         'Community Health Work',
-        'Hygiene & Sanitation'
+        'Hygiene & Sanitation',
+        'Blood Pressure Monitoring',
+        'Diabetes Care',
+        'TB Awareness',
+        'Mental Health Support',
+        'Palliative Care',
+        'Nutrition Guidance',
+        'Record Keeping',
+        'Infection Control',
+        'Patient Transport',
+        'Rehabilitation Support'
     ],
     'Transport & Driving': [
         'Code 8 Licence',
@@ -87,7 +142,15 @@ const SKILLS_DATA = {
         'Vehicle Maintenance',
         'Public Transport',
         'Defensive Driving',
-        'Loading & Offloading'
+        'Loading & Offloading',
+        'GPS Navigation',
+        'Fuel Management',
+        'Trip Logging',
+        'Passenger Transport',
+        'Hazardous Materials',
+        'Fleet Coordination',
+        'Traffic Law Compliance',
+        'Vehicle Inspection'
     ],
     'Education & Training': [
         'Tutoring',
@@ -97,7 +160,17 @@ const SKILLS_DATA = {
         'Adult Literacy',
         'Sports Coaching',
         'Mentoring',
-        'Study Facilitation'
+        'Study Facilitation',
+        'Lesson Planning',
+        'Curriculum Development',
+        'Special Needs Support',
+        'Parent Communication',
+        'Educational Technology',
+        'Exam Supervision',
+        'Library Management',
+        'Student Counselling',
+        'Record Keeping',
+        'Workshop Facilitation'
     ],
     'Administration': [
         'Filing & Record Keeping',
@@ -108,7 +181,18 @@ const SKILLS_DATA = {
         'Report Writing',
         'Office Management',
         'Data Entry',
-        'Photocopying & Scanning'
+        'Photocopying & Scanning',
+        'Invoice Processing',
+        'Procurement',
+        'Travel Arrangements',
+        'Document Management',
+        'Correspondence',
+        'Bookkeeping',
+        'Database Management',
+        'Customer Relations',
+        'Boardroom Setup',
+        'Courier Coordination',
+        'Supply Management'
     ],
     'General Skills': [
         'Teamwork',
@@ -122,7 +206,15 @@ const SKILLS_DATA = {
         'Leadership',
         'Quick Learner',
         'Work Under Pressure',
-        'Self-Motivated'
+        'Self-Motivated',
+        'Adaptability',
+        'Conflict Resolution',
+        'Critical Thinking',
+        'Negotiation',
+        'Customer Focus',
+        'Initiative',
+        'Organisational Skills',
+        'Stress Management'
     ]
 };
 

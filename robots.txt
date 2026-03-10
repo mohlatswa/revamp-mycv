@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /login.html
+Allow: /404.html
+Allow: /icons/
+Disallow: /admin.html
+Disallow: /js/
+Disallow: /sw.js
+
+Sitemap: https://mohlatswa.github.io/revamp-mycv/sitemap.xml

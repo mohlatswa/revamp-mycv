@@ -8,13 +8,43 @@
 /* === h3 Section Title Reset (semantic but inherits template styling) === */
 h3.cv-section-title { margin: 0; font-size: inherit; font-weight: inherit; display: block; }
 
+/* === Generic Personal Details Table === */
+.cv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+}
+.cv-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+}
+.cv-label {
+    font-weight: 600;
+    width: 140px;
+    color: #555;
+    white-space: nowrap;
+}
+
+/* Sidebar personal details */
+.cv-sidebar-section small {
+    font-weight: 600;
+    color: inherit;
+    opacity: 0.65;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+}
+
 /* === CV Preview Container === */
 .cv-preview {
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
-    overflow: hidden;
+    overflow: visible;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* === CV Photo Styles === */
@@ -1232,6 +1262,10 @@ h3.cv-section-title { margin: 0; font-size: inherit; font-weight: inherit; displ
     .cv-section { page-break-inside: avoid; }
     .cv-entry { page-break-inside: avoid; }
     .cv-tl-item { page-break-inside: avoid; }
+    .cv-ref-entry { page-break-inside: avoid; }
+    .cv-table { page-break-inside: avoid; }
+    .cv-header { page-break-after: avoid; }
+    .cv-section-title { page-break-after: avoid; }
 
     .cv-minimalist, .cv-ats, .cv-graduate, .cv-career-change, .cv-exec-modern,
     .cv-academic, .cv-consulting, .cv-nonprofit, .cv-marketing,
@@ -2384,3 +2418,23 @@ h3.cv-section-title { margin: 0; font-size: inherit; font-weight: inherit; displ
 .cv-preview[style] .cv-tourism .cv-header { background: var(--cv-accent); }
 .cv-preview[style] .cv-tourism .cv-section-title { color: var(--cv-accent); border-bottom-color: var(--cv-accent); }
 .cv-preview[style] .cv-tourism .cv-lang-badge { color: var(--cv-accent); }
+
+/* === Dark Mode — CV Preview always white (printed page) === */
+body.dark-mode .cv-preview {
+    background: #fff;
+    color: #222;
+    border-color: #374151;
+}
+
+body.dark-mode .cv-preview h1,
+body.dark-mode .cv-preview h2,
+body.dark-mode .cv-preview h3,
+body.dark-mode .cv-preview h4,
+body.dark-mode .cv-preview p,
+body.dark-mode .cv-preview span,
+body.dark-mode .cv-preview li,
+body.dark-mode .cv-preview td,
+body.dark-mode .cv-preview th,
+body.dark-mode .cv-preview label {
+    color: inherit;
+}

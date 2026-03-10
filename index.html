@@ -3,15 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free CV builder for South African job seekers. Revamp your CV. Land the job.">
+    <meta name="description" content="South Africa's free ATS-friendly CV builder. 46+ professional templates, instant PDF download, built-in ATS scoring. Create a job-winning CV in minutes. Trusted by thousands of SA job seekers.">
+    <meta name="keywords" content="CV builder South Africa, free CV maker, ATS-friendly CV, resume builder SA, professional CV template, job application South Africa, Revamp MyCV, curriculum vitae, career builder, PDF CV download, Matric CV, graduate CV, government CV template">
+    <meta name="author" content="Revamp MyCV">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#1a6b3c">
-    <title>Revamp MyCV — Revamp your CV. Land the job.</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://js.paystack.co https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co https://api.web3forms.com https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://js.paystack.co; object-src 'none'; base-uri 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://mohlatswa.github.io/revamp-mycv/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mohlatswa.github.io/revamp-mycv/">
+    <meta property="og:title" content="Revamp MyCV — South Africa's Free CV Builder">
+    <meta property="og:description" content="Build a professional, ATS-friendly CV in minutes. 46+ templates designed for South African job seekers. Free to use, instant PDF download.">
+    <meta property="og:image" content="https://mohlatswa.github.io/revamp-mycv/icons/icon-512.png">
+    <meta property="og:site_name" content="Revamp MyCV">
+    <meta property="og:locale" content="en_ZA">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Revamp MyCV — South Africa's Free CV Builder">
+    <meta name="twitter:description" content="Build a professional, ATS-friendly CV in minutes. 46+ templates. Free for SA job seekers.">
+    <meta name="twitter:image" content="https://mohlatswa.github.io/revamp-mycv/icons/icon-512.png">
+
+    <title>Revamp MyCV — South Africa's Free Professional CV Builder | ATS-Friendly Templates</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>RM</text></svg>">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/wizard.css">
     <link rel="stylesheet" href="css/templates.css">
     <link rel="stylesheet" href="css/auth.css">
+
+    <!-- Critical inline fallback — ensures page is usable even if CSS fails to load -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; }
+        .app-header { background: #1a6b3c; color: #fff; padding: 16px 20px; }
+        .wizard-container { max-width: 760px; margin: 0 auto; padding: 16px; }
+    </style>
+
+    <!-- Page-level error recovery — redirect to login if critical scripts fail -->
+    <script>
+    window.__scriptErrors = 0;
+    window.addEventListener('error', function(e) {
+        if (e.filename && e.filename.includes('/js/')) {
+            window.__scriptErrors++;
+            console.error('Script load error:', e.filename);
+            if (window.__scriptErrors >= 3) {
+                document.body.innerHTML = '<div style="text-align:center;padding:60px 20px;font-family:sans-serif">' +
+                    '<h1 style="color:#1a6b3c;font-size:2rem">Something went wrong</h1>' +
+                    '<p style="color:#666;margin:12px 0 24px">Some resources failed to load. This may be a network issue.</p>' +
+                    '<a href="login.html" style="display:inline-block;padding:12px 28px;background:#1a6b3c;color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Go to Sign In</a>' +
+                    '<br><a href="." style="display:inline-block;margin-top:12px;color:#1a6b3c;font-size:0.9rem">Retry this page</a></div>';
+            }
+        }
+    }, true);
+    </script>
+
+    <!-- Structured Data - SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Revamp MyCV",
+        "url": "https://mohlatswa.github.io/revamp-mycv/",
+        "description": "South Africa's free professional CV builder with 46+ ATS-friendly templates. Create, preview, and download your CV as PDF instantly.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web Browser",
+        "offers": [
+            {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "ZAR",
+                "name": "Free Plan",
+                "description": "16 general templates, PDF download, ATS scoring"
+            },
+            {
+                "@type": "Offer",
+                "price": "49",
+                "priceCurrency": "ZAR",
+                "name": "Pro Plan",
+                "description": "30 profession templates, unlimited downloads, full ATS tips"
+            },
+            {
+                "@type": "Offer",
+                "price": "149",
+                "priceCurrency": "ZAR",
+                "name": "Premium Plan",
+                "description": "All 46+ templates, unlimited CVs, priority support"
+            }
+        ],
+        "author": {
+            "@type": "Organization",
+            "name": "Revamp MyCV",
+            "email": "revamp.mycv@outlook.com"
+        }
+    }
+    </script>
+
+    <!-- FAQ structured data is on home.html -->
     <!-- Google Analytics -->
     <script>
     (function() {
@@ -83,17 +173,21 @@
 
         <!-- CV Import (Optional) -->
         <div class="cv-import-banner" id="cv-import-banner">
-            <div class="cv-import-content">
+            <div class="cv-import-content cv-import-full">
                 <div class="cv-import-icon">&#128196;</div>
                 <div class="cv-import-text">
                     <strong>Already have a CV?</strong>
-                    <p>Upload it and we'll auto-fill the form for you. Supports PDF and Word documents.</p>
+                    <p>Upload it and we'll auto-fill the form for you. Supports PDF and text documents.</p>
                 </div>
                 <div class="cv-import-actions">
                     <label for="cvFileUpload" class="btn btn-primary btn-sm cv-import-btn">Upload CV</label>
-                    <input type="file" id="cvFileUpload" accept=".pdf,.doc,.docx,.txt" style="display:none">
+                    <input type="file" id="cvFileUpload" accept=".pdf,.docx,.txt" style="display:none">
                     <button type="button" class="btn-import-dismiss" id="btn-import-dismiss">No thanks, I'll start fresh</button>
                 </div>
+            </div>
+            <div class="cv-import-content cv-import-compact">
+                <label for="cvFileUpload" class="btn btn-secondary btn-sm cv-import-btn">&#128196; Upload / Replace CV</label>
+                <span class="cv-import-compact-hint">Upload a PDF or text file to auto-fill the form</span>
             </div>
             <div class="cv-import-progress" id="cv-import-progress" style="display:none">
                 <div class="cv-import-spinner"></div>
@@ -142,7 +236,7 @@
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email"
-                            placeholder="e.g. thabo@email.com" autocomplete="email">
+                            placeholder="e.g. name@email.com" autocomplete="email">
                         <span class="error-message" id="error-email"></span>
                     </div>
                 </div>
@@ -155,7 +249,7 @@
                 <div class="form-group">
                     <label for="address">Street Address</label>
                     <input type="text" id="address" name="address"
-                        placeholder="e.g. 45 Mandela Drive, Unit 3" autocomplete="street-address">
+                        placeholder="e.g. 12 Main Street, Unit 3" autocomplete="street-address">
                     <span class="hint">Optional. Include suburb or street name for a complete CV.</span>
                 </div>
 
@@ -163,7 +257,7 @@
                     <div class="form-group">
                         <label for="location">Town / City *</label>
                         <input type="text" id="location" name="location" required
-                            placeholder="e.g. Polokwane" autocomplete="address-level2">
+                            placeholder="e.g. Your City" autocomplete="address-level2">
                         <span class="error-message" id="error-location"></span>
                     </div>
                     <div class="form-group">
@@ -313,7 +407,7 @@
                     <div class="form-group">
                         <label for="company">Company / Employer *</label>
                         <input type="text" id="company" name="company" required
-                            placeholder="e.g. Spar Limpopo">
+                            placeholder="e.g. Company Name">
                         <span class="error-message" id="error-company"></span>
                     </div>
 
@@ -338,7 +432,7 @@
                         <textarea id="duties" name="duties" rows="3"
                             placeholder="Describe your main responsibilities, one per line&#10;e.g. Assisted customers with purchases&#10;Packed and sorted goods"></textarea>
                         <div class="action-verb-helper" id="action-verb-helper">
-                            <label class="hint">Action verbs (click to insert):</label>
+                            <label class="hint">Action verbs (click to toggle):</label>
                             <div class="action-verb-chips" id="action-verb-chips"></div>
                         </div>
                     </div>
@@ -361,7 +455,7 @@
                     <div class="form-group">
                         <label for="institution">School / Institution *</label>
                         <input type="text" id="institution" name="institution" required
-                            placeholder="e.g. Mokopane High School">
+                            placeholder="e.g. Your High School">
                         <span class="error-message" id="error-institution"></span>
                     </div>
 
@@ -375,7 +469,7 @@
                     <div class="form-group">
                         <label for="eduYear">Year Completed</label>
                         <input type="number" id="eduYear" name="eduYear"
-                            min="1970" max="2026" placeholder="e.g. 2020">
+                            min="1970" max="2030" placeholder="e.g. 2020">
                     </div>
 
                     <button type="button" class="btn btn-secondary" id="btn-add-education">Add This Entry</button>
@@ -425,7 +519,7 @@
                     <div class="form-group">
                         <label for="refName">Reference Name *</label>
                         <input type="text" id="refName" name="refName" required
-                            placeholder="e.g. Mr. James Nkosi">
+                            placeholder="e.g. Full Name">
                         <span class="error-message" id="error-refName"></span>
                     </div>
 
@@ -610,17 +704,209 @@
             <div id="cv-preview" class="cv-preview"></div>
         </section>
 
-    </main>
+        <!-- Find Jobs Section -->
+        <section class="find-jobs-section" id="find-jobs-section">
+            <button type="button" class="find-jobs-toggle" id="find-jobs-toggle">
+                <span class="find-jobs-toggle-text">Find Jobs</span>
+                <span class="find-jobs-toggle-arrow" id="find-jobs-arrow">&#9660;</span>
+            </button>
+            <div class="find-jobs-content" id="find-jobs-content" style="display:none">
+                <p class="find-jobs-desc">Search popular South African job boards and recruitment agencies with your desired job title.</p>
+                <div class="find-jobs-grid" id="find-jobs-grid">
+                    <a class="job-site-card" data-site="indeed" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">IN</div>
+                        <div class="job-site-info">
+                            <strong>Indeed SA</strong>
+                            <span>za.indeed.com</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="linkedin" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">LI</div>
+                        <div class="job-site-info">
+                            <strong>LinkedIn Jobs</strong>
+                            <span>linkedin.com/jobs</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="careers24" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">C24</div>
+                        <div class="job-site-info">
+                            <strong>Careers24</strong>
+                            <span>careers24.com</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="pnet" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">PN</div>
+                        <div class="job-site-info">
+                            <strong>PNet</strong>
+                            <span>pnet.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="jobmail" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">JM</div>
+                        <div class="job-site-info">
+                            <strong>JobMail</strong>
+                            <span>jobmail.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="careerjunction" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">CJ</div>
+                        <div class="job-site-info">
+                            <strong>CareerJunction</strong>
+                            <span>careerjunction.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="gumtree" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">GT</div>
+                        <div class="job-site-info">
+                            <strong>Gumtree Jobs</strong>
+                            <span>gumtree.co.za/s-jobs</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="adzuna" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">AZ</div>
+                        <div class="job-site-info">
+                            <strong>Adzuna SA</strong>
+                            <span>adzuna.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="dpsa" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">GOV</div>
+                        <div class="job-site-info">
+                            <strong>Government Jobs</strong>
+                            <span>dpsa.gov.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                </div>
+                <p class="find-jobs-desc" style="margin-top:18px;font-weight:600">Recruitment Agencies</p>
+                <div class="find-jobs-grid" id="find-jobs-grid-agencies">
+                    <a class="job-site-card" data-site="hays" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">HY</div>
+                        <div class="job-site-info">
+                            <strong>Hays Recruitment</strong>
+                            <span>hays.com</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="michaelpage" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">MP</div>
+                        <div class="job-site-info">
+                            <strong>Michael Page</strong>
+                            <span>page.com</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="roberthalf" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">RH</div>
+                        <div class="job-site-info">
+                            <strong>Robert Half</strong>
+                            <span>roberthalf.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="kelly" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">KL</div>
+                        <div class="job-site-info">
+                            <strong>Kelly Staffing</strong>
+                            <span>kelly.co.za/jobs</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="adcorp" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">AD</div>
+                        <div class="job-site-info">
+                            <strong>Adcorp</strong>
+                            <span>adcorp.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="isilumko" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">IS</div>
+                        <div class="job-site-info">
+                            <strong>Isilumko Staffing</strong>
+                            <span>isilumko.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="dante" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">DP</div>
+                        <div class="job-site-info">
+                            <strong>Dante Personnel</strong>
+                            <span>dantesa.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="express" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">EX</div>
+                        <div class="job-site-info">
+                            <strong>Express Employment</strong>
+                            <span>expresspros.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="quest" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">QS</div>
+                        <div class="job-site-info">
+                            <strong>Quest Staffing</strong>
+                            <span>quest.co.za/jobs</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="workforce" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">WF</div>
+                        <div class="job-site-info">
+                            <strong>Workforce Staffing</strong>
+                            <span>workforce.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="unique" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">UP</div>
+                        <div class="job-site-info">
+                            <strong>Unique Personnel</strong>
+                            <span>unique.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="kontak" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">KR</div>
+                        <div class="job-site-info">
+                            <strong>Kontak Recruitment</strong>
+                            <span>kontak.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                    <a class="job-site-card" data-site="network" href="#" target="_blank" rel="noopener">
+                        <div class="job-site-icon">NR</div>
+                        <div class="job-site-info">
+                            <strong>Network Recruitment</strong>
+                            <span>networkrecruitment.co.za</span>
+                        </div>
+                        <span class="job-site-arrow">&#8599;</span>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-    <!-- Wizard Navigation -->
-    <nav class="wizard-nav" aria-label="Step navigation">
-        <button type="button" class="btn btn-secondary" id="btn-prev" disabled>
-            &larr; Back
-        </button>
-        <button type="button" class="btn btn-primary" id="btn-next">
-            Next &rarr;
-        </button>
-    </nav>
+        <!-- Wizard Navigation -->
+        <nav class="wizard-nav" aria-label="Step navigation">
+            <button type="button" class="btn btn-secondary" id="btn-prev" disabled>
+                &larr; Back
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-next">
+                Next &rarr;
+            </button>
+        </nav>
+
+    </main>
 
     <!-- My CVs Modal -->
     <div class="mycvs-overlay" id="mycvs-overlay">
@@ -893,23 +1179,20 @@
                     <button type="button" class="btn-subscribe btn-subscribe-premium" data-tier="premium">Subscribe Premium</button>
                 </div>
             </div>
-            <!-- EFT Payment Option -->
+            <!-- EFT Payment Option — bank details loaded on demand for authenticated users only -->
             <div class="paywall-eft">
                 <div class="paywall-eft-divider"><span>or pay via EFT / Bank Transfer</span></div>
                 <div class="paywall-eft-details">
                     <p class="paywall-eft-heading">Bank Details:</p>
-                    <table class="paywall-eft-table">
-                        <tr><td>Bank</td><td><strong>Capitec Bank</strong></td></tr>
-                        <tr><td>Account Name</td><td><strong>Hennie Mohlatswa</strong></td></tr>
-                        <tr><td>Account Number</td><td><strong>1717870123</strong></td></tr>
-                        <tr><td>Branch Code</td><td><strong>470010</strong></td></tr>
-                        <tr><td>Account Type</td><td><strong>Savings</strong></td></tr>
-                    </table>
+                    <div id="eft-bank-details">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-reveal-eft">Show Bank Details</button>
+                        <p class="hint" style="margin-top:8px">You must be signed in to view banking details.</p>
+                    </div>
                     <div class="paywall-eft-steps">
                         <p><strong>How to pay:</strong></p>
                         <ol>
                             <li>Log in to your banking app (FNB, Capitec, Standard Bank, Absa, Nedbank, etc.)</li>
-                            <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
+                            <li>Click "Show Bank Details" above and enter the details in your banking app</li>
                             <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
                             <li>Use your <strong>email address</strong> as the payment reference</li>
                             <li>Send proof of payment to <strong>revamp.mycv@outlook.com</strong></li>
@@ -925,37 +1208,38 @@
     <!-- Toast notification -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Clear stale service worker cache -->
-    <script>
-    if ('serviceWorker' in navigator) {
-        caches.keys().then(function(k) { k.forEach(function(n) { caches.delete(n); }); });
-        navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(w) { w.unregister(); }); });
-    }
-    </script>
+    <!-- Noscript fallback -->
+    <noscript>
+        <div style="text-align:center;padding:60px 20px;font-family:sans-serif">
+            <h1 style="color:#1a6b3c;font-size:2rem">JavaScript Required</h1>
+            <p style="color:#666;margin:12px 0">Revamp MyCV needs JavaScript to run. Please enable JavaScript in your browser settings and reload the page.</p>
+        </div>
+    </noscript>
     <!-- Scripts (cache-busted) -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="js/config.js?v=18"></script>
-    <script src="js/auth.js?v=18"></script>
-    <script src="js/subscription.js?v=18"></script>
-    <script src="js/cv-parser.js?v=18"></script>
-    <script src="js/skills-data.js?v=18"></script>
-    <script src="js/ats-scorer.js?v=18"></script>
-    <script src="js/storage.js?v=18"></script>
-    <script src="js/cv-manager.js?v=18"></script>
-    <script src="js/settings.js?v=18"></script>
-    <script src="js/session-timer.js?v=18"></script>
-    <script src="js/wizard.js?v=18"></script>
-    <script src="js/summary-generator.js?v=18"></script>
-    <script src="js/cv-renderer.js?v=18"></script>
-    <script src="js/pdf-export.js?v=18"></script>
-    <script src="js/app.js?v=18"></script>
+    <script src="https://js.paystack.co/v1/inline.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+    <script src="js/config.js?v=24"></script>
+    <script src="js/auth.js?v=24"></script>
+    <script src="js/subscription.js?v=24"></script>
+    <script src="js/cv-parser.js?v=24"></script>
+    <script src="js/skills-data.js?v=24"></script>
+    <script src="js/ats-scorer.js?v=24"></script>
+    <script src="js/storage.js?v=24"></script>
+    <script src="js/cv-manager.js?v=24"></script>
+    <script src="js/settings.js?v=24"></script>
+    <script src="js/session-timer.js?v=24"></script>
+    <script src="js/wizard.js?v=24"></script>
+    <script src="js/summary-generator.js?v=24"></script>
+    <script src="js/cv-renderer.js?v=24"></script>
+    <script src="js/pdf-export.js?v=24"></script>
+    <script src="js/reviews.js?v=24"></script>
+    <script src="js/app.js?v=24"></script>
 
-    <!-- Inline subscription email notification for paywall -->
+    <!-- Subscription email notification (uses APP_CONFIG from config.js) -->
     <script>
     (function() {
-        var WEB3FORMS_KEY = 'c697111c-4475-4e48-9bb7-756a58234f6a';
         document.addEventListener('click', function(e) {
             var btn = e.target;
             if (!btn.classList.contains('btn-subscribe') || !btn.dataset.tier) return;
@@ -964,13 +1248,15 @@
             var price = tier === 'premium' ? 'R149' : 'R49';
 
             setTimeout(function() {
+                var key = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.WEB3FORMS_KEY) || '';
+                if (!key) return;
                 var emailEl = document.getElementById('user-email');
                 var email = emailEl ? emailEl.textContent.trim() : 'Unknown';
                 fetch('https://api.web3forms.com/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        access_key: WEB3FORMS_KEY,
+                        access_key: key,
                         subject: 'New Subscription: ' + plan + ' Plan - ' + price,
                         from_name: 'Revamp MyCV',
                         message: 'A user has subscribed on Revamp MyCV.\n\nEmail Address: ' + email + '\nPlan: ' + plan + '\nAmount: ' + price + '/month\nDate: ' + new Date().toLocaleString('en-ZA')
@@ -991,26 +1277,37 @@
             text: 'Check out Revamp MyCV — Revamp your CV and land the job!',
             url: 'https://mohlatswa.github.io/revamp-mycv/'
         };
-        shareBtn.addEventListener('click', function() {
+        shareBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             if (navigator.share) {
                 navigator.share(shareData).catch(function() {});
             } else {
-                var copyText = shareData.text + ' ' + shareData.url;
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(copyText).then(function() {
-                        showCopyToast();
-                    });
-                } else {
-                    var ta = document.createElement('textarea');
-                    ta.value = copyText;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    showCopyToast();
-                }
+                copyToClipboard(shareData.text + ' ' + shareData.url);
             }
         });
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showCopyToast();
+                }).catch(function() {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+        function fallbackCopy(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy'); } catch(e) {}
+            document.body.removeChild(ta);
+            showCopyToast();
+        }
         function showCopyToast() {
             var t = document.getElementById('toast');
             if (!t) return;
@@ -1021,13 +1318,42 @@
     })();
     </script>
 
-    <!-- Support Footer -->
-    <footer class="support-footer">
-        <span>Need help?</span>
-        <a href="mailto:revamp.mycv@outlook.com">revamp.mycv@outlook.com</a>
-        <span class="sep">|</span>
-        <a href="tel:0727879085">072 787 9085</a>
+    <!-- Minimal app footer -->
+    <footer class="support-footer" style="padding:16px 20px;text-align:center">
+        <div class="footer-bottom">
+            <span>&copy; 2025 - <script>document.write(new Date().getFullYear())</script> Revamp MyCV.</span>
+            <a href="home.html" style="margin-left:12px;color:#1a6b3c;text-decoration:none">FAQ &amp; Reviews</a>
+            <span style="margin:0 8px">|</span>
+            <a href="mailto:revamp.mycv@outlook.com" style="color:#1a6b3c;text-decoration:none">Contact</a>
+        </div>
     </footer>
+
+    <!-- EFT bank details reveal — only for authenticated users -->
+    <script>
+    (function() {
+        var revealBtn = document.getElementById('btn-reveal-eft');
+        if (!revealBtn) return;
+        revealBtn.addEventListener('click', async function() {
+            var session = typeof Auth !== 'undefined' && await Auth.getSession();
+            if (!session) {
+                alert('Please sign in to view bank details.');
+                return;
+            }
+            var container = document.getElementById('eft-bank-details');
+            if (!container) return;
+            var tbl = document.createElement('table');
+            tbl.className = 'paywall-eft-table';
+            [['Bank','Capitec Bank'],['Account Name','Hennie Mohlatswa'],['Account Number','1717870123'],['Branch Code','470010'],['Account Type','Savings']].forEach(function(row) {
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td'); td1.textContent = row[0];
+                var td2 = document.createElement('td'); var s = document.createElement('strong'); s.textContent = row[1]; td2.appendChild(s);
+                tr.appendChild(td1); tr.appendChild(td2); tbl.appendChild(tr);
+            });
+            container.innerHTML = '';
+            container.appendChild(tbl);
+        });
+    })();
+    </script>
 
     <!-- WhatsApp Live Chat Widget -->
     <a href="https://wa.me/27727879085?text=Hi%2C%20I%20need%20help%20with%20Revamp%20MyCV"

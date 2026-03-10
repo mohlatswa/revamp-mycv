@@ -3,13 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in to Revamp MyCV — Revamp your CV. Land the job.">
+    <meta name="description" content="Sign in to Revamp MyCV — South Africa's free ATS-friendly CV builder. 46+ professional templates, instant PDF download. For job seekers and recruitment agents.">
+    <meta name="keywords" content="CV builder login, Revamp MyCV sign in, recruitment agent South Africa, ATS CV builder, free CV maker SA">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#1a6b3c">
-    <title>Sign In — Revamp MyCV</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://js.paystack.co https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co https://api.web3forms.com https://api.emailjs.com https://script.google.com https://www.google-analytics.com https://www.googletagmanager.com https://js.paystack.co; frame-src https://js.paystack.co; object-src 'none'; base-uri 'self'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://mohlatswa.github.io/revamp-mycv/login.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mohlatswa.github.io/revamp-mycv/login.html">
+    <meta property="og:title" content="Sign In — Revamp MyCV | SA's Free CV Builder">
+    <meta property="og:description" content="Create professional, ATS-friendly CVs in minutes. For job seekers and recruitment agencies across South Africa.">
+    <meta property="og:image" content="https://mohlatswa.github.io/revamp-mycv/icons/icon-512.png">
+
+    <title>Sign In — Revamp MyCV | South Africa's Free CV Builder for Job Seekers & Recruiters</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%231a6b3c'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>RM</text></svg>">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://js.paystack.co" crossorigin>
+    <link rel="preconnect" href="https://api.web3forms.com" crossorigin>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/auth.css?v=24">
+
+    <!-- Critical inline fallback — ensures login page is usable even if CSS fails -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f0f7f2; }
+        .auth-container { max-width: 420px; margin: 48px auto; padding: 0 16px; }
+        .auth-card { background: #fff; border-radius: 16px; padding: 32px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .auth-card:not(.active) { display: none; }
+    </style>
+
+    <!-- Page-level error recovery -->
+    <script>
+    window.__scriptErrors = 0;
+    window.addEventListener('error', function(e) {
+        if (e.filename && e.filename.includes('/js/')) {
+            window.__scriptErrors++;
+            console.error('Script load error:', e.filename);
+            if (window.__scriptErrors >= 2) {
+                document.body.innerHTML = '<div style="text-align:center;padding:60px 20px;font-family:sans-serif">' +
+                    '<h1 style="color:#1a6b3c;font-size:2rem">Connection Issue</h1>' +
+                    '<p style="color:#666;margin:12px 0 24px">Some resources failed to load. Please check your internet connection.</p>' +
+                    '<a href="." style="display:inline-block;padding:12px 28px;background:#1a6b3c;color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Retry</a></div>';
+            }
+        }
+    }, true);
+    </script>
     <!-- Google Analytics -->
     <script>
     (function() {
@@ -29,50 +70,90 @@
     </script>
 </head>
 <body class="auth-body">
+    <!-- Decorative background shapes -->
+    <div class="auth-bg-decor">
+        <div class="auth-bg-circle auth-bg-circle-1"></div>
+        <div class="auth-bg-circle auth-bg-circle-2"></div>
+        <div class="auth-bg-circle auth-bg-circle-3"></div>
+    </div>
 
     <div class="auth-container">
         <div class="auth-brand">
-            <div class="auth-logo">RM</div>
+            <div class="auth-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
             <h1>Revamp MyCV</h1>
             <p>Revamp your CV. Land the job.</p>
+            <div class="auth-trust">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Trusted by South African job seekers
+            </div>
         </div>
 
         <!-- Error / Success messages -->
-        <div id="auth-error" class="auth-message auth-message-error" style="display:none"></div>
-        <div id="auth-success" class="auth-message auth-message-success" style="display:none"></div>
+        <div id="auth-error" class="auth-message auth-message-error hidden" role="alert" aria-live="assertive"></div>
+        <div id="auth-success" class="auth-message auth-message-success hidden" role="status" aria-live="polite"></div>
 
         <!-- Login Form -->
         <div class="auth-card active" id="login-form">
-            <h2>Sign In</h2>
+            <div class="auth-card-header">
+                <h2 id="auth-greeting">Welcome back!</h2>
+                <p class="auth-subtitle">Sign in to continue building your CV</p>
+            </div>
             <form id="form-login" novalidate>
                 <div class="auth-field">
                     <label for="login-email">Email Address</label>
-                    <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email">
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email" autofocus>
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required placeholder="Your password" autocomplete="current-password">
+                    <div class="input-icon-wrapper password-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="login-password" required placeholder="Your password" autocomplete="current-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary auth-btn">Sign In</button>
+                <button type="submit" class="btn btn-primary auth-btn">
+                    Sign In
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
             </form>
-            <p class="auth-switch" style="margin-bottom:4px">
+            <p class="auth-switch auth-switch-tight">
                 <a href="#" id="show-forgot">Forgot password?</a>
             </p>
+            <div class="auth-divider"><span>or</span></div>
             <p class="auth-switch">
-                Don't have an account? <a href="#" id="show-register">Create account</a>
+                New here? <a href="#" id="show-register">Create a free account</a>
             </p>
         </div>
 
         <!-- Forgot Password Form -->
         <div class="auth-card" id="forgot-form">
-            <h2>Reset Password</h2>
-            <p style="font-size:14px;color:#666;margin-bottom:16px">Enter your email address and we'll help you reset your password.</p>
+            <div class="auth-card-header">
+                <div class="auth-card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <h2>Reset Password</h2>
+                <p class="auth-subtitle">No worries! Enter your email and we'll help you get back in.</p>
+            </div>
             <form id="form-forgot" novalidate>
                 <div class="auth-field">
                     <label for="forgot-email">Email Address</label>
-                    <input type="email" id="forgot-email" required placeholder="you@example.com" autocomplete="email">
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="forgot-email" required placeholder="you@example.com" autocomplete="email">
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary auth-btn">Reset Password</button>
+                <button type="submit" class="btn btn-primary auth-btn">
+                    Send Reset Link
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
             </form>
             <p class="auth-switch">
                 <a href="#" id="show-login-from-forgot">Back to Sign In</a>
@@ -81,33 +162,109 @@
 
         <!-- Register Form -->
         <div class="auth-card" id="register-form">
-            <h2>Create Account</h2>
+            <div class="auth-card-header">
+                <h2>Join Revamp MyCV</h2>
+                <p class="auth-subtitle">Create your free account and start building a standout CV</p>
+            </div>
             <form id="form-register" novalidate>
                 <div class="auth-field">
                     <label for="register-name">Full Name</label>
-                    <input type="text" id="register-name" required placeholder="Name Surname" autocomplete="name">
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="register-name" required placeholder="Name Surname" autocomplete="name">
+                    </div>
                 </div>
                 <div class="auth-field">
-                    <label for="register-phone">Cellphone Number</label>
-                    <input type="tel" id="register-phone" placeholder="e.g. 072 787 9085" autocomplete="tel">
+                    <label for="register-phone">Cellphone Number <span class="field-optional">(optional)</span></label>
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                        <input type="tel" id="register-phone" placeholder="e.g. 072 787 9085" autocomplete="tel">
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label for="register-email">Email Address</label>
-                    <input type="email" id="register-email" required placeholder="you@example.com" autocomplete="email">
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="register-email" required placeholder="you@example.com" autocomplete="email">
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label for="register-password">Password</label>
-                    <input type="password" id="register-password" required placeholder="Min. 6 characters" autocomplete="new-password">
+                    <div class="input-icon-wrapper password-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="register-password" required placeholder="Min. 8 chars (Aa1)" autocomplete="new-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="auth-field">
                     <label for="register-confirm">Confirm Password</label>
-                    <input type="password" id="register-confirm" required placeholder="Re-enter password" autocomplete="new-password">
+                    <div class="input-icon-wrapper password-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <input type="password" id="register-confirm" required placeholder="Re-enter password" autocomplete="new-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary auth-btn">Create Account</button>
+                <button type="submit" class="btn btn-primary auth-btn">
+                    Create My Account
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
             </form>
+            <div class="auth-divider"><span>or</span></div>
             <p class="auth-switch">
                 Already have an account? <a href="#" id="show-login">Sign in</a>
             </p>
+        </div>
+
+        <!-- Admin First-Run Setup (shown when super admin has no password) -->
+        <div class="auth-card" id="admin-setup-form">
+            <div class="auth-card-header">
+                <div class="auth-card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h2>Set Up Your Admin Account</h2>
+                <p class="auth-subtitle">Welcome, Hennie! Create a password to secure your super admin account.</p>
+            </div>
+            <form id="form-admin-setup" novalidate>
+                <div class="auth-field">
+                    <label>Email Address</label>
+                    <div class="input-icon-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" value="Hennie.Mohlatswa@outlook.com" disabled>
+                    </div>
+                </div>
+                <div class="auth-field">
+                    <label for="admin-setup-password">Create Password</label>
+                    <div class="input-icon-wrapper password-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="admin-setup-password" required placeholder="Min. 8 chars (Aa1)" autocomplete="new-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="auth-field">
+                    <label for="admin-setup-confirm">Confirm Password</label>
+                    <div class="input-icon-wrapper password-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <input type="password" id="admin-setup-confirm" required placeholder="Re-enter password" autocomplete="new-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary auth-btn">
+                    Secure My Account
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </button>
+            </form>
         </div>
 
         <!-- Plan Selection (shown after registration) -->
@@ -154,23 +311,20 @@
                     <button type="button" class="btn btn-primary" id="btn-plan-premium">Subscribe Premium</button>
                 </div>
             </div>
-            <!-- EFT Payment Option -->
+            <!-- EFT Payment Option — bank details shown after registration (user is authenticated) -->
             <div class="plan-eft-info">
                 <div class="plan-eft-divider"><span>or pay via EFT / Bank Transfer</span></div>
                 <div class="plan-eft-details">
                     <p class="plan-eft-heading">Bank Details:</p>
-                    <table class="plan-eft-table">
-                        <tr><td>Bank</td><td><strong>Capitec Bank</strong></td></tr>
-                        <tr><td>Account Name</td><td><strong>Hennie Mohlatswa</strong></td></tr>
-                        <tr><td>Account Number</td><td><strong>1717870123</strong></td></tr>
-                        <tr><td>Branch Code</td><td><strong>470010</strong></td></tr>
-                        <tr><td>Account Type</td><td><strong>Savings</strong></td></tr>
-                    </table>
+                    <div id="plan-eft-bank-details">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-reveal-plan-eft">Show Bank Details</button>
+                        <p class="hint" style="margin-top:8px">Bank details will be shown after you create your account.</p>
+                    </div>
                     <div class="plan-eft-steps">
                         <p><strong>How to pay:</strong></p>
                         <ol>
                             <li>Log in to your banking app (FNB, Capitec, Standard Bank, Absa, Nedbank, etc.)</li>
-                            <li>Select <strong>Pay / Transfer</strong> and add the bank details above</li>
+                            <li>Click "Show Bank Details" above to see the account details</li>
                             <li>Amount: <strong>R49</strong> (Pro) or <strong>R149</strong> (Premium)</li>
                             <li>Use your <strong>email address</strong> as the payment reference</li>
                             <li>Send proof of payment to <strong>revamp.mycv@outlook.com</strong></li>
@@ -180,10 +334,168 @@
                 </div>
             </div>
         </div>
+
+        <!-- Need Help / Contact — below forms -->
+        <div class="auth-help-block" id="auth-help-block">
+            <div class="auth-help-content">
+                <span class="auth-help-label">Need help?</span>
+                <div class="auth-help-links">
+                    <a href="mailto:revamp.mycv@outlook.com" aria-label="Email support">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        revamp.mycv@outlook.com
+                    </a>
+                    <span class="auth-help-sep">|</span>
+                    <a href="tel:0727879085" aria-label="Call support">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        072 787 9085
+                    </a>
+                    <span class="auth-help-sep">|</span>
+                    <a href="https://wa.me/27727879085?text=Hi%2C%20I%20need%20help%20with%20Revamp%20MyCV" target="_blank" rel="noopener" aria-label="WhatsApp support">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Recruitment Agents Section — below auth container -->
+    <section class="recruiter-section" id="recruiter-section">
+        <div class="recruiter-inner">
+            <div class="recruiter-header">
+                <div class="recruiter-badge">FOR RECRUITMENT AGENTS</div>
+                <h2>Empower Your Candidates with Professional CVs</h2>
+                <p>Help your candidates stand out. Revamp MyCV gives recruitment agencies a powerful, free tool to prepare job-ready CVs that pass ATS screening.</p>
+            </div>
+
+            <div class="recruiter-grid">
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Candidate CV Preparation</h3>
+                    <p>Send candidates the link to build their own professional CVs. They sign up free, fill in the wizard, and download an ATS-ready PDF — no training needed.</p>
+                </div>
+
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3>46+ Industry Templates</h3>
+                    <p>Healthcare, IT, Engineering, Mining, Government, Finance, Legal — every major South African industry covered. Match the right template to the right vacancy.</p>
+                </div>
+
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Built-in ATS Scoring</h3>
+                    <p>Every CV gets an ATS compatibility score with actionable tips. Ensure your candidates' CVs pass automated screening before submission to clients.</p>
+                </div>
+
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3>No Software to Install</h3>
+                    <p>Runs in any browser on phone, tablet, or PC. Send your candidates a link — they can build their CV from anywhere, even on mobile data.</p>
+                </div>
+
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>SA Employment Compliant</h3>
+                    <p>Includes Employment Equity Act disability categories, SA driver's licence codes, province fields, and government-standard formats required for public sector applications.</p>
+                </div>
+
+                <div class="recruiter-card">
+                    <div class="recruiter-card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Share via WhatsApp or Link</h3>
+                    <p>Share the app link directly with candidates via WhatsApp, SMS, or email. They sign up, build their CV, and you receive a polished, professional document.</p>
+                </div>
+            </div>
+
+            <div class="recruiter-how">
+                <h3>How Recruitment Agents Use Revamp MyCV</h3>
+                <div class="recruiter-steps">
+                    <div class="recruiter-step">
+                        <div class="recruiter-step-num">1</div>
+                        <div>
+                            <strong>Share the Link</strong>
+                            <p>Send <strong>https://mohlatswa.github.io/revamp-mycv/</strong> to your candidate via WhatsApp, email, or SMS.</p>
+                        </div>
+                    </div>
+                    <div class="recruiter-step">
+                        <div class="recruiter-step-num">2</div>
+                        <div>
+                            <strong>Candidate Builds Their CV</strong>
+                            <p>They sign up for free, fill in the guided wizard, select a template matching the vacancy, and check their ATS score.</p>
+                        </div>
+                    </div>
+                    <div class="recruiter-step">
+                        <div class="recruiter-step-num">3</div>
+                        <div>
+                            <strong>Download & Submit</strong>
+                            <p>Candidate downloads as PDF and sends it to you, or you help them directly. The CV is ATS-optimised, professionally formatted, and ready for submission.</p>
+                        </div>
+                    </div>
+                    <div class="recruiter-step">
+                        <div class="recruiter-step-num">4</div>
+                        <div>
+                            <strong>Bulk Candidate Support</strong>
+                            <p>Each candidate gets their own account. They can save multiple CVs tailored for different positions. You focus on matching — we handle the formatting.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recruiter-cta">
+                <p>Ready to improve your placement rate?</p>
+                <a href="#" class="btn btn-primary recruiter-cta-btn" id="recruiter-try-btn">Try It Free — No Credit Card Required</a>
+                <span class="recruiter-cta-sub">or contact us for agency pricing: <a href="mailto:revamp.mycv@outlook.com">revamp.mycv@outlook.com</a></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Propositions -->
+    <section class="login-features" id="login-features">
+        <div class="login-features-inner">
+            <div class="login-feature">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <div>
+                    <strong>100% Free to Start</strong>
+                    <span>No credit card needed. 16 templates included free.</span>
+                </div>
+            </div>
+            <div class="login-feature">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <div>
+                    <strong>46+ Professional Templates</strong>
+                    <span>Industry-specific templates for every SA sector.</span>
+                </div>
+            </div>
+            <div class="login-feature">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <div>
+                    <strong>ATS-Friendly Output</strong>
+                    <span>CVs that pass automated recruiter screening systems.</span>
+                </div>
+            </div>
+            <div class="login-feature">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <div>
+                    <strong>Instant PDF Download</strong>
+                    <span>Download your CV in seconds. No waiting or email required.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Email status bar -->
-    <div id="email-status" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:14px 20px;font-size:14px;font-weight:700;text-align:center;z-index:9999"></div>
+    <div id="email-status" class="email-status-bar hidden"></div>
 
     <!-- STEP 1: Kill ALL service workers and caches immediately -->
     <script>
@@ -202,118 +514,64 @@
     </script>
 
     <!-- STEP 2: Load app scripts with cache bust -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script src="js/config.js?v=18"></script>
-    <script src="js/auth.js?v=18"></script>
-    <script src="js/subscription.js?v=18"></script>
-    <script src="js/login-page.js?v=18"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://js.paystack.co/v1/inline.js" defer></script>
+    <script src="js/config.js?v=24" defer></script>
+    <script src="js/auth.js?v=24" defer></script>
+    <script src="js/subscription.js?v=24" defer></script>
+    <script src="js/login-page.js?v=24" defer></script>
 
-    <!-- STEP 3: Email notifications — self-contained, no external dependencies -->
+    <!-- Recruiter CTA scroll to register -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var recruiterBtn = document.getElementById('recruiter-try-btn');
+        if (recruiterBtn) {
+            recruiterBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var container = document.querySelector('.auth-container');
+                if (container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Switch to register form
+                    setTimeout(function() {
+                        var showReg = document.getElementById('show-register');
+                        if (showReg) showReg.click();
+                    }, 600);
+                }
+            });
+        }
+    });
+    </script>
+
+    <!-- EFT bank details reveal for plan selection -->
     <script>
     (function() {
-        var WEB3FORMS_KEY = 'c697111c-4475-4e48-9bb7-756a58234f6a';
-        var NOTIFY_EMAIL = 'revamp.mycv@outlook.com';
-        var statusBar = document.getElementById('email-status');
-
-        function showStatus(msg, bg) {
-            statusBar.textContent = msg;
-            statusBar.style.background = bg;
-            statusBar.style.color = '#fff';
-            statusBar.style.display = 'block';
-            setTimeout(function() { statusBar.style.display = 'none'; }, 10000);
-        }
-
-        function notifyAdmin(subject, body) {
-            showStatus('Sending email notification...', '#2563eb');
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    access_key: WEB3FORMS_KEY,
-                    subject: subject,
-                    from_name: 'Revamp MyCV',
-                    message: body
-                })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(d) {
-                if (d.success) {
-                    showStatus('Email SENT to ' + NOTIFY_EMAIL, '#16a34a');
-                } else {
-                    showStatus('Email FAILED: ' + (d.message || JSON.stringify(d)), '#dc2626');
-                }
-            })
-            .catch(function(err) {
-                showStatus('Email ERROR: ' + err.message, '#dc2626');
+        var btn = document.getElementById('btn-reveal-plan-eft');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            var container = document.getElementById('plan-eft-bank-details');
+            if (!container) return;
+            var tbl = document.createElement('table');
+            tbl.className = 'plan-eft-table';
+            [['Bank','Capitec Bank'],['Account Name','Hennie Mohlatswa'],['Account Number','1717870123'],['Branch Code','470010'],['Account Type','Savings']].forEach(function(row) {
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td'); td1.textContent = row[0];
+                var td2 = document.createElement('td'); var s = document.createElement('strong'); s.textContent = row[1]; td2.appendChild(s);
+                tr.appendChild(td1); tr.appendChild(td2); tbl.appendChild(tr);
             });
-        }
-
-        // Hook into the register form submit
-        var regForm = document.getElementById('form-register');
-        if (regForm) {
-            regForm.addEventListener('submit', function() {
-                var n = document.getElementById('register-name');
-                var e = document.getElementById('register-email');
-                var ph = document.getElementById('register-phone');
-                if (!n || !e) return;
-                var name = n.value.trim();
-                var email = e.value.trim();
-                var phone = ph ? ph.value.trim() : '';
-                if (!name || !email) return;
-
-                // Small delay so Auth.signUp runs first
-                setTimeout(function() {
-                    notifyAdmin(
-                        'New Signup: ' + name,
-                        'A new user has registered on Revamp MyCV.\n\n' +
-                        'Full Name: ' + name + '\n' +
-                        'Cellphone: ' + (phone || 'Not provided') + '\n' +
-                        'Email Address: ' + email + '\n' +
-                        'Date: ' + new Date().toLocaleString('en-ZA')
-                    );
-                }, 800);
-            });
-        }
-
-        // Hook into plan subscription buttons
-        document.addEventListener('click', function(e) {
-            var id = e.target.id;
-            if (id === 'btn-plan-pro' || id === 'btn-plan-premium') {
-                var plan = id === 'btn-plan-pro' ? 'Pro' : 'Premium';
-                var price = id === 'btn-plan-pro' ? 'R49' : 'R149';
-                var n = document.getElementById('register-name');
-                var em = document.getElementById('register-email');
-                var name = n ? n.value.trim() : 'Unknown';
-                var email = em ? em.value.trim() : 'Unknown';
-
-                setTimeout(function() {
-                    notifyAdmin(
-                        'New Subscription: ' + plan + ' Plan - ' + price,
-                        'A user has subscribed on Revamp MyCV.\n\n' +
-                        'Full Name: ' + name + '\n' +
-                        'Email Address: ' + email + '\n' +
-                        'Plan: ' + plan + '\n' +
-                        'Amount: ' + price + '/month\n' +
-                        'Date: ' + new Date().toLocaleString('en-ZA')
-                    );
-                }, 2500);
-            }
+            container.innerHTML = '';
+            container.appendChild(tbl);
         });
     })();
     </script>
 
-    <!-- Support Footer -->
-    <footer class="support-footer">
-        <span>Need help?</span>
-        <a href="mailto:revamp.mycv@outlook.com">revamp.mycv@outlook.com</a>
-        <span class="sep">|</span>
-        <a href="tel:0727879085">072 787 9085</a>
+    <!-- Login page footer -->
+    <footer class="login-page-footer">
+        <span>&copy; 2025 - <script>document.write(new Date().getFullYear())</script> Revamp MyCV. Built with pride in South Africa.</span>
     </footer>
 
     <!-- WhatsApp Live Chat Widget -->
     <a href="https://wa.me/27727879085?text=Hi%2C%20I%20need%20help%20with%20Revamp%20MyCV"
-       class="whatsapp-float" target="_blank" rel="noopener" title="Chat with us on WhatsApp">
+       class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Chat with us on WhatsApp" aria-label="Chat with us on WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#fff">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>

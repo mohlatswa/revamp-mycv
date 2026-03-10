@@ -11,11 +11,35 @@ const Auth = (() => {
     const LOCAL_SESSION_KEY = 'cv_auth_session';
     let _authChangeCallback = null;
 
-    // ── Pre-seeded admin account ──
-    // Password is base64-encoded to avoid plain-text exposure in source.
-    // Decode at runtime only during seed check.
-    const _SA = { i: 'admin-001', e: 'aGVubmllLm1vaGxhdHN3YUBnemljYW4uY29t', p: 'SGVubmllNkA=', n: 'QWRtaW4=', r: 'super_admin' };
-    function _d(b) { try { return atob(b); } catch { return ''; } }
+    // ── Super admin account ──
+    const ADMIN_EMAIL = 'hennie.mohlatswa@outlook.com';
+    const ADMIN_NAME = 'Hennie Mohlatswa';
+
+    // ── Password hashing (SHA-256 via Web Crypto API) ──
+    // Note: For production, use bcrypt/scrypt on a real server.
+    // This is a significant improvement over plaintext but not as
+    // strong as bcrypt due to lack of salting/key stretching.
+    async function _hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password + '_revampmycv_salt');
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // ── Cryptographic token generation ──
+    function _generateToken() {
+        const array = new Uint8Array(32);
+        crypto.getRandomValues(array);
+        return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // ── Secure temporary password generation ──
+    function _generateTempPassword() {
+        const array = new Uint8Array(12);
+        crypto.getRandomValues(array);
+        return 'R' + Array.from(array, b => b.toString(36)).join('').slice(0, 15);
+    }
 
     function isPlaceholder() {
         return !APP_CONFIG.SUPABASE_URL || APP_CONFIG.SUPABASE_URL.includes('YOUR_PROJECT');
@@ -70,7 +94,7 @@ const Auth = (() => {
                 email: user.email,
                 user_metadata: { full_name: user.full_name, role: user.role || 'user' }
             },
-            access_token: 'local_' + Date.now()
+            access_token: 'local_' + _generateToken()
         };
         localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(session));
         return session;
@@ -81,20 +105,43 @@ const Auth = (() => {
     }
 
     function _seedAdmin() {
-        const users = _getUsers();
-        const email = _d(_SA.e);
-        const exists = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        let users = _getUsers();
+
+        // Remove legacy admin from previous version if present
+        const oldIdx = users.findIndex(u => u.id === 'admin-001' && u.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase());
+        if (oldIdx !== -1) users.splice(oldIdx, 1);
+
+        const exists = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
         if (!exists) {
             users.push({
-                id: _SA.i,
-                email: email,
-                password: _d(_SA.p),
-                full_name: _d(_SA.n),
-                role: _SA.r,
+                id: 'admin-001',
+                email: ADMIN_EMAIL,
+                password: null,          // No password yet — must be set on first login
+                full_name: ADMIN_NAME,
+                role: 'super_admin',
+                needsSetup: true,
                 created_at: new Date().toISOString()
             });
-            _saveUsers(users);
         }
+        _saveUsers(users);
+    }
+
+    function adminNeedsSetup() {
+        if (!useLocal) return false;
+        const users = _getUsers();
+        const admin = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+        return admin && admin.needsSetup === true;
+    }
+
+    async function completeAdminSetup(password) {
+        if (!useLocal) return false;
+        const users = _getUsers();
+        const admin = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+        if (!admin) return false;
+        admin.password = await _hashPassword(password);
+        admin.needsSetup = false;
+        _saveUsers(users);
+        return true;
     }
 
     // ── Public API ──
@@ -116,11 +163,12 @@ const Auth = (() => {
             throw new Error('An account with this email already exists.');
         }
         const newUser = {
-            id: 'user-' + Date.now(),
+            id: 'user-' + _generateToken().slice(0, 16),
             email: email,
-            password: password,
+            password: await _hashPassword(password),
             full_name: fullName,
             role: 'user',
+            verified: false,
             created_at: new Date().toISOString()
         };
         users.push(newUser);
@@ -140,11 +188,27 @@ const Auth = (() => {
         // Local mode
         const users = _getUsers();
         const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        const genericError = 'Invalid login credentials. Please check your email and password.';
         if (!user) {
-            throw new Error('Invalid login credentials. Please check your email and password.');
+            // Hash anyway to prevent timing attacks
+            await _hashPassword(password);
+            throw new Error(genericError);
         }
-        if (user.password !== password) {
-            throw new Error('Invalid login credentials. Please check your email and password.');
+        if (user.suspended) {
+            throw new Error('Your account has been suspended. Please contact support.');
+        }
+        if (user.needsSetup) {
+            throw new Error('NEEDS_SETUP');
+        }
+        const hashedInput = await _hashPassword(password);
+        if (user.password === hashedInput) {
+            // Hashed password matches — normal login
+        } else if (user.password === password) {
+            // Legacy plaintext password — migrate to hashed on successful login
+            user.password = hashedInput;
+            _saveUsers(users);
+        } else {
+            throw new Error(genericError);
         }
         const session = _saveLocalSession(user);
         if (_authChangeCallback) _authChangeCallback('SIGNED_IN', session);
@@ -159,7 +223,10 @@ const Auth = (() => {
             return;
         }
 
-        // Local mode
+        // Local mode — clear user data before clearing session
+        if (typeof CVStorage !== 'undefined') {
+            try { CVStorage.clearAll(); } catch (e) {}
+        }
         _clearLocalSession();
         if (_authChangeCallback) _authChangeCallback('SIGNED_OUT', null);
     }
@@ -211,9 +278,12 @@ const Auth = (() => {
         // Local mode: find user, generate temp password, notify via Web3Forms
         const users = _getUsers();
         const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-        if (!user) throw new Error('No account found with that email.');
-        const tempPass = 'Reset' + Math.random().toString(36).slice(2, 8);
-        user.password = tempPass;
+        if (!user) {
+            // Return success anyway to prevent account enumeration
+            return { method: 'local', message: 'If an account exists, a reset has been sent.' };
+        }
+        const tempPass = _generateTempPassword();
+        user.password = await _hashPassword(tempPass);
         _saveUsers(users);
 
         // Send temp password via Web3Forms
@@ -237,5 +307,5 @@ const Auth = (() => {
         return { method: 'local', tempPass: tempPass };
     }
 
-    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, onAuthStateChange };
+    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, onAuthStateChange, adminNeedsSetup, completeAdminSetup };
 })();

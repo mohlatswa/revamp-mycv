@@ -28,20 +28,21 @@ const PDFExport = (() => {
             await loadLibrary();
 
             const opt = {
-                margin: 0,
+                margin: [10, 10, 10, 10],
                 filename: filename || 'my-cv.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
-                    letterRendering: true
+                    letterRendering: true,
+                    scrollY: 0
                 },
                 jsPDF: {
                     unit: 'mm',
                     format: 'a4',
                     orientation: 'portrait'
                 },
-                pagebreak: { mode: ['avoid-all', 'css'] }
+                pagebreak: { mode: ['css', 'legacy'], avoid: ['.cv-entry', '.cv-ref-entry', '.cv-table'] }
             };
 
             await html2pdf().set(opt).from(previewEl).save();

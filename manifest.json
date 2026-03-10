@@ -1,8 +1,10 @@
 {
-    "name": "Revamp MyCV — Revamp your CV. Land the job.",
+    "name": "Revamp MyCV — South Africa's Free Professional CV Builder",
     "short_name": "Revamp MyCV",
-    "description": "Free CV builder for South African job seekers. Revamp your CV. Land the job.",
+    "description": "South Africa's free ATS-friendly CV builder. 46+ professional templates, instant PDF download, built-in ATS scoring. Create a job-winning CV in minutes.",
     "start_url": "./login.html",
+    "scope": "./",
+    "id": "revamp-mycv",
     "display": "standalone",
     "background_color": "#f5f6fa",
     "theme_color": "#1a6b3c",
@@ -21,6 +23,7 @@
             "purpose": "any maskable"
         }
     ],
-    "categories": ["productivity", "utilities"],
-    "lang": "en-ZA"
+    "categories": ["productivity", "utilities", "business"],
+    "lang": "en-ZA",
+    "dir": "ltr"
 }
