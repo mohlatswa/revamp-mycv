@@ -25,8 +25,8 @@ const APP_CONFIG = (() => {
         // ── Supabase (Database & Auth) ──
         // Currently using localStorage mode. Add your Supabase credentials
         // via the Admin Panel (admin.html > System Settings) when ready.
-        SUPABASE_URL: 'https://YOUR_PROJECT.supabase.co',
-        SUPABASE_ANON_KEY: 'YOUR_ANON_KEY_HERE',
+        SUPABASE_URL: 'https://uwxnbaicwfbygvkiyhcf.supabase.co',
+        SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3eG5iYWljd2ZieWd2a2l5aGNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzEwOTEsImV4cCI6MjA4ODc0NzA5MX0.eEf8iGPW43yPyt2tQU9W2r3rzLwXmGhVMtyNrgMXy5Y',
 
         // ── Paystack (Payments) ──
         // Currently using EFT-only mode (simulated payment dialog).
