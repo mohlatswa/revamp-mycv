@@ -17,7 +17,8 @@
         const session = await Auth.getSession();
         if (!session) { window.location.replace('login.html'); return; }
 
-        const role = session.user.user_metadata && session.user.user_metadata.role;
+        // Check role from profiles table (server-side) — never trust user_metadata
+        const role = await Auth.getRole();
         if (role !== 'super_admin') { showAccessDenied(); return; }
 
         document.getElementById('admin-content').style.display = 'block';
@@ -266,14 +267,27 @@
                 if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
                     showEl('modal-error', 'A user with this email already exists.'); return;
                 }
-                users.push({ id: 'user-' + Date.now(), email, password, full_name: name, role, created_at: new Date().toISOString() });
+                // Hash password before storing (local mode)
+                const encoder = new TextEncoder();
+                const pwData = encoder.encode(password + '_revampmycv_salt');
+                crypto.subtle.digest('SHA-256', pwData).then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashedPw = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    users.push({ id: 'user-' + Date.now(), email, password: hashedPw, full_name: name, role, created_at: new Date().toISOString() });
+                    saveUsers(users);
+                    renderUsers();
+                    _audit('user.create', email, 'New user, role: ' + role);
+                    showToast('User created.');
+                });
+                closeModal('user-modal');
+                return;
             }
 
             saveUsers(users);
             closeModal('user-modal');
             renderUsers();
-            _audit(id ? 'user.update' : 'user.create', email, id ? 'Role: ' + role : 'New user, role: ' + role);
-            showToast(id ? 'User updated.' : 'User created.');
+            _audit('user.update', email, 'Role: ' + role);
+            showToast('User updated.');
         });
         document.getElementById('btn-cancel-modal').addEventListener('click', () => closeModal('user-modal'));
     }
@@ -306,11 +320,17 @@
             const idx = users.findIndex(u => u.id === id);
             if (idx === -1) { showEl('reset-error', 'User not found.'); return; }
 
-            users[idx].password = pw;
-            saveUsers(users);
+            // Hash the password before storing (local mode)
+            const encoder = new TextEncoder();
+            const data = encoder.encode(pw + '_revampmycv_salt');
+            crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                users[idx].password = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                saveUsers(users);
+                _audit('user.password_reset', users[idx].email, 'Password reset by admin');
+                showToast('Password reset for ' + users[idx].email);
+            });
             closeModal('reset-modal');
-            _audit('user.password_reset', users[idx].email, 'Password reset by admin');
-            showToast('Password reset for ' + users[idx].email);
         });
         document.getElementById('btn-cancel-reset').addEventListener('click', () => closeModal('reset-modal'));
     }

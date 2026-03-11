@@ -307,5 +307,54 @@ const Auth = (() => {
         return { method: 'local', tempPass: tempPass };
     }
 
-    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, onAuthStateChange, adminNeedsSetup, completeAdminSetup };
+    /**
+     * Get the user's role from the profiles table (Supabase) or session (local).
+     * This is the ONLY trusted source for role — never trust user_metadata.role.
+     */
+    async function getRole() {
+        if (!useLocal) {
+            if (!supabase) return 'user';
+            const user = await getUser();
+            if (!user) return 'user';
+            try {
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', user.id)
+                    .single();
+                return (data && data.role) ? data.role : 'user';
+            } catch {
+                return 'user';
+            }
+        }
+        // Local mode — use session metadata
+        const session = _getLocalSession();
+        return session ? (session.user.user_metadata.role || 'user') : 'user';
+    }
+
+    /**
+     * Get the user's profile from the profiles table (Supabase) or session (local).
+     */
+    async function getProfile() {
+        if (!useLocal) {
+            if (!supabase) return null;
+            const user = await getUser();
+            if (!user) return null;
+            try {
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+                return data;
+            } catch {
+                return null;
+            }
+        }
+        // Local mode
+        const session = _getLocalSession();
+        return session ? session.user : null;
+    }
+
+    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, getRole, getProfile, onAuthStateChange, adminNeedsSetup, completeAdminSetup };
 })();

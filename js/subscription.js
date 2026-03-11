@@ -181,11 +181,11 @@ const Subscription = (() => {
         return { downloads: userDownloads, subscribed, plan, expired };
     }
 
-    /** Check if the current user is a super_admin */
+    /** Check if the current user is a super_admin (uses profiles table, not user_metadata) */
     async function _isSuperAdmin() {
         try {
-            const user = await Auth.getUser();
-            return user && user.user_metadata && user.user_metadata.role === 'super_admin';
+            const role = await Auth.getRole();
+            return role === 'super_admin';
         } catch { return false; }
     }
 

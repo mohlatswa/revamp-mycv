@@ -88,11 +88,12 @@
         emailEl.textContent = session.user.email;
         menu.style.display = 'flex';
 
-        // Show Admin link for super_admin users
-        const role = session.user.user_metadata && session.user.user_metadata.role;
+        // Show Admin link for super_admin users (check profiles table, not user_metadata)
         const adminBtn = document.getElementById('btn-admin');
-        if (adminBtn && role === 'super_admin') {
-            adminBtn.style.display = 'inline-block';
+        if (adminBtn) {
+            Auth.getRole().then(role => {
+                if (role === 'super_admin') adminBtn.style.display = 'inline-block';
+            });
         }
 
         // Check subscription status and show tier badge + expiry countdown
