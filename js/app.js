@@ -23,6 +23,14 @@
             // Clear CV data if a different user signed in
             clearDataIfNewUser(session.user.id);
 
+            // Init CV cloud sync
+            if (typeof CVSync !== 'undefined') {
+                CVSync.init();
+                CVSync.setUser(session.user.id);
+                // Try to restore from cloud if local is empty
+                try { await CVSync.loadFromCloud(); } catch (e) { /* ignore */ }
+            }
+
             // Init subscription module
             Subscription.init();
 
@@ -47,6 +55,7 @@
         setupEducationForm();
         setupSkillsUI();
         setupReferencesForm();
+        setupHobbiesForm();
         setupTemplateChooser();
         setupExportButtons();
         setupPhotoUpload();
@@ -147,10 +156,11 @@
         logoutBtn.addEventListener('click', async () => {
             try {
                 await Auth.signOut();
-                window.location.replace('login.html');
             } catch (e) {
-                showToast('Sign out failed. Please try again.');
+                console.warn('Sign out error:', e);
             }
+            // Always redirect — session is cleared in Auth.signOut regardless of API errors
+            window.location.replace('login.html');
         });
     }
 
@@ -220,6 +230,7 @@
         setVal('fullName', s1.fullName);
         setVal('phone', s1.phone);
         setVal('email', s1.email);
+        setVal('linkedin', s1.linkedin);
         setVal('address', s1.address);
         setVal('location', s1.location);
         setVal('province', s1.province);
@@ -255,6 +266,11 @@
 
         // Step 5: References
         (data.step5 || []).forEach(ref => renderReferenceCard(ref));
+
+        // Step 6: Hobbies & Achievements
+        const s6 = data.step6 || {};
+        setVal('hobbies', s6.hobbies);
+        setVal('achievements', s6.achievements);
     }
 
     function setVal(id, val) {
@@ -267,7 +283,7 @@
     // ============================
     function setupAutoSave() {
         // Step 1 fields
-        const step1Fields = ['fullName', 'phone', 'email', 'address', 'location', 'province', 'dateOfBirth', 'gender', 'nationality', 'maritalStatus', 'languages', 'driversLicence', 'disability', 'disabilityOther', 'objective'];
+        const step1Fields = ['fullName', 'phone', 'email', 'linkedin', 'address', 'location', 'province', 'dateOfBirth', 'gender', 'nationality', 'maritalStatus', 'languages', 'driversLicence', 'disability', 'disabilityOther', 'objective'];
         step1Fields.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -282,6 +298,7 @@
             fullName: document.getElementById('fullName').value,
             phone: document.getElementById('phone').value,
             email: document.getElementById('email').value,
+            linkedin: (document.getElementById('linkedin') || {}).value || '',
             address: document.getElementById('address').value,
             location: document.getElementById('location').value,
             province: document.getElementById('province').value,
@@ -440,7 +457,7 @@
     // Step change handler
     // ============================
     function onStepChange(step) {
-        if (step === 6) {
+        if (step === 7) {
             renderCVPreview();
         }
     }
@@ -691,7 +708,9 @@
             const ref = {
                 name: document.getElementById('refName').value.trim(),
                 relationship: document.getElementById('refRelationship').value.trim(),
-                phone: document.getElementById('refPhone').value.trim()
+                company: (document.getElementById('refCompany') || {}).value?.trim() || '',
+                phone: document.getElementById('refPhone').value.trim(),
+                email: (document.getElementById('refEmail') || {}).value?.trim() || ''
             };
 
             const refs = CVStorage.getStep('step5') || [];
@@ -708,9 +727,14 @@
         const card = document.createElement('div');
         card.className = 'entry-card';
 
+        let details = esc(ref.relationship);
+        if (ref.company) details += ' &middot; ' + esc(ref.company);
+        details += ' &middot; ' + esc(ref.phone);
+        if (ref.email) details += ' &middot; ' + esc(ref.email);
+
         card.innerHTML = `
             <h4>${esc(ref.name)}</h4>
-            <p>${esc(ref.relationship)} &middot; ${esc(ref.phone)}</p>
+            <p>${details}</p>
             <div class="entry-actions">
                 <button class="btn-remove" title="Remove">&times;</button>
             </div>
@@ -729,7 +753,32 @@
     }
 
     // ============================
-    // TEMPLATE CHOOSER (Step 6)
+    // HOBBIES & ACHIEVEMENTS (Step 6)
+    // ============================
+    function setupHobbiesForm() {
+        const hobbiesEl = document.getElementById('hobbies');
+        const achievementsEl = document.getElementById('achievements');
+        if (!hobbiesEl && !achievementsEl) return;
+
+        function saveStep6() {
+            CVStorage.saveStep('step6', {
+                hobbies: hobbiesEl ? hobbiesEl.value : '',
+                achievements: achievementsEl ? achievementsEl.value : ''
+            });
+        }
+
+        if (hobbiesEl) {
+            hobbiesEl.addEventListener('input', saveStep6);
+            hobbiesEl.addEventListener('change', saveStep6);
+        }
+        if (achievementsEl) {
+            achievementsEl.addEventListener('input', saveStep6);
+            achievementsEl.addEventListener('change', saveStep6);
+        }
+    }
+
+    // ============================
+    // TEMPLATE CHOOSER (Step 7)
     // ============================
     function setupTemplateChooser() {
         const savedTemplate = CVStorage.getTemplate();
@@ -1739,6 +1788,7 @@
             const contactParts = [];
             if (p.phone) contactParts.push(p.phone);
             if (p.email) contactParts.push(p.email);
+            if (p.linkedin) contactParts.push(p.linkedin);
             const loc = [p.address, p.location, p.province].filter(Boolean).join(', ');
             if (loc) contactParts.push(loc);
             text += contactParts.join(' | ') + '\n\n';
@@ -1792,11 +1842,31 @@
                 text += langs.join(', ') + '\n\n';
             }
 
+            // Hobbies & Interests
+            const s6 = data.step6 || {};
+            if (s6.hobbies && s6.hobbies.trim()) {
+                text += 'HOBBIES & INTERESTS\n';
+                text += s6.hobbies.trim() + '\n\n';
+            }
+
+            // Achievements
+            if (s6.achievements && s6.achievements.trim()) {
+                text += 'ACHIEVEMENTS & AWARDS\n';
+                s6.achievements.trim().split('\n').map(l => l.trim()).filter(Boolean).forEach(a => {
+                    text += '\u2022 ' + a + '\n';
+                });
+                text += '\n';
+            }
+
             // References
             if (ref.length) {
                 text += 'REFERENCES\n';
                 ref.forEach(r => {
-                    text += r.name + ' \u2014 ' + r.relationship + ' \u2014 ' + r.phone + '\n';
+                    let refLine = r.name + ' \u2014 ' + r.relationship;
+                    if (r.company) refLine += ', ' + r.company;
+                    refLine += ' \u2014 ' + r.phone;
+                    if (r.email) refLine += ' \u2014 ' + r.email;
+                    text += refLine + '\n';
                 });
             }
 

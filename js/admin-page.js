@@ -39,6 +39,7 @@
         renderSubscriptions();
         renderAuditLog();
         loadSettings();
+        setupCVDataPanel();
     });
 
     // ════════════════════════════════════════
@@ -688,7 +689,7 @@
 
     function setupLogout() {
         document.getElementById('btn-logout').addEventListener('click', async () => {
-            await Auth.signOut();
+            try { await Auth.signOut(); } catch (e) { console.warn('Sign out error:', e); }
             window.location.replace('login.html');
         });
     }
@@ -747,6 +748,226 @@
         }
     }
 
+    // ════════════════════════════════════════
+    // CV DATA PANEL — View/print all learners' CV data
+    // ════════════════════════════════════════
+    let _cvdataPage = 1;
+    const _cvdataLimit = 50;
+
+    function setupCVDataPanel() {
+        if (typeof CVSync === 'undefined') return;
+        CVSync.init();
+
+        const searchInput = document.getElementById('cvdata-search');
+        const refreshBtn = document.getElementById('btn-refresh-cvdata');
+        const modalOverlay = document.getElementById('cvdata-modal');
+        const modalClose = document.getElementById('cvdata-modal-close');
+        const closeBtn = document.getElementById('btn-close-cv-modal');
+        const printBtn = document.getElementById('btn-print-cv');
+
+        if (refreshBtn) refreshBtn.addEventListener('click', () => renderCVDataTable());
+        if (searchInput) {
+            let searchTimer;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => renderCVDataTable(searchInput.value.trim()), 400);
+            });
+        }
+
+        // Modal close handlers
+        if (modalClose) modalClose.addEventListener('click', closeCVModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeCVModal);
+        if (modalOverlay) modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeCVModal();
+        });
+
+        // Print CV
+        if (printBtn) printBtn.addEventListener('click', () => {
+            const body = document.getElementById('cvdata-modal-body');
+            if (!body) return;
+            const printWin = window.open('', '_blank');
+            printWin.document.write('<html><head><title>Print CV</title>');
+            printWin.document.write('<link rel="stylesheet" href="css/templates.css">');
+            printWin.document.write('<style>body{font-family:sans-serif;margin:20px} .cv-detail-section{margin:0 0 16px} .cv-detail-label{font-weight:700;color:#333} table{border-collapse:collapse;width:100%} th,td{border:1px solid #ddd;padding:6px 10px;text-align:left} th{background:#f5f5f5}</style>');
+            printWin.document.write('</head><body>');
+            printWin.document.write(body.innerHTML);
+            printWin.document.write('</body></html>');
+            printWin.document.close();
+            printWin.focus();
+            setTimeout(() => { printWin.print(); }, 500);
+        });
+
+        // Table row click delegation
+        const tbody = document.getElementById('cvdata-tbody');
+        if (tbody) {
+            tbody.addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const cvJson = btn.dataset.cv;
+                if (action === 'view' && cvJson) {
+                    try { openCVDetail(JSON.parse(decodeURIComponent(cvJson))); } catch (er) { console.warn(er); }
+                }
+            });
+        }
+
+        renderCVDataTable();
+    }
+
+    async function renderCVDataTable(searchQuery) {
+        const tbody = document.getElementById('cvdata-tbody');
+        const noData = document.getElementById('no-cvdata');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:24px">Loading CV data...</td></tr>';
+
+        let cvList = [];
+        try {
+            if (searchQuery) {
+                cvList = await CVSync.adminSearchCVs(searchQuery);
+            } else {
+                const result = await CVSync.adminGetAllCVs(_cvdataPage, _cvdataLimit);
+                cvList = result.data;
+            }
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#dc2626;padding:24px">Failed to load CV data. Ensure the cv_data table exists in Supabase.</td></tr>';
+            return;
+        }
+
+        if (!cvList.length) {
+            tbody.innerHTML = '';
+            if (noData) noData.style.display = 'block';
+            return;
+        }
+        if (noData) noData.style.display = 'none';
+
+        tbody.innerHTML = '';
+        cvList.forEach(cv => {
+            const d = cv.data || {};
+            const p = d.step1 || {};
+            const exp = d.step2 || [];
+            const edu = d.step3 || [];
+            const sk = d.step4 || [];
+            const ref = d.step5 || [];
+            const updated = cv.updated_at ? new Date(cv.updated_at).toLocaleDateString('en-ZA') : '—';
+
+            const cvEncoded = encodeURIComponent(JSON.stringify(cv));
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><strong>' + esc(p.fullName || '—') + '</strong></td>' +
+                '<td>' + esc(p.email || '—') + '</td>' +
+                '<td>' + esc(p.phone || '—') + '</td>' +
+                '<td>' + esc([p.location, p.province].filter(Boolean).join(', ') || '—') + '</td>' +
+                '<td>' + esc(cv.template || 'classic') + '</td>' +
+                '<td>' + exp.length + ' job' + (exp.length !== 1 ? 's' : '') + '</td>' +
+                '<td>' + edu.length + '</td>' +
+                '<td>' + sk.length + '</td>' +
+                '<td>' + ref.length + '</td>' +
+                '<td style="white-space:nowrap">' + updated + '</td>' +
+                '<td><button class="btn btn-primary btn-sm" data-action="view" data-cv="' + cvEncoded.replace(/"/g, '&quot;') + '">View</button></td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    function openCVDetail(cv) {
+        const modal = document.getElementById('cvdata-modal');
+        const title = document.getElementById('cvdata-modal-title');
+        const body = document.getElementById('cvdata-modal-body');
+        if (!modal || !body) return;
+
+        const d = cv.data || {};
+        const p = d.step1 || {};
+        const exp = d.step2 || [];
+        const edu = d.step3 || [];
+        const sk = d.step4 || [];
+        const ref = d.step5 || [];
+        const s6 = d.step6 || {};
+
+        title.textContent = 'CV: ' + (p.fullName || 'Unknown');
+
+        let html = '';
+
+        // Personal Details
+        html += '<div class="cv-detail-section"><h4>Personal Information</h4>';
+        html += '<table><tbody>';
+        html += '<tr><td class="cv-detail-label">Full Name</td><td>' + esc(p.fullName || '—') + '</td></tr>';
+        html += '<tr><td class="cv-detail-label">Phone</td><td>' + esc(p.phone || '—') + '</td></tr>';
+        html += '<tr><td class="cv-detail-label">Email</td><td>' + esc(p.email || '—') + '</td></tr>';
+        if (p.linkedin) html += '<tr><td class="cv-detail-label">LinkedIn / Portfolio</td><td>' + esc(p.linkedin) + '</td></tr>';
+        html += '<tr><td class="cv-detail-label">Address</td><td>' + esc([p.address, p.location, p.province].filter(Boolean).join(', ') || '—') + '</td></tr>';
+        if (p.dateOfBirth) html += '<tr><td class="cv-detail-label">Date of Birth</td><td>' + esc(p.dateOfBirth) + '</td></tr>';
+        if (p.gender) html += '<tr><td class="cv-detail-label">Gender</td><td>' + esc(p.gender) + '</td></tr>';
+        if (p.nationality) html += '<tr><td class="cv-detail-label">Nationality</td><td>' + esc(p.nationality) + '</td></tr>';
+        if (p.maritalStatus) html += '<tr><td class="cv-detail-label">Marital Status</td><td>' + esc(p.maritalStatus) + '</td></tr>';
+        if (p.languages) html += '<tr><td class="cv-detail-label">Languages</td><td>' + esc(p.languages) + '</td></tr>';
+        if (p.driversLicence) html += '<tr><td class="cv-detail-label">Driver\'s Licence</td><td>' + esc(p.driversLicence) + '</td></tr>';
+        if (p.disability && p.disability !== 'None' && p.disability !== 'Prefer not to say') {
+            html += '<tr><td class="cv-detail-label">Disability</td><td>' + esc(p.disability === 'Other' ? (p.disabilityOther || 'Other') : p.disability) + '</td></tr>';
+        }
+        if (p.objective) html += '<tr><td class="cv-detail-label">Career Objective</td><td>' + esc(p.objective) + '</td></tr>';
+        html += '</tbody></table></div>';
+
+        // Work Experience
+        if (exp.length) {
+            html += '<div class="cv-detail-section"><h4>Work Experience (' + exp.length + ')</h4>';
+            html += '<table><thead><tr><th>Job Title</th><th>Company</th><th>Period</th><th>Duties</th></tr></thead><tbody>';
+            exp.forEach(j => {
+                const period = (j.startDate || '?') + ' – ' + (j.currentJob ? 'Present' : (j.endDate || '?'));
+                html += '<tr><td>' + esc(j.jobTitle) + '</td><td>' + esc(j.company) + '</td><td>' + esc(period) + '</td><td>' + esc((j.duties || '').substring(0, 150)) + '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        // Education
+        if (edu.length) {
+            html += '<div class="cv-detail-section"><h4>Education (' + edu.length + ')</h4>';
+            html += '<table><thead><tr><th>Institution</th><th>Qualification</th><th>Year</th></tr></thead><tbody>';
+            edu.forEach(e => {
+                html += '<tr><td>' + esc(e.institution) + '</td><td>' + esc(e.qualification) + '</td><td>' + esc(e.year || '—') + '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        // Skills
+        if (sk.length) {
+            html += '<div class="cv-detail-section"><h4>Skills (' + sk.length + ')</h4>';
+            html += '<p>' + sk.map(s => '<span style="display:inline-block;background:#e8f5e9;padding:2px 10px;margin:2px;border-radius:4px;font-size:0.85rem">' + esc(s) + '</span>').join('') + '</p></div>';
+        }
+
+        // Hobbies & Achievements
+        if (s6.hobbies) {
+            html += '<div class="cv-detail-section"><h4>Hobbies & Interests</h4><p>' + esc(s6.hobbies) + '</p></div>';
+        }
+        if (s6.achievements) {
+            html += '<div class="cv-detail-section"><h4>Achievements & Awards</h4>';
+            html += '<ul>' + s6.achievements.split('\n').filter(Boolean).map(a => '<li>' + esc(a.trim()) + '</li>').join('') + '</ul></div>';
+        }
+
+        // References
+        if (ref.length) {
+            html += '<div class="cv-detail-section"><h4>References (' + ref.length + ')</h4>';
+            html += '<table><thead><tr><th>Name</th><th>Relationship</th><th>Company</th><th>Phone</th><th>Email</th></tr></thead><tbody>';
+            ref.forEach(r => {
+                html += '<tr><td>' + esc(r.name) + '</td><td>' + esc(r.relationship) + '</td><td>' + esc(r.company || '—') + '</td><td>' + esc(r.phone) + '</td><td>' + esc(r.email || '—') + '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        // Template & Metadata
+        html += '<div class="cv-detail-section" style="margin-top:20px;padding-top:12px;border-top:1px solid #ddd"><small style="color:#888">Template: ' + esc(cv.template || 'classic') + ' | Updated: ' + (cv.updated_at ? new Date(cv.updated_at).toLocaleString('en-ZA') : '—') + ' | Active: ' + (cv.is_active ? 'Yes' : 'No') + '</small></div>';
+
+        body.innerHTML = html;
+        modal.style.display = 'flex';
+    }
+
+    function closeCVModal() {
+        const modal = document.getElementById('cvdata-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // ════════════════════════════════════════
+    // AUDIT LOG
+    // ════════════════════════════════════════
     function renderAuditLog() {
         const tbody = document.getElementById('audit-tbody');
         const noAudit = document.getElementById('no-audit');

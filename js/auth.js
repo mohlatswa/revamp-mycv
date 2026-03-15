@@ -11,9 +11,10 @@ const Auth = (() => {
     const LOCAL_SESSION_KEY = 'cv_auth_session';
     let _authChangeCallback = null;
 
-    // ── Super admin account ──
-    const ADMIN_EMAIL = 'hennie.mohlatswa@outlook.com';
+    // ── Super admin accounts ──
+    const ADMIN_EMAIL = 'mohlatswa96@gmail.com';
     const ADMIN_NAME = 'Hennie Mohlatswa';
+    const ADMIN_EMAILS = ['mohlatswa96@gmail.com', 'hennie.mohlatswa@outlook.com'];
 
     // ── Password hashing (SHA-256 via Web Crypto API) ──
     // Note: For production, use bcrypt/scrypt on a real server.
@@ -102,41 +103,68 @@ const Auth = (() => {
 
     function _clearLocalSession() {
         localStorage.removeItem(LOCAL_SESSION_KEY);
+        // Also clear Supabase auth tokens (stored as sb-<ref>-auth-token)
+        try {
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } catch (e) { /* ignore */ }
     }
 
     function _seedAdmin() {
         let users = _getUsers();
 
-        // Remove legacy admin from previous version if present
-        const oldIdx = users.findIndex(u => u.id === 'admin-001' && u.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase());
-        if (oldIdx !== -1) users.splice(oldIdx, 1);
-
-        const exists = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-        if (!exists) {
-            users.push({
-                id: 'admin-001',
-                email: ADMIN_EMAIL,
-                password: null,          // No password yet — must be set on first login
-                full_name: ADMIN_NAME,
-                role: 'super_admin',
-                needsSetup: true,
-                created_at: new Date().toISOString()
-            });
-        }
+        // Seed all admin accounts
+        ADMIN_EMAILS.forEach((email, idx) => {
+            const id = 'admin-' + String(idx + 1).padStart(3, '0');
+            const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+            if (!existing) {
+                users.push({
+                    id: id,
+                    email: email,
+                    password: null,          // No password yet — must be set on first login
+                    full_name: ADMIN_NAME,
+                    role: 'super_admin',
+                    needsSetup: true,
+                    created_at: new Date().toISOString()
+                });
+            } else if (existing.role !== 'super_admin') {
+                // Ensure existing account has super_admin role
+                existing.role = 'super_admin';
+            }
+        });
         _saveUsers(users);
     }
 
     function adminNeedsSetup() {
         if (!useLocal) return false;
         const users = _getUsers();
-        const admin = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-        return admin && admin.needsSetup === true;
+        return ADMIN_EMAILS.some(email => {
+            const admin = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+            return admin && admin.needsSetup === true;
+        });
     }
 
-    async function completeAdminSetup(password) {
+    /** Check if a specific email needs admin setup */
+    function emailNeedsSetup(email) {
         if (!useLocal) return false;
         const users = _getUsers();
-        const admin = users.find(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        return user && user.needsSetup === true;
+    }
+
+    async function completeAdminSetup(password, email) {
+        if (!useLocal) return false;
+        const users = _getUsers();
+        // Find admin by email if provided, otherwise find any admin needing setup
+        let admin;
+        if (email) {
+            admin = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        } else {
+            admin = users.find(u => ADMIN_EMAILS.includes(u.email.toLowerCase()) && u.needsSetup);
+        }
         if (!admin) return false;
         admin.password = await _hashPassword(password);
         admin.needsSetup = false;
@@ -216,18 +244,23 @@ const Auth = (() => {
     }
 
     async function signOut() {
-        if (!useLocal) {
-            if (!supabase) return;
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-            return;
-        }
-
-        // Local mode — clear user data before clearing session
+        // Always clear local data first — ensures sign-out works even if Supabase API fails
         if (typeof CVStorage !== 'undefined') {
             try { CVStorage.clearAll(); } catch (e) {}
         }
         _clearLocalSession();
+
+        if (!useLocal) {
+            if (supabase) {
+                try {
+                    await supabase.auth.signOut();
+                } catch (e) {
+                    // Supabase API failed — local session already cleared above, so sign-out still works
+                    console.warn('Supabase signOut API failed (local session cleared):', e);
+                }
+            }
+        }
+
         if (_authChangeCallback) _authChangeCallback('SIGNED_OUT', null);
     }
 
@@ -327,9 +360,12 @@ const Auth = (() => {
                 return 'user';
             }
         }
-        // Local mode — use session metadata
+        // Local mode — check users array for up-to-date role (not stale session)
         const session = _getLocalSession();
-        return session ? (session.user.user_metadata.role || 'user') : 'user';
+        if (!session) return 'user';
+        const users = _getUsers();
+        const user = users.find(u => u.id === session.user.id || u.email.toLowerCase() === session.user.email.toLowerCase());
+        return user ? (user.role || 'user') : (session.user.user_metadata.role || 'user');
     }
 
     /**
@@ -356,5 +392,5 @@ const Auth = (() => {
         return session ? session.user : null;
     }
 
-    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, getRole, getProfile, onAuthStateChange, adminNeedsSetup, completeAdminSetup };
+    return { init, getClient, isLocalMode, signUp, signIn, signOut, resetPassword, getUser, getSession, getRole, getProfile, onAuthStateChange, adminNeedsSetup, emailNeedsSetup, completeAdminSetup };
 })();

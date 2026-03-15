@@ -143,7 +143,7 @@
             } catch (err) {
                 // Admin needs to set up their password first
                 if (err.message === 'NEEDS_SETUP') {
-                    showAdminSetupForm();
+                    showAdminSetupForm(email);
                     showSuccess('Please create your admin password to get started.');
                     return;
                 }
@@ -288,13 +288,23 @@
         });
     }
 
-    function showAdminSetupForm() {
+    function showAdminSetupForm(email) {
+        _adminSetupEmail = email || null;
         document.getElementById('login-form').classList.remove('active');
         document.getElementById('register-form').classList.remove('active');
         document.getElementById('forgot-form').classList.remove('active');
         document.getElementById('admin-setup-form').classList.add('active');
+        // Update the displayed email in the admin setup form
+        if (email) {
+            const emailInput = document.querySelector('#admin-setup-form input[type="email"]');
+            if (emailInput) emailInput.value = email;
+            const subtitle = document.querySelector('#admin-setup-form .auth-subtitle');
+            if (subtitle) subtitle.textContent = 'Welcome! Create a password to secure your super admin account.';
+        }
         clearErrors();
     }
+
+    let _adminSetupEmail = null; // Track which admin email needs setup
 
     function setupAdminSetup() {
         const form = document.getElementById('form-admin-setup');
@@ -326,7 +336,7 @@
 
             setLoading(true);
             try {
-                const success = Auth.completeAdminSetup(password);
+                const success = await Auth.completeAdminSetup(password, _adminSetupEmail);
                 if (!success) {
                     showError('Setup failed. Please try again.');
                     return;
@@ -338,7 +348,7 @@
 
                 // Pre-fill the login email
                 const loginEmail = document.getElementById('login-email');
-                if (loginEmail) loginEmail.value = 'Hennie.Mohlatswa@outlook.com';
+                if (loginEmail && _adminSetupEmail) loginEmail.value = _adminSetupEmail;
             } finally {
                 setLoading(false);
             }

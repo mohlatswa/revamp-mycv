@@ -85,6 +85,7 @@
                 <button type="button" class="admin-tab active" data-panel="panel-users">Users</button>
                 <button type="button" class="admin-tab" data-panel="panel-subscriptions">Subscriptions</button>
                 <button type="button" class="admin-tab" data-panel="panel-settings">System Settings</button>
+                <button type="button" class="admin-tab" data-panel="panel-cvdata">CV Data</button>
                 <button type="button" class="admin-tab" data-panel="panel-audit">Audit Log</button>
             </div>
 
@@ -256,6 +257,54 @@
                     </div>
                 </div>
             </div>
+            <!-- ═══ CV DATA PANEL ═══ -->
+            <div class="admin-panel" id="panel-cvdata">
+                <div class="admin-toolbar">
+                    <h2>CV Data — All Learners</h2>
+                    <div class="admin-toolbar-actions">
+                        <input type="text" id="cvdata-search" placeholder="Search by name or email..." class="admin-search-input" style="min-width:220px">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-refresh-cvdata">Refresh</button>
+                    </div>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="cvdata-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Location</th>
+                                <th>Template</th>
+                                <th>Experience</th>
+                                <th>Education</th>
+                                <th>Skills</th>
+                                <th>References</th>
+                                <th>Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cvdata-tbody"></tbody>
+                    </table>
+                    <p class="admin-empty" id="no-cvdata" style="display:none">No CV data found. Data appears here when users save their CVs.</p>
+                </div>
+                <div class="admin-pagination" id="cvdata-pagination"></div>
+
+                <!-- CV Detail Modal -->
+                <div class="admin-modal-overlay" id="cvdata-modal" style="display:none">
+                    <div class="admin-modal" style="max-width:800px;max-height:90vh;overflow-y:auto">
+                        <div class="admin-modal-header">
+                            <h3 id="cvdata-modal-title">CV Details</h3>
+                            <button type="button" class="admin-modal-close" id="cvdata-modal-close">&times;</button>
+                        </div>
+                        <div class="admin-modal-body" id="cvdata-modal-body"></div>
+                        <div class="admin-modal-footer">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-print-cv">Print CV</button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="btn-close-cv-modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ═══ AUDIT LOG PANEL ═══ -->
             <div class="admin-panel" id="panel-audit">
                 <div class="admin-toolbar">
@@ -410,6 +459,10 @@
     <script src="js/config.js?v=24"></script>
     <script src="js/auth.js?v=24"></script>
     <script src="js/audit-log.js?v=24"></script>
+    <script src="js/storage.js?v=24"></script>
+    <script src="js/cv-sync.js?v=24"></script>
+    <script src="js/summary-generator.js?v=24"></script>
+    <script src="js/cv-renderer.js?v=24"></script>
     <script src="js/admin-page.js?v=24"></script>
 </body>
 </html>

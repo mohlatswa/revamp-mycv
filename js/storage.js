@@ -17,11 +17,12 @@ const CVStorage = (() => {
 
     function getDefault() {
         return {
-            step1: { fullName: '', phone: '', email: '', address: '', location: '', province: '', dateOfBirth: '', gender: '', nationality: '', maritalStatus: '', languages: '', driversLicence: '', disability: '', disabilityOther: '', objective: '' },
+            step1: { fullName: '', phone: '', email: '', linkedin: '', address: '', location: '', province: '', dateOfBirth: '', gender: '', nationality: '', maritalStatus: '', languages: '', driversLicence: '', disability: '', disabilityOther: '', objective: '' },
             step2: [],
             step3: [],
             step4: [],
             step5: [],
+            step6: { hobbies: '', achievements: '' },
             template: 'classic'
         };
     }
@@ -29,6 +30,10 @@ const CVStorage = (() => {
     function saveAll(data) {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            // Trigger cloud sync if available
+            if (typeof CVSync !== 'undefined' && CVSync.isAvailable()) {
+                CVSync.syncToCloud();
+            }
         } catch (e) {
             console.warn('Failed to save CV data:', e);
         }

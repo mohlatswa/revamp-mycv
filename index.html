@@ -164,6 +164,10 @@
             </li>
             <li class="progress-step" data-step="6">
                 <span class="step-number">6</span>
+                <span class="step-label">More Info</span>
+            </li>
+            <li class="progress-step" data-step="7">
+                <span class="step-number">7</span>
                 <span class="step-label">Preview</span>
             </li>
         </ol>
@@ -239,6 +243,13 @@
                             placeholder="e.g. name@email.com" autocomplete="email">
                         <span class="error-message" id="error-email"></span>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn / Portfolio URL</label>
+                    <input type="url" id="linkedin" name="linkedin"
+                        placeholder="e.g. https://linkedin.com/in/yourname" autocomplete="url">
+                    <span class="hint">Optional. Add your LinkedIn profile or portfolio website.</span>
                 </div>
 
                 <!-- ── Address ── -->
@@ -531,10 +542,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="refPhone">Phone Number *</label>
-                        <input type="tel" id="refPhone" name="refPhone" required
-                            placeholder="e.g. 082 345 6789">
-                        <span class="error-message" id="error-refPhone"></span>
+                        <label for="refCompany">Company / Organisation</label>
+                        <input type="text" id="refCompany" name="refCompany"
+                            placeholder="e.g. ABC Company (Pty) Ltd">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="refPhone">Phone Number *</label>
+                            <input type="tel" id="refPhone" name="refPhone" required
+                                placeholder="e.g. 082 345 6789">
+                            <span class="error-message" id="error-refPhone"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="refEmail">Email Address</label>
+                            <input type="email" id="refEmail" name="refEmail"
+                                placeholder="e.g. reference@email.com">
+                        </div>
                     </div>
 
                     <button type="button" class="btn btn-secondary" id="btn-add-reference">Add This Reference</button>
@@ -542,8 +566,30 @@
             </div>
         </section>
 
-        <!-- Step 6: Preview & Download -->
-        <section class="wizard-step" id="step-6" aria-label="Preview and Download">
+        <!-- Step 6: Hobbies, Interests & Achievements -->
+        <section class="wizard-step" id="step-6" aria-label="Hobbies and Achievements">
+            <h2 class="step-title">Hobbies, Interests & Achievements</h2>
+            <p class="step-description">Add your hobbies, interests, and any notable achievements. This section is optional but helps show your personality.</p>
+
+            <form class="wizard-form" id="form-additional" novalidate>
+                <div class="form-group">
+                    <label for="hobbies">Hobbies & Interests</label>
+                    <textarea id="hobbies" name="hobbies" rows="3"
+                        placeholder="e.g. Reading, community volunteering, football, gardening, cooking&#10;One per line or separated by commas"></textarea>
+                    <span class="hint">Employers value well-rounded candidates. Include hobbies that show teamwork, leadership, or dedication.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="achievements">Awards & Achievements</label>
+                    <textarea id="achievements" name="achievements" rows="3"
+                        placeholder="e.g. Employee of the Month (June 2023)&#10;Dean's List 2022&#10;Gold medal in regional sports competition"></textarea>
+                    <span class="hint">Include awards, certifications, recognitions, or notable accomplishments.</span>
+                </div>
+            </form>
+        </section>
+
+        <!-- Step 7: Preview & Download -->
+        <section class="wizard-step" id="step-7" aria-label="Preview and Download">
             <h2 class="step-title">Preview & Download</h2>
             <p class="step-description">Review your CV below. Choose a template, then download or print.</p>
 
@@ -1228,6 +1274,7 @@
     <script src="js/ats-scorer.js?v=24"></script>
     <script src="js/storage.js?v=24"></script>
     <script src="js/cv-manager.js?v=24"></script>
+    <script src="js/cv-sync.js?v=24"></script>
     <script src="js/settings.js?v=24"></script>
     <script src="js/session-timer.js?v=24"></script>
     <script src="js/wizard.js?v=24"></script>

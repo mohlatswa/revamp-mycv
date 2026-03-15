@@ -66,15 +66,19 @@ const SessionTimer = (() => {
 
     function expire() {
         hideWarning();
+        var redirected = false;
+        function doRedirect() {
+            if (redirected) return;
+            redirected = true;
+            window.location.replace('login.html');
+        }
+        // Safety net — redirect after 3 seconds no matter what
+        setTimeout(doRedirect, 3000);
         // Sign out and redirect
         if (typeof Auth !== 'undefined' && Auth.signOut) {
-            Auth.signOut().then(function () {
-                window.location.replace('login.html');
-            }).catch(function () {
-                window.location.replace('login.html');
-            });
+            Auth.signOut().then(doRedirect).catch(doRedirect);
         } else {
-            window.location.replace('login.html');
+            doRedirect();
         }
     }
 

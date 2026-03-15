@@ -3,7 +3,7 @@
  */
 const Wizard = (() => {
     let currentStep = 1;
-    const totalSteps = 6;
+    const totalSteps = 7;
     let onStepChange = null;
 
     function init(stepChangeCallback) {
